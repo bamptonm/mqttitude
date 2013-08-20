@@ -6,11 +6,11 @@ the elements.
 
 ```json
 {
+    "_type": "location",	// (a) (i)
     "lat": "xx.xxxxxx", 	// (a) (i)
     "lon": "y.yyyyyy", 		// (a) (i)
     "tst": "1376715317",	// (a) (i)
     "acc": "75m",		// (a) (i)
-    "mo" : "<type>", 		// (i)
     "alt" : "mmmmm",		// (a) (i)
     "vac" : "xxxx",		// (i)
     "dir" : "xxx",		// (i)
@@ -22,7 +22,6 @@ the elements.
 * `lon` is longitude as decimal, represented as a string
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
 * `acc` is accuracy if available
-* `mo` is motion (e.g. `vehicle`, `on foot`, etc.) if available
 * `alt` altitude, measured in meters (i.e. units of 100cm). Android provides the info, but it doesn't always contain anything useful.
 * `vac`,  "xxxx" for vertical accuracy in meters - negative value indicates no valid altitude information
 * `dir` is direction
@@ -31,6 +30,7 @@ the elements.
 ## User object
 ```json
 {
+    "_type" : "user"
     "name": "testuser"
 }
 ```
@@ -38,28 +38,28 @@ the elements.
 ## Backend API
 
 ```none
-GET /users
+GET /api/1/users
 > {"items":[{"name" : foo}, {"name" : "bar"}]}
 ```
 
 ```none
-GET /users/1
+GET /api/1/users/1
 > {"name" : foo}
 ```
 
+Query locations. All locations are sorted by decending by ```tst``` 
 ```none
-GET /users/1/locations
-```
-```none
-GET /users/1/locations/current
-```
-```none
-GET /users/1/locations?year=2013
-```
-```none
-GET /users/1/locations?year=2013&month=1
-```
-```none
-GET /users/1/locations?year=2013&month=1&day=13
+GET /api/1/users/1/locations
+=> tbd
 ```
 
+```none
+GET /api/1/users/1/locations?limit=1
+=> tbd
+```
+
+```none
+GET /api/1/users/1/locations?tst=1376912006
+# >, <, >=, <= operators also avilable
+=> tbd
+```
