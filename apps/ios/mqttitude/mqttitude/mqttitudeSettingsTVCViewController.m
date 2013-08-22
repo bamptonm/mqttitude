@@ -7,6 +7,7 @@
 //
 
 #import "mqttitudeSettingsTVCViewController.h"
+#import "mqttitudeQoSTVC.h"
 
 @interface mqttitudeSettingsTVCViewController()
 @property (weak, nonatomic) IBOutlet UITextField *UIhost;
@@ -17,7 +18,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIport;
 @property (weak, nonatomic) IBOutlet UITextField *UItopic;
 @property (weak, nonatomic) IBOutlet UISwitch *UIretainFlag;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *UIqos;
+@property (weak, nonatomic) IBOutlet UITextField *UIqos;
+@property (weak, nonatomic) IBOutlet UISwitch *UIbackground;
 @property (weak, nonatomic) IBOutlet UITextField *UIversion;
 @end
 
@@ -33,7 +35,9 @@
     self.UIpass.text = self.pass;
     self.UItopic.text = self.topic;
     self.UIretainFlag.on = self.retainFlag;
-    self.UIqos.selectedSegmentIndex = self.qos;
+    self.UIbackground.on = self.background;
+    self.UIqos.text = [self qosString:self.qos];
+
     NSDictionary *info = [NSBundle mainBundle].infoDictionary;
     self.UIversion.text = [NSString stringWithFormat:@"%@ %@",  info[@"CFBundleName"], info[@"CFBundleShortVersionString"]];;
 }
@@ -53,9 +57,6 @@
 - (IBAction)retainFlagChanged:(UISwitch *)sender {
     self.retainFlag = sender.on;
 }
-- (IBAction)qosChange:(UISegmentedControl *)sender {
-    self.qos = sender.selectedSegmentIndex;
-}
 - (IBAction)authChange:(UISwitch *)sender {
     self.auth = sender.on;
 }
@@ -65,6 +66,43 @@
 - (IBAction)passChange:(UITextField *)sender {
     self.pass = sender.text;
 }
+- (IBAction)backgroundChange:(UISwitch *)sender {
+    self.background = sender.on;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:[mqttitudeQoSTVC class]]) {
+        mqttitudeQoSTVC *qos = (mqttitudeQoSTVC *)segue.destinationViewController;
+        qos.qos = self.qos;
+    }
+}
+
+
+- (IBAction)settingsSaved:(UIStoryboardSegue *)seque
+{
+    if ([seque.sourceViewController isKindOfClass:[mqttitudeQoSTVC class]]) {
+        mqttitudeQoSTVC *qos = (mqttitudeQoSTVC *)seque.sourceViewController;
+        self.qos = qos.qos;
+        self.UIqos.text = [self qosString:self.qos];
+    }
+}
+
+- (NSString *)qosString:(NSInteger)qos
+{
+    NSArray *qosStrings = @[
+                            NSLocalizedString(@"At most once (0)", @"MQTT QoS 0"),
+                            NSLocalizedString(@"At least once (1)", @"MQTT QoS 1"),
+                            NSLocalizedString(@"Exactly once (2)", @"MQTT QoS 2")
+                            ];
+    
+    if (qos < [qosStrings count]) {
+        return qosStrings[self.qos];
+    } else {
+        return @"MQTTitude unknown QoS";
+    }
+}
+
 
 
 @end
