@@ -10,10 +10,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "MQTTSession.h"
+#import "ConnectionThreadDelegate.h"
 
+@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ConnectionThreadDelegate>
 
-@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate>
-- (void)showStatus:(NSString *)status;
-- (void)publishNow;
-- (void)log:(NSString *)message;
 @end

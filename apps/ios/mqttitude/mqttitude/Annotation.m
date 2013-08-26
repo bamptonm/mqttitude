@@ -19,15 +19,16 @@
 }
 
 - (NSString *)title {
-    return [NSDateFormatter localizedStringFromDate:self.timeStamp
+    NSString *timestampAsString = [NSDateFormatter localizedStringFromDate:self.timeStamp
                                           dateStyle:NSDateFormatterShortStyle
                                           timeStyle:NSDateFormatterMediumStyle];
+    return [NSString stringWithFormat:@"%@ %@", timestampAsString,  self.topic ? self.topic : @""];
 }
 
 - (NSString *)subtitle {
     return  (self.placemark) ?
     ABCreateStringWithAddressDictionary (self.placemark.addressDictionary, TRUE) :
-    [NSString stringWithFormat:@"%f %f",
+    [NSString stringWithFormat:@"%f:%f",
      self.coordinate.latitude,
      self.coordinate.longitude];
 }
