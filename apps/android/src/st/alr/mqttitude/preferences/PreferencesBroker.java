@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -220,13 +219,11 @@ public class PreferencesBroker extends DialogPreference {
         if (v == null)
             return;
 
-        if (ServiceMqtt.getInstance().getConnectivity() == MQTT_CONNECTIVITY.DISCONNECTED_WAITINGFORINTERNET
-                || ServiceMqtt.getInstance().getConnectivity() == MQTT_CONNECTIVITY.DISCONNECTED_USERDISCONNECT
-                || ServiceMqtt.getInstance().getConnectivity() == MQTT_CONNECTIVITY.DISCONNECTED_DATADISABLED
-                || ServiceMqtt.getInstance().getConnectivity() == MQTT_CONNECTIVITY.DISCONNECTED) {
-            v.setEnabled(false);
-        } else {
+        if (ServiceMqtt.getConnectivity() == MQTT_CONNECTIVITY.CONNECTING
+                || ServiceMqtt.getConnectivity() == MQTT_CONNECTIVITY.CONNECTED) {
             v.setEnabled(true);
+        } else {
+            v.setEnabled(false);
         }
 
     }

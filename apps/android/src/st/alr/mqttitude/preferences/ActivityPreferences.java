@@ -1,7 +1,8 @@
 
 package st.alr.mqttitude.preferences;
 
-import st.alr.mqttitude.R.xml;
+import com.google.android.gms.internal.ee;
+
 import st.alr.mqttitude.services.ServiceMqtt;
 import st.alr.mqttitude.support.Defaults;
 import st.alr.mqttitude.support.Events;
@@ -27,15 +28,19 @@ public class ActivityPreferences extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Not starting the service for the preferences prevents fuzzy states during error cases
+        // The service should have been started earlier by the ActivityMain
+        // TODO: investigate what happens if this activity gets started without starting the service first and if this is possible
+        
         // Start service if it is not already started
-        Intent service = new Intent(this, ServiceMqtt.class);
-        startService(service);
+        //Intent service = new Intent(this, ServiceMqtt.class);
+        //tartService(service);
 
-        // Register for connection changed events
-        EventBus.getDefault().register(this);
 
         // Replace content with fragment for custom preferences
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new CustomPreferencesFragment()).commit();
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new CustomPreferencesFragment()).commit();
+        
 
     }
 
@@ -50,22 +55,22 @@ public class ActivityPreferences extends PreferenceActivity {
             PackageManager pm = this.getActivity().getPackageManager();
             Preference version = findPreference("versionReadOnly");
 
-            
-            findPreference(Defaults.SETTINGS_KEY_BACKGROUND_UPDATES_INTERVAL).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Log.v(this.toString(), newValue.toString());
-                    if (newValue.toString().equals("0")) {
-                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                        editor.putString(preference.getKey(), "1");
-                        editor.commit();                                                
-                        return false;
-                    }
-                    return true;
-                }});
-       
+            findPreference(Defaults.SETTINGS_KEY_BACKGROUND_UPDATES_INTERVAL)
+                    .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            Log.v(this.toString(), newValue.toString());
+                            if (newValue.toString().equals("0")) {
+                                SharedPreferences.Editor editor = PreferenceManager
+                                        .getDefaultSharedPreferences(getActivity()).edit();
+                                editor.putString(preference.getKey(), "1");
+                                editor.commit();
+                                return false;
+                            }
+                            return true;
+                        }
+                    });
 
-                    
             try {
                 version.setSummary(pm.getPackageInfo(this.getActivity().getPackageName(), 0).versionName);
             } catch (NameNotFoundException e) {
@@ -74,6 +79,9 @@ public class ActivityPreferences extends PreferenceActivity {
 
             serverPreference = findPreference("brokerPreference");
             setServerPreferenceSummary();
+
+            // Register for connection changed events
+            EventBus.getDefault().register(getActivity());
 
         }
     }
@@ -90,7 +98,6 @@ public class ActivityPreferences extends PreferenceActivity {
     private static void setServerPreferenceSummary() {
         serverPreference.setSummary(ServiceMqtt.getConnectivityText());
     }
-
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

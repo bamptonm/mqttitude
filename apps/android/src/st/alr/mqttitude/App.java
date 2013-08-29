@@ -1,19 +1,18 @@
 
 package st.alr.mqttitude;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import st.alr.mqttitude.support.Defaults;
 import st.alr.mqttitude.support.Events;
 import st.alr.mqttitude.support.FusedLocationLocator;
 import st.alr.mqttitude.support.Locator;
-import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -30,8 +29,8 @@ public class App extends Application {
     private static NotificationCompat.Builder notificationBuilder;
 
     private Locator locator;
-    private PendingIntent updateIntent;
     private boolean even = false;
+    private SimpleDateFormat dateFormater;
     
     @Override
     public void onCreate() {
@@ -47,7 +46,8 @@ public class App extends Application {
             locator = new FusedLocationLocator(this);
             Log.e(this.toString(),  "play services not available and no other locator implemented yet ");
         }
-        
+        this.dateFormater = new SimpleDateFormat("y/M/d H:m:s", getResources().getConfiguration().locale);
+
         notificationManager = (NotificationManager) App.getInstance().getSystemService(
                 Context.NOTIFICATION_SERVICE);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -66,6 +66,9 @@ public class App extends Application {
 
     }
 
+    public String formatDate(Date d) {
+        return dateFormater.format(d);
+    }
 
     public static App getInstance() {
         return instance;
@@ -129,6 +132,9 @@ public class App extends Application {
     }
 
     public void onEvent(Events.LocationUpdated e) {
+        if(e.getLocation() == null)
+            return;
+        
         Log.v(this.toString(), "LocationUpdated: " + e.getLocation().getLatitude() + ":"
                 + e.getLocation().getLongitude());
     }

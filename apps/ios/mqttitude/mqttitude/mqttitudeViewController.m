@@ -9,55 +9,314 @@
 #import "mqttitudeViewController.h"
 #import "mqttitudeSettingsTVCViewController.h"
 #import "mqttitudeLogTVCViewController.h"
-#import "Location.h"
-#import "LogEntry.h"
-
+#import "Annotation.h"
+#import "Logs.h"
+#import "Connection.h"
+#import "mqttitudeIndicatorView.h"
 
 @interface mqttitudeViewController ()
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) CLLocationManager *manager;
-@property (strong, nonatomic) NSString *clientId;
+@property (strong, nonatomic) Logs *logs;
+@property (strong, nonatomic) NSTimer *keepAliveTimer;
 
 @property (strong, nonatomic) NSString *topic;
-@property (nonatomic) BOOL tls;
 @property (nonatomic) BOOL retainFlag;
 @property (nonatomic) NSInteger qos;
+@property (nonatomic) BOOL background;
+
 @property (strong, nonatomic) NSString *host;
 @property (nonatomic) UInt32 port;
-@property (strong, nonatomic) NSMutableArray *logArray;
+@property (nonatomic) BOOL tls;
+@property (nonatomic) BOOL auth;
+@property (strong, nonatomic) NSString *user;
+@property (strong, nonatomic) NSString *pass;
+
 @property (strong, nonatomic) NSMutableArray *annotationArray;
 
-@property (weak, nonatomic) IBOutlet MKMapView *map;
-@property (weak, nonatomic) IBOutlet UITextField *status;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet mqttitudeIndicatorView *indicatorView;
+@property (weak, nonatomic) IBOutlet MKUserTrackingBarButtonItem *trackingButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *stopButton;
+
+@property (strong, nonatomic) Connection *connection;
 
 @end
 
 @implementation mqttitudeViewController
 
+#define DEBUGGING
+#define KEEPALIVE 120.0
+
+- (void)viewDidLoad
+{
+    /*
+     * Initializing all Objects
+     */
+     
+    [super viewDidLoad];
+
+    self.logs = [[Logs alloc] init];
+    
+    self.connection = [[Connection alloc] init];
+    self.connection.delegate = self;
+    
+    self.annotationArray = [[NSMutableArray alloc] init];
+    if ([CLLocationManager locationServicesEnabled]) {
+        self.manager = [[CLLocationManager alloc] init];
+        self.manager.delegate = self;
+        self.mapView.delegate = self;
+        self.mapView.showsUserLocation = YES;
+        [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+        (void)[self.trackingButton initWithMapView:self.mapView];
+    } else {
+        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+        NSLog(@"MQTTitude not authorized for CoreLocation %d", status); // Better inform the user and exit
+    }
+
+    [self.logs log:[NSString stringWithFormat:@"%@ v%@ on %@",
+                    [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
+                    [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                    [[[UIDevice currentDevice] identifierForVendor] UUIDString]]];
+
+    [self settingsFromPropertyList];
+    [self connect];
+    
+    [self.manager startMonitoringSignificantLocationChanges];
+    
+    self.keepAliveTimer = [NSTimer timerWithTimeInterval:KEEPALIVE target:self selector:@selector(keepAlive:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.keepAliveTimer forMode:NSRunLoopCommonModes];
+    
+
+#ifdef DEBUGGING
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+#endif
+}
+
+- (void)connect
+{
+    NSDictionary *will = @{
+                           @"tst": [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]],
+                           @"_type": [NSString stringWithFormat:@"%@", @"lwt"]
+                           };
+
+    [self.connection connectTo:self.host
+                          port:self.port
+                           tls:self.tls
+                          auth:self.auth
+                          user:self.user
+                          pass:self.pass
+                     willTopic:self.topic
+                          will:[self jsonToData:will]];
+}
+
+#define MAX_ANNOTATIONS 50
+
+- (void)locationToMap:(CLLocation *)location topic:(NSString *)topic
+{
+    // prepare annotation
+    Annotation *annotation = [[Annotation alloc] init];
+    annotation.coordinate = location.coordinate;
+    annotation.timeStamp = location.timestamp;
+    annotation.topic = topic;
+    
+    // if other's location, delete previous
+    if (![annotation.topic isEqualToString:self.topic]) {
+        for (Annotation *theAnnotation in self.annotationArray) {
+            if ([theAnnotation.topic isEqualToString:annotation.topic]) {
+                [self.annotationArray removeObject:theAnnotation];
+                [self.mapView removeAnnotation:theAnnotation];
+                break;
+            }
+        }
+    }
+    
+    // add the new annotation to the map, for reference and to the log
+    [self.mapView addAnnotation:annotation];
+    [self.annotationArray addObject:annotation];
+    [self.logs log:[NSString stringWithFormat:@"%@@%@", annotation.topic, [annotation subtitle]]];
+    
+    // limit the total number of annotations
+    if ([self.annotationArray count] > MAX_ANNOTATIONS) {
+        [self.mapView removeAnnotation:self.annotationArray[0]];
+        [self.annotationArray removeObjectAtIndex:0];
+    }
+    
+    // count other's annotation
+    NSInteger others = 0;
+    for (Annotation *theAnnotation in self.annotationArray) {
+        if (![theAnnotation.topic isEqualToString:self.topic]) {
+            others++;
+        }
+    }
+    
+    // show the user how many others are on the map
+    [UIApplication sharedApplication].applicationIconBadgeNumber = others;
+}
+
+- (void)publishLocation:(CLLocation *)location
+{
+    [self locationToMap:location topic:self.topic];
+    
+    NSData *data = [self formatLocationData:location];
+    
+    [self.connection sendData:data topic:self.topic qos:self.qos retain:self.retainFlag];
+}
+
+- (NSData *)formatLocationData:(CLLocation *)location
+{
+    NSDictionary *jsonObject = @{
+                                     @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
+                                     @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
+                                     @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
+                                     @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
+                                     @"alt": [NSString stringWithFormat:@"%f", location.altitude],
+                                     @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
+                                     @"vel": [NSString stringWithFormat:@"%f", location.speed],
+                                     @"dir": [NSString stringWithFormat:@"%f", location.course],
+#ifdef DEBUGGING
+                        /*testing*/  @"_pow": [NSString stringWithFormat:@"%.0f", ([[UIDevice currentDevice] isBatteryMonitoringEnabled]) ? [[UIDevice currentDevice] batteryLevel] * 100.0: -1.0 ],
+#endif
+                                     @"_type": [NSString stringWithFormat:@"%@", @"location"]
+                                     };
+    return [self jsonToData:jsonObject];
+}
+
+- (NSData *)jsonToData:(NSDictionary *)jsonObject
+{
+    NSData *data;
+    
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
+        NSError *error;
+        data = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 /* not pretty printed */ error:&error];
+        if (!data) {
+            NSLog(@"Error %@ serializing JSON Object: %@", [error description], [jsonObject description]);
+        }
+    } else {
+        NSLog(@"No valid JSON Object: %@", [jsonObject description]);
+    }
+    return data;
+}
+
+
+/* Called from LocationManager when location changes significantly
+ *
+ */
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+#ifdef DEBUGGING
+    NSLog(@"Significant Location Change");
+#endif
+    for (CLLocation *location in locations) {
+#ifdef DEBUGGING
+        NSLog(@"Location: %@", [location description]);
+#endif
+        if (self.background) [self publishLocation:location];
+    }
+}
+
+/* UI Actions
+ *
+ */
+
+- (IBAction)publishNow:(UIBarButtonItem *)sender {
+    [self publishLocation:self.manager.location];
+}
+
+- (IBAction)stop:(UIBarButtonItem *)sender {
+    [self.connection stop];
+    [self.manager stopMonitoringSignificantLocationChanges];
+    exit(0);
+}
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:[mqttitudeSettingsTVCViewController class]]) {
+        mqttitudeSettingsTVCViewController *settings = (mqttitudeSettingsTVCViewController *)segue.destinationViewController;
+        settings.host = self.host;
+        settings.port = self.port;
+        settings.tls = self.tls;
+        settings.auth = self.auth;
+        settings.user = self.user;
+        settings.pass = self.pass;
+        settings.topic = self.topic;
+        settings.retainFlag = self.retainFlag;
+        settings.qos = self.qos;
+        settings.background = self.background;
+    } else if ([segue.destinationViewController isKindOfClass:[mqttitudeLogTVCViewController class]]) {
+        mqttitudeLogTVCViewController *logs = (mqttitudeLogTVCViewController *)segue.destinationViewController;
+        logs.logs = self.logs;
+    } 
+}
+
+- (IBAction)settingsSaved:(UIStoryboardSegue *)seque
+{
+    if ([seque.sourceViewController isKindOfClass:[mqttitudeSettingsTVCViewController class]]) {
+        mqttitudeSettingsTVCViewController *settings = (mqttitudeSettingsTVCViewController *)seque.sourceViewController;
+        
+        [self.connection disconnect];
+        self.host = settings.host;
+        self.port = settings.port;
+        self.tls = settings.tls;
+        self.auth = settings.auth;
+        self.user = settings.user;
+        self.pass = settings.pass;
+        self.topic = settings.topic;
+        self.retainFlag = settings.retainFlag;
+        self.qos = settings.qos;
+        self.background = settings.background;
+        [self synchronizeSettings];
+        [self connect];
+    }
+}
+
+/* Persistent Settings
+ *
+ */
+
 #define SETTINGS_KEY @"SETTINGS"
+
 #define HOST_KEY @"HOST"
 #define PORT_KEY @"PORT"
-#define TOPIC_KEY @"TOPIC"
 #define TLS_KEY @"TLS"
+#define AUTH_KEY @"AUTH"
+#define USER_KEY @"USER"
+#define PASS_KEY @"PASS"
+
+#define TOPIC_KEY @"TOPIC"
 #define RETAIN_KEY @"RETAIN"
 #define QOS_KEY @"QOS"
+#define BACKGROUND_KEY @"BACKGROUND"
 
-#define HOST_DEFAULT @"test.mosquitto.org"
+#define HOST_DEFAULT @"host"
 #define PORT_DEFAULT 1883
-#define TOPIC_DEFAULT @"mqttitude"
 #define TLS_DEFAULT FALSE
+#define AUTH_DEFAULT FALSE
+#define USER_DEFAULT @"user"
+#define PASS_DEFAULT @"password"
+
+#define TOPIC_DEFAULT @"mqttitude"
 #define RETAIN_DEFAULT TRUE
 #define QOS_DEFAULT 2
+#define BACKGROUND_DEFAULT TRUE
+
 
 - (void)synchronizeSettings
 {
     [[NSUserDefaults standardUserDefaults] setObject:@{
                                             HOST_KEY:self.host,
                                             PORT_KEY:@(self.port),
-                                           TOPIC_KEY:self.topic,
                                              TLS_KEY:@(self.tls),
+                                            AUTH_KEY:@(self.auth),
+                                            USER_KEY:self.user,
+                                            PASS_KEY:self.pass,
+                                           TOPIC_KEY:self.topic,
                                           RETAIN_KEY:@(self.retainFlag),
-                                             QOS_KEY:@(self.qos)}
+                                             QOS_KEY:@(self.qos),
+                                      BACKGROUND_KEY:@(self.background)}
                                               forKey:SETTINGS_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -68,232 +327,164 @@
     
     if (settings) {
         self.host = settings[HOST_KEY];
-        self.topic = settings[TOPIC_KEY];
         self.port = [settings[PORT_KEY] intValue];
         self.tls = [settings[TLS_KEY] boolValue];
+        self.auth = [settings[AUTH_KEY] boolValue];
+        self.user = settings[USER_KEY];
+        self.pass = settings[PASS_KEY];
+        
+        self.topic = settings[TOPIC_KEY];
         self.retainFlag = [settings[RETAIN_KEY] boolValue];
         self.qos = [settings[QOS_KEY] intValue];
+        self.background = [settings[BACKGROUND_KEY] boolValue];
     } else {
         self.host = HOST_DEFAULT;
         self.port = PORT_DEFAULT;
-        self.topic = TOPIC_DEFAULT;
         self.tls = TLS_DEFAULT;
+        self.auth = AUTH_DEFAULT;
+        self.user = USER_DEFAULT;
+        self.pass = PASS_DEFAULT;
+        
+        self.topic = [NSString stringWithFormat:@"%@/%@", TOPIC_DEFAULT, [[UIDevice currentDevice] name]];
         self.retainFlag = RETAIN_DEFAULT;
         self.qos = QOS_DEFAULT;
+        self.background = BACKGROUND_DEFAULT;
         [self synchronizeSettings];
     }
 }
 
-- (void)viewDidLoad
+/* Communication from Background Thread
+ *
+ */
+
+- (void)showIndicator:(NSNumber *)indicator
 {
-    [super viewDidLoad];
+    UIColor *color;
     
-    self.logArray = [[NSMutableArray alloc] init];
-    self.annotationArray = [[NSMutableArray alloc] init];
-    
-    if ([CLLocationManager locationServicesEnabled]) {
-        self.manager = [[CLLocationManager alloc] init];
-        self.manager.delegate = self;
-        
-    } else {
-        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        [self log:[NSDate date] message:[NSString stringWithFormat:@"Not authorized for CoreLocation %d", status]];
-        
-    }
-    
-    [self settingsFromPropertyList];
-    [self connect];
-}
-
-#pragma mark - MQtt Callback methods
-
-- (void)session:(MQTTSession*)sender handleEvent:(MQTTSessionEvent)eventCode {
-    switch (eventCode) {
-        case MQTTSessionEventConnected:
-            self.status.text = @"connected";
+    switch ([indicator integerValue]) {
+        case indicator_green:
+            color = [UIColor greenColor];
             break;
-        case MQTTSessionEventConnectionRefused:
-            self.status.text = @"connection refused";            
+        case indicator_amber:
+            color = [UIColor yellowColor];
             break;
-        case MQTTSessionEventConnectionClosed:
-            self.status.text = @"connection closed";
-            
+        case indicator_red:
+            color = [UIColor redColor];
             break;
-        case MQTTSessionEventConnectionError:
-            self.status.text = @"connection error, reconnecting...";
-            [self log:[NSDate date] message:self.status.text];
-            
-            // Forcing reconnection
-            [self.session connectToHost:self.host port:self.port usingSSL:self.tls];
-            break;
-        case MQTTSessionEventProtocolError:
-            self.status.text = @"protocol error";
-            break;
+        case indicator_idle:
         default:
-            self.status.text = [NSString stringWithFormat:@"unknown eventCode: %d", eventCode];
+            color = [UIColor blueColor];
             break;
     }
-    [self log:[NSDate date] message:self.status.text];
-
+    self.indicatorView.color = color;
+    [self.indicatorView setNeedsDisplay];
 }
 
-- (void)connect
+- (void)publishNow
 {
-    if (!self.session) {
-        self.clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-        
-        self.session = [[MQTTSession alloc] initWithClientId:self.clientId];
-        [self.session setDelegate:self];
-        [self.session connectToHost:self.host
-                               port:self.port
-                           usingSSL:self.tls];
-    }
-    if (self.manager) {
-        [self.manager startMonitoringSignificantLocationChanges];
-    }
-}
-
-- (void)disconnect
-{
-    if (self.session) {
-        [self.session close];
-        self.session = nil;
-    }
-    if (self.manager) {
-        [self.manager stopMonitoringSignificantLocationChanges];
-    }
-    
-    [self.map removeAnnotations:self.map.annotations];
-}
-
-- (IBAction)publishNow:(UIBarButtonItem *)sender {
     [self publishLocation:self.manager.location];
 }
 
-#define MAX_ANNOTATIONS 20
-
-- (void)publishLocation:(CLLocation *)location
+- (void)log:(NSString *)message
 {
-    if (location) {
-        [self.map setCenterCoordinate:location.coordinate animated:YES];
-        [self.map setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
-        
-        Location *locationAnnotation = [[Location alloc] init];
-        locationAnnotation.coordinate = location.coordinate;
-        locationAnnotation.timeStamp = location.timestamp;
-        [self.map addAnnotation:locationAnnotation];
-        [self.annotationArray addObject:locationAnnotation];
-        if ([self.annotationArray count] > MAX_ANNOTATIONS) {
-            [self.map removeAnnotation:self.annotationArray[0]];
-            [self.annotationArray removeObjectAtIndex:0];
-        }
-        
-        NSDictionary *jsonObject = @{
-                                     @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
-                                     @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
-                                     @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
-                                     @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
-                                     @"alt": [NSString stringWithFormat:@"%f", location.altitude],
-                                     @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
-                                     @"vel": [NSString stringWithFormat:@"%f", location.speed],
-                                     @"dir": [NSString stringWithFormat:@"%f", location.course],
-                                     @"mo": [NSString stringWithFormat:@"%@", @"unkown"]
-                                     };
-        NSData *data;
-        
-        if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
-            NSError *error;
-            data = [NSJSONSerialization dataWithJSONObject:jsonObject options:!NSJSONWritingPrettyPrinted error:&error];
-            if (!data) {
-                [self log:[NSDate date] message:[error description]];
+    [self.logs log:message];
+}
+
+#define COMMAND_PUBLISH @"publish"
+
+- (void)handleMessage:(NSDictionary *)dictionary
+{
+    NSString *topic = dictionary[@"TOPIC"];
+    NSData *data = dictionary[@"DATA"];
+    
+    if (self.background) {
+        if ([topic isEqualToString:self.topic]) {
+            // received own data
+        } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO]]) {
+            // received command
+            NSString *message = [self dataToString:data];
+            if ([message isEqualToString:COMMAND_PUBLISH]) {
+                [self publishNow];
+            } else {
+                NSLog(@"Unknown command: %@", message);
             }
         } else {
-            [self log:[NSDate date] message:[NSString stringWithFormat:@"No valid JSON Object: %@", [jsonObject description]]];
-        }
-        
-        if (self.session) {
-            [self log:location.timestamp message:[NSString stringWithUTF8String:data.bytes]];
-            
-            switch (self.qos) {
-                case 0:
-                    [self.session publishDataAtMostOnce:data onTopic:[NSString stringWithFormat:@"%@", self.topic] retain:self.retainFlag];
-                    break;
-                case 1:
-                    [self.session publishDataAtLeastOnce:data onTopic:[NSString stringWithFormat:@"%@", self.topic] retain:self.retainFlag];
-                    break;
-                case 2:
-                    [self.session publishDataExactlyOnce:data onTopic:[NSString stringWithFormat:@"%@", self.topic] retain:self.retainFlag];
-                    break;
-                default:
-                    NSLog(@"Unknown qos: %d", self.qos);
-                    break;                    
+            // received other data
+            NSError *error;
+            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (dictionary) {
+                if ([dictionary[@"_type"] isEqualToString:@"location"]) {
+                    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([dictionary[@"lat"] floatValue], [dictionary[@"lon"] floatValue]);
+                    CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
+                                                                         altitude:[dictionary[@"alt"] floatValue]
+                                                               horizontalAccuracy:[dictionary[@"acc"] floatValue]
+                                                                 verticalAccuracy:[dictionary[@"vac"] floatValue]
+                                                                        timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] floatValue]]];
+                    [self locationToMap:location topic:topic];
+                }
             }
         }
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    
-    /*
-     If you start this service and your application is subsequently terminated, the system automatically relaunches the application into the background if a new event arrives. In such a case, the options dictionary passed to the locationManager:didUpdateLocations: method of your application delegate contains the key UIApplicationLaunchOptionsLocationKey to indicate that your application was launched because of a location event. Upon relaunch, you must still configure a location manager object and call this method to continue receiving location events. When you restart location services, the current event is delivered to your delegate immediately. In addition, the location property of your location manager object is populated with the most recent location object even before you start location services.
-     
-     In addition to your delegate object implementing the locationManager:didUpdateLocations: method, it should also implement the locationManager:didFailWithError: method to respond to potential errors.
-     
-     Note: Apps can expect a notification as soon as the device moves 500 meters or more from its previous notification. It should not expect notifications more frequently than once every five minutes. If the device is able to retrieve data from the network, the location manager is much more likely to deliver notifications in a timely manner.
-     
-     */
-    for (CLLocation *location in locations) {
-        [self publishLocation:location];
-    }
-}
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (NSString *)dataToString:(NSData *)data
 {
-    if ([segue.destinationViewController isKindOfClass:[mqttitudeSettingsTVCViewController class]]) {
-        mqttitudeSettingsTVCViewController *settings = (mqttitudeSettingsTVCViewController *)segue.destinationViewController;
-        settings.host = self.host;
-        settings.port = self.port;
-        settings.tls = self.tls;
-        settings.topic = self.topic;
-        settings.retainFlag = self.retainFlag;
-        settings.qos = self.qos;
-    } else if ([segue.destinationViewController isKindOfClass:[mqttitudeLogTVCViewController class]]) {
-        mqttitudeLogTVCViewController *logs = (mqttitudeLogTVCViewController *)segue.destinationViewController;
-        logs.logArray = self.logArray;
+    /* the following lines are necessary to convert data which is possibly not null-terminated into a string */
+    NSString *message = [[NSString alloc] init];
+    for (int i = 0; i < data.length; i++) {
+        char c;
+        [data getBytes:&c range:NSMakeRange(i, 1)];
+        message = [message stringByAppendingFormat:@"%c", c];
     }
-}
-
-- (IBAction)settingsSaved:(UIStoryboardSegue *)seque
-{
-    if ([seque.sourceViewController isKindOfClass:[mqttitudeSettingsTVCViewController class]]) {
-        mqttitudeSettingsTVCViewController *settings = (mqttitudeSettingsTVCViewController *)seque.sourceViewController;
-        [self disconnect];
-        self.host = settings.host;
-        self.port = settings.port;
-        self.tls = settings.tls;
-        self.topic = settings.topic;
-        self.retainFlag = settings.retainFlag;
-        self.qos = settings.qos;
-        [self synchronizeSettings];
-        [self connect];
-    }
+    return message;
 }
 
 
-#define MAX_LOGS 50
+/* MapView
+ *
+ */
+#define REUSE_ID_SELF @"MQTTitude_Annotation_self"
+#define REUSE_ID_OTHER @"MQTTitude_Annotation_other"
 
-- (void)log:(NSDate *)timestamp message:(NSString *)message
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    NSLog(@"%@", message);
-
-    LogEntry *logEntry = [[LogEntry alloc] init];
-    logEntry.timestamp = timestamp;
-    logEntry.message = message;
-    [self.logArray insertObject:logEntry atIndex:0];
-    if ([self.logArray count] > MAX_LOGS) {
-        [self.logArray removeLastObject];
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
+        return nil;
+    } else {
+        if ([annotation isKindOfClass:[Annotation class]]) {
+            Annotation *MQTTannotation = (Annotation *)annotation;
+            if ([MQTTannotation.topic isEqualToString:self.topic]) {
+                MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_SELF];
+                if (annotationView) {
+                    return annotationView;
+                } else {
+                    MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_SELF];
+                    pinAnnotationView.pinColor = MKPinAnnotationColorRed;
+                    pinAnnotationView.canShowCallout = YES;
+                    return pinAnnotationView;
+                }
+            } else {
+                MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_OTHER];
+                if (annotationView) {
+                    return annotationView;
+                } else {
+                    MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_OTHER];
+                    pinAnnotationView.pinColor = MKPinAnnotationColorGreen;
+                    pinAnnotationView.canShowCallout = YES;
+                    return pinAnnotationView;
+                }
+            }
+        }
+        return nil;
     }
+}
+
+- (void)keepAlive:(NSTimer *)timer
+{
+#ifdef DEBUGGING
+    NSLog(@"%@ Alive @%.0f", [[[UIDevice currentDevice] identifierForVendor] UUIDString], [[NSDate date] timeIntervalSince1970]);
+#endif
 }
 
 @end

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.prefs.PreferenceChangeListener;
 
 import de.greenrobot.event.EventBus;
 import st.alr.mqttitude.App;
@@ -31,7 +30,6 @@ public abstract class Locator implements MqttPublish {
 
     Locator(Context context) {
         this.context = context;
-        this.lastPublishDateFormat = new SimpleDateFormat("y/M/d H:m:s");
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.state = EnumSet.of(Defaults.State.Idle);
 
@@ -56,13 +54,18 @@ public abstract class Locator implements MqttPublish {
 
     public void publishLastKnownLocation() {
         Log.v(TAG, "publishLastKnownLocation");
+        lastPublish = new Date();
 
         Intent service = new Intent(context, ServiceMqtt.class);
         StringBuilder payload = new StringBuilder();
         Date d = new Date();
         Location l = getLastKnownLocation();
         String topic = sharedPreferences.getString(Defaults.SETTINGS_KEY_TOPIC, Defaults.VALUE_TOPIC);
-
+        ServiceMqtt s = ServiceMqtt.getInstance();
+        if(s == null) {
+            return;
+        }
+        
         if (topic == null) {
             addState(State.NOTOPIC);
             return;
@@ -72,17 +75,20 @@ public abstract class Locator implements MqttPublish {
             return;
         }
 
+         
+        
         context.startService(service);
 
         payload.append("{");
+        payload.append("\"type\": ").append("\"").append("_location").append("\"");
         payload.append("\"lat\": ").append("\"").append(l.getLatitude()).append("\"");
         payload.append(", \"lon\": ").append("\"").append(l.getLongitude()).append("\"");
-        payload.append(", \"tst\": ").append("\"").append(d.getTime()).append("\"");
+        payload.append(", \"tst\": ").append("\"").append((int)(d.getTime()/1000)).append("\"");
         payload.append(", \"acc\": ").append("\"").append(Math.round(l.getAccuracy() * 100) / 100.0d).append("m").append("\"");
         payload.append(", \"alt\": ").append("\"").append(l.getAltitude()).append("\"");
         payload.append("}");
 
-        ServiceMqtt.getInstance().publishWithTimeout(
+        ServiceMqtt.getInstance().publish(
                 topic,
                 payload.toString(),
                 sharedPreferences.getBoolean(Defaults.SETTINGS_KEY_RETAIN, Defaults.VALUE_RETAIN),
@@ -93,13 +99,12 @@ public abstract class Locator implements MqttPublish {
 
     public void publishSuccessfull() {
         Log.v(TAG, "publishSuccessfull");
-        lastPublish = new Date();
         EventBus.getDefault().post(new Events.PublishSuccessfull());
         // This is a bit hacked as we append an empty space on every second
         // ticker update. Otherwise consecutive tickers with the same text would
         // not be shown
-        App.getInstance().updateTicker(
-                App.getInstance().getString(R.string.statePublished));
+        if(isTickerOnPublishEnabled())
+            App.getInstance().updateTicker(App.getInstance().getString(R.string.statePublished));
         this.resetState();
     }
 
@@ -127,7 +132,7 @@ public abstract class Locator implements MqttPublish {
         return App.getInstance().getString(R.string.stateIdle);
     }
 
-    public void publishTimeout() {
+    public void publishFailed() {
         Log.e(TAG, "publishTimeout");
         this.addState(State.PublishConnectionTimeout);
     }
@@ -149,17 +154,16 @@ public abstract class Locator implements MqttPublish {
 
     protected void addState(State s) {       
         this.state.add(s);
-        if (isErrorState(s)) {
-            Log.v(this.toString(), "error state");
+        if (isTickerState(s) && isTickerOnPublishEnabled()) {
             App.getInstance().updateTicker(getStateAsText());
         }
         App.getInstance().updateNotification();
         EventBus.getDefault().post(new Events.StateChanged());
     }
 
-    private boolean isErrorState(State s) {
+    private boolean isTickerState(State s) {
         return s == Defaults.State.LocatingFail || s == Defaults.State.NOTOPIC
-                || s == Defaults.State.PublishConnectionTimeout;
+                || s == Defaults.State.PublishConnectionTimeout || s == Defaults.State.PublishConnectionWaiting || s == Defaults.State.Publishing;
     }
 
     protected void removeState(State s) {
@@ -173,16 +177,18 @@ public abstract class Locator implements MqttPublish {
         App.getInstance().updateNotification();
     }
 
-    public String getLastupdateText() {
-        if (lastPublish != null)
-            return lastPublishDateFormat.format(lastPublish);
-        else
-            return context.getResources().getString(R.string.na);
+    public Date getLastPublishDate() {
+        return lastPublish;
     }
 
     public boolean areBackgroundUpdatesEnabled() {
         return sharedPreferences.getBoolean(Defaults.SETTINGS_KEY_BACKGROUND_UPDATES,
                 Defaults.VALUE_BACKGROUND_UPDATES);
+    }
+    
+    public boolean isTickerOnPublishEnabled(){
+        return  sharedPreferences.getBoolean(Defaults.SETTINGS_KEY_TICKER_ON_PUBLISH,
+                Defaults.VALUE_TICKER_ON_PUBLISH);
     }
 
     

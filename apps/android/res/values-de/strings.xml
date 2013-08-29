@@ -4,7 +4,7 @@
     <string name="app_name">Mqttitude</string>
     <string name="action_settings">Einstellungen</string>
     <string name="titleActivityPreferences">"Einstellungen"</string>
-    <string name="preferencesServerTitle">"Broker"</string>
+    <string name="preferencesServerTitle">"Server"</string>
     <string name="preferencesServerAddress">"Host"</string>
     <string name="preferencesServerPort">"Port"</string>
     <string name="preferencesServerCancel">"Trennen"</string>
@@ -43,7 +43,10 @@
     <string name="statePublishing">"Veröffentlichen"</string>
     <string name="stateWaiting">"Warten auf Verbindung"</string>
     <string name="stateIdle">"Idle"</string>
-
+    <string name="currentLocation">Aktuelle Position</string>
+                    <string name="preferencesNotificationTickerOnPublishSummary">Ticker bei erfolgreicher Veröffentlichung anzeigen</string>
+           <string name="preferencesNotificationTickerOnPublishTitle" >Ticker bei Veröffentlichung</string>
+    <string name="preferencesNotification">Benachrichtigungen</string>
     <string-array name="connect_options_security">
         <item>Keine</item>
         <item>SSL</item>
