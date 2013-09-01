@@ -1,6 +1,6 @@
 # Specifications for MQTTitude
 
-This documents the specifications layed out for MQTTitude.
+This documents the specifications layed out for MQTTitude. (Possible future features are [here](FUTURE.md).)
 
 ## Apps
 
