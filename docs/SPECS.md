@@ -25,8 +25,21 @@ Apps will publish a JSON payload as described in [JSON-pub](json-pub.md)
 
 ## Backend
 
+The MQTTitude "back-end" is a set of utilities and services which consume the data published by the MQTTitude apps. These basically consist of
+
+* an MQTT broker
+* a database
+* a Web interface
+
 ### MQTT broker
 
 Any compatible MQTT broker can be used, as long as it supports the features offerred by the apps, in particular _TLS_ and _authentication_.
 
+### Database
+
+* MySQL (maybe prefer PostgreSQL b/c of licensing?)
+
 ### MQTTitude Web interface
+
+* Display user location over time as list of places/countries
+* If possible, display routes on "map", e.g. using [Leaflet](http://leafletjs.com)
