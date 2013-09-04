@@ -14,7 +14,7 @@ keyfile .............
 
 * `8883` is the standard MQTT port for TLS connections. Change it if you need to, but make sure your MQTTitude app uses the same port.
 * `tls_version` specifies TLSv1 which is currently a requirement for the MQTTitude apps, as their APIs support that TLS version.
-* `cafile` is the certificate authority file
+* `cafile` is the path to the certificate authority file
 * `certfile` points to your server's certificate in PEM format
 * `keyfile` points to your server's secret key file (which you *never* divulge!)
 
@@ -35,3 +35,5 @@ cafile ca-bundle.crt
 certfile server.crt
 keyfile server.key
 ```
+
+Then download the _startssl.com_ CA certificate ([ca.crt](http://www.startssl.com/certs/ca.crt)) and [install that](TLS-certificates.md) on your device.
