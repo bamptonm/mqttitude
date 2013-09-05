@@ -10,27 +10,32 @@
 
 @interface Logs()
 @property (strong, nonatomic) NSMutableArray *logArray;
+@property (strong, nonatomic) NSString *name;
 @end
 
 @implementation Logs
 
-- (NSString *)description
+- (Logs *)initWithName:(NSString *)name
 {
-    NSString *string = [[NSString alloc] init];
-
-    for (LogEntry *logEntry in self.logArray) {
-        string = [string stringByAppendingFormat:@"%@:%@\n", logEntry.timestamp, logEntry.message];
-    };
-    return string;
+    self = [super init];
+    _name = name;
+    return self;
 }
 
 - (NSMutableArray *)logArray
 {
-    if (!_logArray) _logArray = [[NSMutableArray alloc] init];
+    if (!_logArray) {
+        if (self.name) {
+            _logArray =  [[[NSUserDefaults standardUserDefaults] arrayForKey:self.name] mutableCopy];
+        }
+        if (!_logArray) {
+            _logArray = [[NSMutableArray alloc] init];
+        }
+    }
     return _logArray;
 }
 
-- (LogEntry *)elementAtPosition:(NSInteger)pos
+- (NSString *)elementAtPosition:(NSInteger)pos
 {
     if (pos > [self count]) {
         return nil;
@@ -39,20 +44,23 @@
     }
 }
 
-#define MAX_LOGS 50
+#define MAX_LOGS 256
 
 - (void)log:(NSString *)message
 {
-    NSLog(@"%@", message);
-    
-    LogEntry *logEntry = [[LogEntry alloc] init];
-    logEntry.timestamp = [NSDate date];
-    logEntry.message = message;
-    
+    NSString *logEntry = [NSString stringWithFormat:@"%@: %@", [NSDateFormatter localizedStringFromDate:[NSDate date]
+                                                                                              dateStyle:NSDateFormatterShortStyle
+                                                                                              timeStyle:NSDateFormatterMediumStyle], message];
     [self.logArray insertObject:logEntry atIndex:0];
+    [self.delegate insert:self at:0];
     if ([self.logArray count] > MAX_LOGS) {
         [self.logArray removeLastObject];
+        [self.delegate remove:self at:MAX_LOGS];
     }
+    if (self.name){
+        [[NSUserDefaults standardUserDefaults] setObject:self.logArray forKey:self.name];
+    }
+    [self.delegate changed:self];
 }
 
 - (NSInteger)count

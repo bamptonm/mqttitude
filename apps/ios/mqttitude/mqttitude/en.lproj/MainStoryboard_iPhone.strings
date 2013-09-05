@@ -1,96 +1,138 @@
 
-/* Class = "IBUITextField"; placeholder = "QoS"; ObjectID = "19p-Tf-XsB"; */
-"19p-Tf-XsB.placeholder" = "QoS";
+/* Class = "IBUIViewController"; title = "Map"; ObjectID = "2"; */
+"2.title" = "Map";
 
-/* Class = "IBUILabel"; text = "TLS"; ObjectID = "2f0-X4-Xzv"; */
-"2f0-X4-Xzv.text" = "TLS";
+/* Class = "IBUITextField"; placeholder = "subs"; ObjectID = "19p-Tf-XsB"; */
+"19p-Tf-XsB.placeholder" = "subs";
 
-/* Class = "IBUILabel"; text = "Title"; ObjectID = "4BU-gN-ed5"; */
-"4BU-gN-ed5.text" = "Title";
+/* Class = "IBUILabel"; text = "Publications"; ObjectID = "2G9-Pv-94d"; */
+"2G9-Pv-94d.text" = "Publications";
 
-/* Class = "IBUITableViewSection"; headerTitle = "Server Connection"; ObjectID = "4JK-fA-yFU"; */
-"4JK-fA-yFU.headerTitle" = "Server Connection";
+/* Class = "IBUITabBarItem"; title = "MQTT Level Log"; ObjectID = "4mg-c0-1pG"; */
+"4mg-c0-1pG.title" = "MQTT Level Log";
 
 /* Class = "IBUITableViewSection"; headerTitle = "MQTT Parameters"; ObjectID = "6nX-V8-09P"; */
 "6nX-V8-09P.headerTitle" = "MQTT Parameters";
 
-/* Class = "IBUINavigationItem"; title = "Credits"; ObjectID = "7oY-gj-x7g"; */
-"7oY-gj-x7g.title" = "Credits";
+/* Class = "IBUINavigationItem"; title = "Publications"; ObjectID = "859-jQ-bH9"; */
+"859-jQ-bH9.title" = "Publications";
 
-/* Class = "IBUILabel"; text = "Authenticate"; ObjectID = "90q-yO-ge9"; */
-"90q-yO-ge9.text" = "Authenticate";
-
-/* Class = "IBUILabel"; text = "UserID"; ObjectID = "9QR-ZZ-2PU"; */
-"9QR-ZZ-2PU.text" = "UserID";
+/* Class = "IBUITabBarItem"; title = "Friends & Family"; ObjectID = "9Dh-6W-2Zi"; */
+"9Dh-6W-2Zi.title" = "Friends & Family";
 
 /* Class = "IBUILabel"; text = "At most once (0)"; ObjectID = "9R8-zi-0XA"; */
 "9R8-zi-0XA.text" = "At most once (0)";
 
-/* Class = "IBUILabel"; text = "Password"; ObjectID = "9kJ-qG-UQa"; */
-"9kJ-qG-UQa.text" = "Password";
+/* Class = "IBUITableViewSection"; headerTitle = "MQTT Application"; ObjectID = "Af1-RI-mNu"; */
+"Af1-RI-mNu.headerTitle" = "MQTT Application";
 
-/* Class = "IBUINavigationItem"; title = "Settings"; ObjectID = "BlZ-XY-L9g"; */
-"BlZ-XY-L9g.title" = "Settings";
+/* Class = "IBUINavigationItem"; title = "MQTTitude"; ObjectID = "BlZ-XY-L9g"; */
+"BlZ-XY-L9g.title" = "MQTTitude";
 
-/* Class = "IBUIBarButtonItem"; title = "Show Log"; ObjectID = "DIF-vb-obJ"; */
-"DIF-vb-obJ.title" = "Show Log";
+/* Class = "IBUILabel"; text = "QoS"; ObjectID = "F6l-Wl-E5E"; */
+"F6l-Wl-E5E.text" = "QoS";
 
-/* Class = "IBUITextField"; placeholder = "Host"; ObjectID = "FRL-Td-pft"; */
-"FRL-Td-pft.placeholder" = "Host";
+/* Class = "IBUILabel"; text = "QoS"; ObjectID = "FdU-db-t21"; */
+"FdU-db-t21.text" = "QoS";
 
 /* Class = "IBUINavigationItem"; title = "QoS"; ObjectID = "Gg2-ai-xgm"; */
 "Gg2-ai-xgm.title" = "QoS";
 
-/* Class = "IBUITextField"; placeholder = "password"; ObjectID = "Gkl-PD-Bsg"; */
-"Gkl-PD-Bsg.placeholder" = "password";
+/* Class = "IBUITextField"; placeholder = " newtopic"; ObjectID = "HiM-qC-68a"; */
+"HiM-qC-68a.placeholder" = " newtopic";
 
-/* Class = "IBUIBarButtonItem"; title = "Save"; ObjectID = "Gq7-Ap-QQn"; */
-"Gq7-Ap-QQn.title" = "Save";
+/* Class = "IBUITableViewController"; title = "Where We Are"; ObjectID = "Ive-AB-E3Y"; */
+"Ive-AB-E3Y.title" = "Where We Are";
 
-/* Class = "IBUILabel"; text = "Version"; ObjectID = "HI4-Zj-rQA"; */
-"HI4-Zj-rQA.text" = "Version";
+/* Class = "IBUILabel"; text = "Detail"; ObjectID = "JaJ-Tk-43y"; */
+"JaJ-Tk-43y.text" = "Detail";
 
-/* Class = "IBUITextField"; placeholder = "UserID"; ObjectID = "KEA-tN-tGr"; */
-"KEA-tN-tGr.placeholder" = "UserID";
+/* Class = "IBUITabBarItem"; title = "Map"; ObjectID = "KVm-jQ-eOg"; */
+"KVm-jQ-eOg.title" = "Map";
 
-/* Class = "IBUITableViewSection"; headerTitle = "MQTTitude App"; ObjectID = "OBE-cO-5wF"; */
-"OBE-cO-5wF.headerTitle" = "MQTTitude App";
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "Lfs-0b-JmJ"; */
+"Lfs-0b-JmJ.text" = "Title";
 
-/* Class = "IBUILabel"; text = "Host"; ObjectID = "Wmq-nz-Nhm"; */
-"Wmq-nz-Nhm.text" = "Host";
+/* Class = "IBUITextField"; placeholder = "qos"; ObjectID = "MKf-vt-7q8"; */
+"MKf-vt-7q8.placeholder" = "qos";
 
-/* Class = "IBUILabel"; text = "QoS"; ObjectID = "Zap-E9-Kcv"; */
-"Zap-E9-Kcv.text" = "QoS";
+/* Class = "IBUILabel"; text = "Topic"; ObjectID = "Nq0-Tz-Qz5"; */
+"Nq0-Tz-Qz5.text" = "Topic";
 
-/* Class = "IBUILabel"; text = "Subtitle"; ObjectID = "cEh-Fy-HAT"; */
-"cEh-Fy-HAT.text" = "Subtitle";
+/* Class = "IBUIButton"; normalTitle = "Switch Off"; ObjectID = "Puw-wy-IQs"; */
+"Puw-wy-IQs.normalTitle" = "Switch Off";
 
-/* Class = "IBUITextField"; placeholder = "Topic"; ObjectID = "dYE-Dl-58G"; */
-"dYE-Dl-58G.placeholder" = "Topic";
+/* Class = "IBUINavigationItem"; title = "Subscriptions"; ObjectID = "RxQ-Hm-t1l"; */
+"RxQ-Hm-t1l.title" = "Subscriptions";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "TOa-oi-gPJ"; */
+"TOa-oi-gPJ.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "Xfa-nY-Y82"; */
+"Xfa-nY-Y82.text" = "Title";
+
+/* Class = "IBUITabBarItem"; title = "Log"; ObjectID = "Xoa-Dx-qtO"; */
+"Xoa-Dx-qtO.title" = "Log";
+
+/* Class = "IBUILabel"; text = "Topic"; ObjectID = "Z4A-yW-hTA"; */
+"Z4A-yW-hTA.text" = "Topic";
+
+/* Class = "IBUILabel"; text = "Subscriptions"; ObjectID = "Zap-E9-Kcv"; */
+"Zap-E9-Kcv.text" = "Subscriptions";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "bkC-HI-AFG"; */
+"bkC-HI-AFG.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUILabel"; text = "Retain"; ObjectID = "blP-py-phu"; */
+"blP-py-phu.text" = "Retain";
 
 /* Class = "IBUINavigationItem"; title = "Log"; ObjectID = "dd4-rC-iK0"; */
 "dd4-rC-iK0.title" = "Log";
 
-/* Class = "IBUIBarButtonItem"; title = "Settings"; ObjectID = "hPX-4p-OdQ"; */
-"hPX-4p-OdQ.title" = "Settings";
+/* Class = "IBUILabel"; text = "Detail"; ObjectID = "eno-xl-NYQ"; */
+"eno-xl-NYQ.text" = "Detail";
 
-/* Class = "IBUITextView"; text = "MQTTitude\n\nA Google Latitude replacement that allows to upload the current location data to an own server\n\nCopyright © 2013 by Christoph Krey, mqttitude.org\n\nusing\n\nmqttIO-iOS-SDK\niOS SDK for MQTT\n\nCopyright © 2011, 2013 2lemetry, LLC\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."; ObjectID = "hof-rs-weX"; */
-"hof-rs-weX.text" = "MQTTitude\n\nA Google Latitude replacement that allows to upload the current location data to an own server\n\nCopyright © 2013 by Christoph Krey, mqttitude.org\n\nusing\n\nmqttIO-iOS-SDK\niOS SDK for MQTT\n\nCopyright © 2011, 2013 2lemetry, LLC\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.";
+/* Class = "IBUINavigationItem"; title = "Subscription"; ObjectID = "eu7-d2-byS"; */
+"eu7-d2-byS.title" = "Subscription";
 
-/* Class = "IBUILabel"; text = "Credits"; ObjectID = "kDY-o6-S9a"; */
-"kDY-o6-S9a.text" = "Credits";
+/* Class = "IBUIButton"; normalTitle = "Send Now"; ObjectID = "g5A-3e-a4O"; */
+"g5A-3e-a4O.normalTitle" = "Send Now";
 
-/* Class = "IBUILabel"; text = "Port"; ObjectID = "l6z-Hm-XcE"; */
-"l6z-Hm-XcE.text" = "Port";
+/* Class = "IBUITableViewController"; title = "MQTT Level Log"; ObjectID = "hgo-v3-CZ7"; */
+"hgo-v3-CZ7.title" = "MQTT Level Log";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "hiI-AW-WVP"; */
+"hiI-AW-WVP.text" = "Title";
+
+/* Class = "IBUINavigationItem"; title = "Publication"; ObjectID = "jbm-1N-aGY"; */
+"jbm-1N-aGY.title" = "Publication";
+
+/* Class = "IBUIBarButtonItem"; title = "Item"; ObjectID = "kij-QI-Vhq"; */
+"kij-QI-Vhq.title" = "Item";
+
+/* Class = "IBUITextField"; placeholder = "pubs"; ObjectID = "lP8-La-Ewa"; */
+"lP8-La-Ewa.placeholder" = "pubs";
 
 /* Class = "IBUILabel"; text = "At least once (1)"; ObjectID = "m6R-bu-xFa"; */
 "m6R-bu-xFa.text" = "At least once (1)";
 
-/* Class = "IBUILabel"; text = "Topic"; ObjectID = "oRS-ES-Aun"; */
-"oRS-ES-Aun.text" = "Topic";
+/* Class = "IBUILabel"; text = "Detail"; ObjectID = "nNU-ux-W9U"; */
+"nNU-ux-W9U.text" = "Detail";
 
-/* Class = "IBUITextField"; placeholder = "Version"; ObjectID = "w3s-tQ-QOG"; */
-"w3s-tQ-QOG.placeholder" = "Version";
+/* Class = "IBUILabel"; text = "Data"; ObjectID = "r7M-DU-syL"; */
+"r7M-DU-syL.text" = "Data";
+
+/* Class = "IBUITextField"; placeholder = "qos"; ObjectID = "t0N-UP-qad"; */
+"t0N-UP-qad.placeholder" = "qos";
+
+/* Class = "IBUINavigationItem"; title = "MQTT Level Log"; ObjectID = "tL5-ng-0aK"; */
+"tL5-ng-0aK.title" = "MQTT Level Log";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "ta2-x0-8V1"; */
+"ta2-x0-8V1.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUITableViewController"; title = "MQTTitude Log"; ObjectID = "vNv-wc-RzS"; */
+"vNv-wc-RzS.title" = "MQTTitude Log";
 
 /* Class = "IBUINavigationItem"; title = "MQTTitude"; ObjectID = "x0N-7e-ll2"; */
 "x0N-7e-ll2.title" = "MQTTitude";
@@ -98,11 +140,17 @@
 /* Class = "IBUILabel"; text = "Exactly once (2)"; ObjectID = "xRW-Pc-XAz"; */
 "xRW-Pc-XAz.text" = "Exactly once (2)";
 
-/* Class = "IBUIBarButtonItem"; title = "Publish Now"; ObjectID = "xmE-pL-qYg"; */
-"xmE-pL-qYg.title" = "Publish Now";
+/* Class = "IBUIBarButtonItem"; title = "Center"; ObjectID = "xlA-R2-aep"; */
+"xlA-R2-aep.title" = "Center";
 
-/* Class = "IBUITextField"; placeholder = "Port"; ObjectID = "yw5-Nq-yNB"; */
-"yw5-Nq-yNB.placeholder" = "Port";
+/* Class = "IBUIBarButtonItem"; title = "All"; ObjectID = "xmE-pL-qYg"; */
+"xmE-pL-qYg.title" = "All";
 
-/* Class = "IBUILabel"; text = "Retain"; ObjectID = "yyy-1a-h4s"; */
-"yyy-1a-h4s.text" = "Retain";
+/* Class = "IBUINavigationController"; title = "Settings"; ObjectID = "z0R-ST-siT"; */
+"z0R-ST-siT.title" = "Settings";
+
+/* Class = "IBUITabBarItem"; title = "Settings"; ObjectID = "zPu-ot-jqm"; */
+"zPu-ot-jqm.title" = "Settings";
+
+/* Class = "IBUINavigationItem"; title = "Friends & Family"; ObjectID = "zb1-lg-31q"; */
+"zb1-lg-31q.title" = "Friends & Family";

@@ -11,25 +11,37 @@
 
 
 @protocol ConnectionDelegate <NSObject>
-#define LISTENTO @"listento"
 
-enum indicator {
-    indicator_idle = 0,
-    indicator_green = 1,
-    indicator_amber = 2,
-    indicator_red = 3
+enum state {
+    state_starting,
+    state_connecting,
+    state_error,
+    state_connected,
+    state_closing,
+    state_exit
 };
 
-- (void)showIndicator:(NSInteger)indicator;
+- (void)showState:(NSInteger)state;
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic;
+- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg;
+
 @end
 
 @interface Connection: NSObject <MQTTSessionDelegate>
-@property (weak, nonatomic) id<ConnectionDelegate> delegate;
 
-- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will;
+@property (weak, nonatomic) id<ConnectionDelegate> delegate;
+@property (nonatomic, readonly) NSInteger state;
+
+
+- (void)connectToLast;
+- (void)sendDataAsLast;
+- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls keepalive:(NSInteger)keepalive auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will willQos:(NSInteger)willQos willRetainFlag:(BOOL)willRetainFlag;
 - (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
+- (void)subscribe:(NSString *)topic qos:(NSInteger)qos;
+- (void)unsubscribe:(NSString *)topic;
 - (void)disconnect;
 - (void)stop;
+
++ (NSString *)dataToString:(NSData *)data;
 
 @end

@@ -7,10 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LogEntry.h"
+
+@class Logs;
+
+@protocol LogsDelegate <NSObject>
+- (void)changed:(Logs *)logs;
+- (void)insert:(Logs *)logs at:(NSInteger)pos;
+- (void)remove:(Logs *)logs at:(NSInteger)pos;
+@end
+
 
 @interface Logs : NSObject
+@property (weak, nonatomic) id<LogsDelegate> delegate;
+- (Logs *)initWithName:(NSString *)name;
 - (void)log:(NSString *)message;
-- (LogEntry *)elementAtPosition:(NSInteger)pos;
+- (NSString *)elementAtPosition:(NSInteger)pos;
 - (NSInteger)count;
 @end

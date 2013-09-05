@@ -1,5 +1,5 @@
 //
-//  mqttitudeLogTVCViewController.h
+//  mqttitudeLogTVC.h
 //  mqttitude
 //
 //  Created by Christoph Krey on 17.08.13.
@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "Logs.h"
 
-@interface mqttitudeLogTVCViewController : UITableViewController
-@property (weak, nonatomic) Logs *logs;
-
+@interface mqttitudeLogTVC : UITableViewController <LogsDelegate>
+@property (strong, nonatomic) Logs *logs;
 @end

@@ -10,4 +10,6 @@
 
 @interface mqttitudeQoSTVC : UITableViewController
 @property (nonatomic) NSInteger qos;
++ (NSString *)qosString:(NSInteger)qos;
+
 @end

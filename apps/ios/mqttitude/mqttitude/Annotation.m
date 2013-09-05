@@ -43,6 +43,7 @@
      ^(NSArray *placemarks, NSError *error) {
          if ([placemarks count] > 0) {
              self.placemark = placemarks[0];
+             [self.delegate changed:self];
          } else {
              self.placemark = nil;
          }

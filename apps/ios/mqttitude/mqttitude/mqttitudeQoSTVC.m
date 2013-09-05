@@ -36,6 +36,21 @@
     [self setup];
 }
 
++ (NSString *)qosString:(NSInteger)qos
+{
+    NSArray *qosStrings = @[
+                            NSLocalizedString(@"At most once (0)", @"MQTT QoS 0"),
+                            NSLocalizedString(@"At least once (1)", @"MQTT QoS 1"),
+                            NSLocalizedString(@"Exactly once (2)", @"MQTT QoS 2")
+                            ];
+    
+    if (qos < [qosStrings count]) {
+        return qosStrings[qos];
+    } else {
+        return @"MQTTitude unknown QoS";
+    }
+}
+
 @end
 
 

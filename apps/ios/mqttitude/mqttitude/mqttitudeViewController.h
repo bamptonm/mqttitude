@@ -11,7 +11,12 @@
 #import <MapKit/MapKit.h>
 #import "MQTTSession.h"
 #import "Connection.h"
+#import "Annotations.h"
 
-@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ConnectionDelegate>
+@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, AnnotationsDelegate>
+- (void)setSplitViewBarButtonItem:(UIBarButtonItem *)barButtonItem;
+@property (strong, nonatomic) UIBarButtonItem *splitViewBarButtonItem;
+
+@property (weak, nonatomic) Annotations *annotations;
 
 @end

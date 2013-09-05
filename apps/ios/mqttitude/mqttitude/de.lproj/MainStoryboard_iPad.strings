@@ -1,0 +1,147 @@
+
+/* Class = "IBUIBarButtonItem"; title = "Center"; ObjectID = "05f-xC-UHt"; */
+"05f-xC-UHt.title" = "Center";
+
+/* Class = "IBUILabel"; text = "QoS"; ObjectID = "2tY-1N-gor"; */
+"2tY-1N-gor.text" = "QoS";
+
+/* Class = "IBUILabel"; text = "Subtitle"; ObjectID = "2vZ-g2-b4E"; */
+"2vZ-g2-b4E.text" = "Subtitle";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "3cC-qC-MsK"; */
+"3cC-qC-MsK.text" = "Title";
+
+/* Class = "IBUITableViewController"; title = "Low Level Log"; ObjectID = "41j-Lu-WHa"; */
+"41j-Lu-WHa.title" = "Low Level Log";
+
+/* Class = "IBUITextField"; placeholder = "newsubscription"; ObjectID = "4Sz-Hd-GKS"; */
+"4Sz-Hd-GKS.placeholder" = "newsubscription";
+
+/* Class = "IBUILabel"; text = "QoS"; ObjectID = "6QE-MG-DLi"; */
+"6QE-MG-DLi.text" = "QoS";
+
+/* Class = "IBUINavigationItem"; title = "QoS"; ObjectID = "6RI-ut-r37"; */
+"6RI-ut-r37.title" = "QoS";
+
+/* Class = "IBUILabel"; text = "Data"; ObjectID = "7Cl-OK-DP1"; */
+"7Cl-OK-DP1.text" = "Data";
+
+/* Class = "IBUITextField"; placeholder = "qos"; ObjectID = "7Yi-kW-iYE"; */
+"7Yi-kW-iYE.placeholder" = "qos";
+
+/* Class = "IBUIBarButtonItem"; title = "All"; ObjectID = "9rd-KD-R2r"; */
+"9rd-KD-R2r.title" = "All";
+
+/* Class = "IBUITextField"; placeholder = "publications"; ObjectID = "A0x-D4-2YN"; */
+"A0x-D4-2YN.placeholder" = "publications";
+
+/* Class = "IBUITextField"; placeholder = "subscriptions"; ObjectID = "A8J-e7-egd"; */
+"A8J-e7-egd.placeholder" = "subscriptions";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "AY9-rf-tpC"; */
+"AY9-rf-tpC.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUITabBarItem"; title = "Family & Friends"; ObjectID = "DDf-9k-kQb"; */
+"DDf-9k-kQb.title" = "Familie & Freunde";
+
+/* Class = "IBUILabel"; text = "Publications"; ObjectID = "EuF-QP-noN"; */
+"EuF-QP-noN.text" = "Publications";
+
+/* Class = "IBUILabel"; text = "New"; ObjectID = "FSd-Yp-yvt"; */
+"FSd-Yp-yvt.text" = "New";
+
+/* Class = "IBUILabel"; text = "At Least once (1)"; ObjectID = "Fxd-GL-O8h"; */
+"Fxd-GL-O8h.text" = "Wenigstens einmal (1)";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "HYL-lW-pXL"; */
+"HYL-lW-pXL.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUILabel"; text = "Topic"; ObjectID = "ITk-9B-Ip8"; */
+"ITk-9B-Ip8.text" = "Topic";
+
+/* Class = "IBUINavigationItem"; title = "Publish"; ObjectID = "J2n-8m-1EM"; */
+"J2n-8m-1EM.title" = "Publish";
+
+/* Class = "IBUINavigationItem"; title = "Friends & Family"; ObjectID = "Ky6-4A-iip"; */
+"Ky6-4A-iip.title" = "Familie & Freunde";
+
+/* Class = "IBUITabBarItem"; title = "Log"; ObjectID = "LrY-UH-xPa"; */
+"LrY-UH-xPa.title" = "Log";
+
+/* Class = "IBUINavigationItem"; title = "Subscriptions"; ObjectID = "NmP-3C-flO"; */
+"NmP-3C-flO.title" = "Subscriptions";
+
+/* Class = "IBUITableViewSection"; headerTitle = "MQTTitude App"; ObjectID = "TwN-aV-Y5t"; */
+"TwN-aV-Y5t.headerTitle" = "MQTTitude App";
+
+/* Class = "IBUIButton"; normalTitle = "Switch Off"; ObjectID = "XVQ-Xu-AYn"; */
+"XVQ-Xu-AYn.normalTitle" = "Abschalten";
+
+/* Class = "IBUILabel"; text = "Subscriptions"; ObjectID = "XdQ-63-Fsf"; */
+"XdQ-63-Fsf.text" = "Subscriptions";
+
+/* Class = "IBUITableViewSection"; headerTitle = "MQTT Parameters"; ObjectID = "aMn-l1-lhK"; */
+"aMn-l1-lhK.headerTitle" = "MQTT Parameters";
+
+/* Class = "IBUINavigationItem"; title = "Publishs"; ObjectID = "axN-OA-Vq6"; */
+"axN-OA-Vq6.title" = "Publishs";
+
+/* Class = "IBUILabel"; text = "At most once (0)"; ObjectID = "bEb-iR-KzO"; */
+"bEb-iR-KzO.text" = "Höchstens einmal (0)";
+
+/* Class = "IBUITextField"; placeholder = "qos"; ObjectID = "beg-iX-sco"; */
+"beg-iX-sco.placeholder" = "qos";
+
+/* Class = "IBUITabBarItem"; title = "Low Level Log"; ObjectID = "cTv-UE-LG2"; */
+"cTv-UE-LG2.title" = "Low Level Log";
+
+/* Class = "IBUINavigationItem"; title = "Logs"; ObjectID = "ccF-X9-8TG"; */
+"ccF-X9-8TG.title" = "Logs";
+
+/* Class = "IBUINavigationItem"; title = "MQTTitude"; ObjectID = "cyR-qz-ADH"; */
+"cyR-qz-ADH.title" = "MQTTitude";
+
+/* Class = "IBUILabel"; text = "Retain"; ObjectID = "dkY-Of-c1f"; */
+"dkY-Of-c1f.text" = "Retain";
+
+/* Class = "IBUILabel"; text = "Detail"; ObjectID = "hnG-tI-5ry"; */
+"hnG-tI-5ry.text" = "Detail";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "iP5-Ha-Jvm"; */
+"iP5-Ha-Jvm.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUINavigationItem"; title = "MQTT Level Logs"; ObjectID = "lxG-Iw-P8R"; */
+"lxG-Iw-P8R.title" = "MQTT Level Logs";
+
+/* Class = "IBUILabel"; text = "Detail"; ObjectID = "mPR-ij-0Lv"; */
+"mPR-ij-0Lv.text" = "Detail";
+
+/* Class = "IBUITableViewController"; title = "Log"; ObjectID = "ota-5w-PAK"; */
+"ota-5w-PAK.title" = "Log";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "t4U-cZ-BcW"; */
+"t4U-cZ-BcW.text" = "Title";
+
+/* Class = "IBUITabBarItem"; title = "Map"; ObjectID = "tk5-Ig-NG0"; */
+"tk5-Ig-NG0.title" = "Karte";
+
+/* Class = "IBUITableViewController"; title = "Where we are"; ObjectID = "tzS-wB-14i"; */
+"tzS-wB-14i.title" = "Where we are";
+
+/* Class = "IBUILabel"; text = "Exactly once (2)"; ObjectID = "ubI-3s-eHt"; */
+"ubI-3s-eHt.text" = "Genau einmal (2)";
+
+/* Class = "IBUINavigationItem"; title = "Subscription"; ObjectID = "vWn-IT-W2h"; */
+"vWn-IT-W2h.title" = "Subscription";
+
+/* Class = "IBUINavigationItem"; title = "Settings"; ObjectID = "xeV-J5-Ine"; */
+"xeV-J5-Ine.title" = "Einstellungen";
+
+/* Class = "IBUITextField"; placeholder = "topic"; ObjectID = "xy1-M3-TQg"; */
+"xy1-M3-TQg.placeholder" = "topic";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "y2P-zh-goX"; */
+"y2P-zh-goX.text" = "Title";
+
+/* Class = "IBUIButton"; normalTitle = "Send Now"; ObjectID = "zr8-u6-osT"; */
+"zr8-u6-osT.normalTitle" = "Jetzt Senden";

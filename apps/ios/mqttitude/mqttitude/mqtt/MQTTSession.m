@@ -50,15 +50,6 @@
                runLoop:(NSRunLoop *)runLoop
                forMode:(NSString *)runLoopMode
 {
-    self.connectMessage = [MQTTMessage connectMessageWithClientId:clientId
-                                                      userName:userName
-                                                      password:password
-                                                     keepAlive:keepAliveInterval
-                                                  cleanSession:cleanSessionFlag
-                                                     willTopic:willTopic
-                                                       willMsg:willMsg
-                                                       willQoS:willQoS
-                                                    willRetain:willRetainFlag];
     self.clientId = clientId;
     self.keepAliveInterval = keepAliveInterval;
     self.runLoop = runLoop;
@@ -68,6 +59,17 @@
     self.txMsgId = 1;
     self.txFlows = [[NSMutableDictionary alloc] init];
     self.rxFlows = [[NSMutableDictionary alloc] init];
+    
+    self.connectMessage = [MQTTMessage connectMessageWithClientId:clientId
+                                                         userName:userName
+                                                         password:password
+                                                        keepAlive:keepAliveInterval
+                                                     cleanSession:cleanSessionFlag
+                                                        willTopic:willTopic
+                                                          willMsg:willMsg
+                                                          willQoS:willQoS
+                                                       willRetain:willRetainFlag];
+
 
     return self;
 }
@@ -158,35 +160,40 @@
 - (void)closeInternal
 {
     if (self.status == MQTTSessionStatusConnected) {
+        self.status = MQTTSessionStatusDisconnecting;
         [self send:[MQTTMessage disconnectMessage]];
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+    } else {
+        if (self.encoder) {
+            [self.encoder close];
+            self.encoder = nil;
+        }
+        if (self.decoder) {
+            [self.decoder close];
+            self.decoder = nil;
+        }
+        if (self.keepAliveTimer) {
+            [self.keepAliveTimer invalidate];
+            self.keepAliveTimer = nil;
+        }
+        self.status = MQTTSessionStatusClosed;
     }
-    if (self.encoder) {
-        [self.encoder close];
-        self.encoder = nil;
-    }
-    if (self.decoder) {
-        [self.decoder close];
-        self.decoder = nil;
-    }
-    if (self.keepAliveTimer) {
-        [self.keepAliveTimer invalidate];
-        self.keepAliveTimer = nil;
-    }    
 }
 
 
 - (void)timerHandler:(NSTimer *)timer
 {
+    
 #ifdef DEBUG
     NSLog(@"%@ Ping @%.0f", self.clientId, [[NSDate date] timeIntervalSince1970]);
 #endif
     if ([self.encoder status] == MQTTEncoderStatusReady) {
-        [self.encoder encodeMessage:[MQTTMessage pingreqMessage]];
+        MQTTMessage *msg = [MQTTMessage pingreqMessage];
+        [self.delegate lowlevellog:self component:@"encoder" message:@"senddirect" mqttmsg:msg];
+        [self.encoder encodeMessage:msg];
     }
     
     for (MQttTxFlow *flow in self.txFlows) {
-        if (flow.deadline < [NSDate date]) {
+        if ([flow.deadline compare:[NSDate date]] == NSOrderedAscending) {
             MQTTMessage *msg = [flow msg];
             flow.deadline = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT];
             [msg setDupFlag];
@@ -199,8 +206,11 @@
 {
     switch (eventCode) {
         case MQTTEncoderEventReady:
+            [self.delegate lowlevellog:self component:@"encoder" message:@"eventready" mqttmsg:nil];
+
             switch (self.status) {
                 case MQTTSessionStatusCreated:
+                    [self.delegate lowlevellog:self component:@"encoder" message:@"senddirect" mqttmsg:self.connectMessage];
                     [sender encodeMessage:self.connectMessage];
                     self.status = MQTTSessionStatusConnecting;
                     break;
@@ -210,14 +220,21 @@
                     if ([self.queue count] > 0) {
                         MQTTMessage *msg = [self.queue objectAtIndex:0];
                         [self.queue removeObjectAtIndex:0];
+                        [self.delegate lowlevellog:self component:@"encoder" message:@"senddirect" mqttmsg:msg];
                         [self.encoder encodeMessage:msg];
                     }
+                    break;
+                case MQTTSessionStatusDisconnecting:
+                    [self closeInternal];
+                    break;
+                case MQTTSessionStatusClosed:
                     break;
                 case MQTTSessionStatusError:
                     break;
             }
             break;
         case MQTTEncoderEventErrorOccurred:
+            [self.delegate lowlevellog:self component:@"encoder" message:@"eventerror" mqttmsg:nil];
             [self error:MQTTSessionEventConnectionError];
             break;
     }
@@ -228,12 +245,15 @@
     MQTTSessionEvent event;
     switch (eventCode) {
         case MQTTDecoderEventConnectionClosed:
+            [self.delegate lowlevellog:self component:@"decoder" message:@"eventconnectionclosed" mqttmsg:nil];
             event = MQTTSessionEventConnectionError;
             break;
         case MQTTDecoderEventConnectionError:
+            [self.delegate lowlevellog:self component:@"decoder" message:@"eventconnectionerror" mqttmsg:nil];
             event = MQTTSessionEventConnectionError;
             break;
         case MQTTDecoderEventProtocolError:
+            [self.delegate lowlevellog:self component:@"decoder" message:@"protocolerror" mqttmsg:nil];
             event = MQTTSessionEventProtocolError;
             break;
     }
@@ -244,6 +264,7 @@
 {
     switch (self.status) {
         case MQTTSessionStatusConnecting:
+            [self.delegate lowlevellog:self component:@"decoder" message:@"received" mqttmsg:msg];
             switch ([msg type]) {
                 case MQTTConnack:
                     if ([[msg data] length] != 2) {
@@ -272,6 +293,7 @@
             }
             break;
         case MQTTSessionStatusConnected:
+            [self.delegate lowlevellog:self component:@"decoder" message:@"received" mqttmsg:msg];
             switch ([msg type]) {
                 case MQTTPublish:
                     [self handlePublish:msg];
@@ -433,6 +455,7 @@
 
 - (void)send:(MQTTMessage*)msg {
     if ([self.encoder status] == MQTTEncoderStatusReady) {
+        [self.delegate lowlevellog:self component:@"encoder" message:@"send" mqttmsg:msg];
         [self.encoder encodeMessage:msg];
     }
     else {
