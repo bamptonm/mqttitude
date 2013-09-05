@@ -18,6 +18,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import de.greenrobot.event.EventBus;
+
+import com.bugsnag.android.Bugsnag;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -38,10 +40,15 @@ public class App extends Application {
         int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
         instance = this;
+        
+        Bugsnag.register(this, Defaults.BUGSNAG_API_KEY);
+        Bugsnag.setNotifyReleaseStages("production", "testing");
+
         EventBus.getDefault().register(this);
 
         if (resp == ConnectionResult.SUCCESS) {
             locator = new FusedLocationLocator(this);
+            Log.v(this.toString(), "Play  services version: " + GooglePlayServicesUtil.GOOGLE_PLAY_SERVICES_VERSION_CODE);
         } else {
             locator = new FusedLocationLocator(this);
             Log.e(this.toString(),  "play services not available and no other locator implemented yet ");

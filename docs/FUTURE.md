@@ -28,6 +28,7 @@ Thoughts on possible future enhancements.
   * Needs friends/family on same broker
   * Needs 'standardized' topic names (maybe with Twitter id in topic?)
 * Queue updates on device (with `tst` etc) to be PUBlished upon available connection
+* Corner-pegging [#94](https://github.com/binarybucks/mqttitude/issues/94)
 
 ## Very-long term, a.k.a. "Neat ideas"
 

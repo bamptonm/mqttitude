@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #(@)generate-CA.sh - Create CA key-pair and server key-pair signed by CA
 
 # Copyright (c) 2013 Jan-Piet Mens <jpmens()gmail.com>
@@ -41,6 +41,7 @@ SERVER=${DIR}/server
 SERVER_DN="/CN=$(hostname -f)$CA_ORG"
 keybits=2048
 openssl=$(which openssl)
+MOSQUITTOUSER=${MOSQUITTOUSER:=$USER}
 
 function maxdays() {
 	nowyear=$(date +%Y)
@@ -90,6 +91,8 @@ if [ ! -f $CACERT.crt ]; then
 
 	chmod 400 $CACERT.key
 	chmod 444 $CACERT.crt
+	chown $MOSQUITTOUSER $CACERT.*
+	echo "Warning: the CA key is not encrypted; store it safely!"
 fi
 
 if [ ! -f $SERVER.key ]; then
@@ -100,6 +103,7 @@ if [ ! -f $SERVER.key ]; then
 		-key $SERVER.key \
 		-subj "${SERVER_DN}"
 	chmod 400 $SERVER.key
+	chown $MOSQUITTOUSER $SERVER.key
 fi
 
 if [ -f $SERVER.csr -a ! -f $SERVER.crt ]; then
@@ -120,6 +124,19 @@ if [ -f $SERVER.csr -a ! -f $SERVER.crt ]; then
 	%%% # issuerAltName           = issuer:copy
 	%%% nsCaRevocationUrl       = http://mqttitude.org/carev/
 	%%% nsRevocationUrl         = http://mqttitude.org/carev/
+	%%% certificatePolicies     = ia5org,@polsection
+	%%% 
+	%%% [polsection]
+	%%% policyIdentifier	    = 1.3.5.8
+	%%% CPS.1		    = "http://localhost"
+	%%% userNotice.1	    = @notice
+	%%% 
+	%%% [notice]
+	%%% explicitText            = "This CA is for a local MQTT broker installation only"
+	%%% organization            = "MQTTitude"
+	%%% noticeNumbers           = 1
+
+
 !ENDconfig
 
 	SUBJALTNAME="$(addresslist)"
@@ -139,4 +156,5 @@ if [ -f $SERVER.csr -a ! -f $SERVER.crt ]; then
 
 	rm -f $CNF
 	chmod 444 $SERVER.crt
+	chown $MOSQUITTOUSER $SERVER.crt
 fi

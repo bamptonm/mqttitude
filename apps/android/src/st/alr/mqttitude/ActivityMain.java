@@ -6,6 +6,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import st.alr.mqttitude.preferences.ActivityPreferences;
+import st.alr.mqttitude.services.ServiceMqtt;
+import st.alr.mqttitude.support.Events;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,24 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import st.alr.mqttitude.preferences.ActivityPreferences;
-import st.alr.mqttitude.services.ServiceMqtt;
-import st.alr.mqttitude.support.Events;
-import st.alr.mqttitude.R;
-import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import de.greenrobot.event.EventBus;
 
-public class ActivityMain extends FragmentActivity {
+public class ActivityMain extends android.support.v4.app.FragmentActivity {
     MenuItem publish;
     TextView location;
     TextView statusLocator;
@@ -58,6 +57,10 @@ public class ActivityMain extends FragmentActivity {
             Intent intent1 = new Intent(this, ActivityPreferences.class);
             startActivity(intent1);
             return true;
+        }  else if (itemId == R.id.menu_status) {
+                Intent intent1 = new Intent(this, ActivityStatus.class);
+                startActivity(intent1);
+                return true;
         } else if (itemId == R.id.menu_publish) {
             App.getInstance().getLocator().publishLastKnownLocation();
             return true;
@@ -184,7 +187,7 @@ public class ActivityMain extends FragmentActivity {
                 locationPrimary.setText(a.getAddressLine(0));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // Geocoder information not available. LatLong is already shown and just not overwritten. Nothing to do here
         }
 
         
