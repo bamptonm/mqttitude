@@ -50,7 +50,7 @@ ones, or user provided ones that require a lock screen password to be set)
 
 * publishes this locations via MQTT to the configured server while in foreground and background.
 
-* The current location can be send immediately by the user.
+* The current location can be send on request.
 
 ### Configuration
 
@@ -64,22 +64,20 @@ Configuration is done via the system settings app.
 
 * If TLS is used, the server certificate needs to be distributed separately and installed on the IOS device
 
-* Data published on the server under a user-configurable `topic`.
-
-* MQTT parameters are
+* Data is published on the server under a user-configurable `topic` with
 	* QoS and
 	* Retain
 
-Within the app, subscriptions and publications are setup.
-* Switch-Off-Button to complete shut down the app, location monitoring and server publishes und subscriptions (quiet and private)
+* App listens to one subscription topic and receives publications with the specified QoS lebel
 
 ### Map Display
 
-* Displays a map with the current location and marks the last ~50 locations with timestamp, name and reverse-geocoded location
+* Displays a map with the current location and marks the last ~50 locations with timestamp and topic
 
 * Shows a button to center the map on the current location and follow the current user location
 
 * Shows a button to zoom out until all marked locations of user and friends are displayed.
+* Shows a button to exit the app. If not exited, the app continues in the background.
 
 * Connection indicator light shows current status of the MQTT server connection
   The server connection is established automatically when a new location shall be published.
@@ -88,19 +86,6 @@ Within the app, subscriptions and publications are setup.
 	* GREEN=CONNECTED, server connection established
 	* AMBER=ERROR OCCURED, WAITING FOR RECONNECT, app will automatically try to reconnect to the server
 	* RED=ERROR, no connection to the server possible or transient errror condition
-
-### Family & Friends Display
-
-* The app shows the last known location of the user and all location data on the MQTT server
-
-### Log Display
-
-* Shows a scrollable log of the 256 last log entries (publications, subscriptions, connects, etc.)
-
-### MQTT Level Log
-
-* Shows a trace of the last 256 messages on MQTT level
-
 
 ### Background Mode
 
