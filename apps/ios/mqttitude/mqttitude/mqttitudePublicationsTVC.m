@@ -1,20 +1,20 @@
 //
-//  mqttitudePublishsTVC.m
+//  mqttitudePublicationsTVC.m
 //  mqttitude
 //
 //  Created by Christoph Krey on 01.09.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
-#import "mqttitudePublishsTVC.h"
-#import "mqttitudePublishTVC.h"
+#import "mqttitudePublicationsTVC.h"
+#import "mqttitudePublicationTVC.h"
 #import "mqttitudeAppDelegate.h"
 
-@interface mqttitudePublishsTVC ()
+@interface mqttitudePublicationsTVC ()
 
 @end
 
-@implementation mqttitudePublishsTVC
+@implementation mqttitudePublicationsTVC
 
 - (void)viewDidLoad
 {
@@ -24,8 +24,8 @@
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.destinationViewController isKindOfClass:[mqttitudePublishTVC class]]) {
-        mqttitudePublishTVC *pub = (mqttitudePublishTVC *)segue.destinationViewController;
+    if ([segue.destinationViewController isKindOfClass:[mqttitudePublicationTVC class]]) {
+        mqttitudePublicationTVC *pub = (mqttitudePublicationTVC *)segue.destinationViewController;
         if ([sender isKindOfClass:[UITableViewCell class]]) {
             UITableViewCell *cell = (UITableViewCell *)sender;
             NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
@@ -53,8 +53,8 @@
 
 - (IBAction)settingsSaved:(UIStoryboardSegue *)segue
 {
-    if ([segue.sourceViewController isKindOfClass:[mqttitudePublishTVC class]]) {
-        mqttitudePublishTVC *pub = (mqttitudePublishTVC *)segue.sourceViewController;
+    if ([segue.sourceViewController isKindOfClass:[mqttitudePublicationTVC class]]) {
+        mqttitudePublicationTVC *pub = (mqttitudePublicationTVC *)segue.sourceViewController;
         NSMutableDictionary *pubs = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"pubs_preference"] mutableCopy];
         mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
 
@@ -136,7 +136,7 @@
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        [self performSegueWithIdentifier:@"publish" sender:nil];
+        [self performSegueWithIdentifier:@"publication" sender:nil];
     }
 }
 

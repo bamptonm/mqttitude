@@ -60,7 +60,7 @@
     for (Annotation *annotation in self.annotationArray) {
         if ([annotation.topic isEqualToString:self.myTopic]) {
             if (lastAnnotation) {
-                if (lastAnnotation.timeStamp < annotation.timeStamp) {
+                if ([lastAnnotation.timeStamp compare:annotation.timeStamp] == NSOrderedAscending) {
                     lastAnnotation = annotation;
                 }
             } else {

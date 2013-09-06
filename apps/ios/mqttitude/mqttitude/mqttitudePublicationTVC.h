@@ -1,5 +1,5 @@
 //
-//  mqttitudePublishTVC.h
+//  mqttitudePublicationTVC.h
 //  mqttitude
 //
 //  Created by Christoph Krey on 01.09.13.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface mqttitudePublishTVC : UITableViewController <UITextViewDelegate>
+@interface mqttitudePublicationTVC : UITableViewController <UITextViewDelegate>
 @property (strong, nonatomic) NSString *topic;
 @property (strong, nonatomic) NSString *oldTopic;
 @property (strong, nonatomic) NSData *data;

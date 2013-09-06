@@ -224,7 +224,7 @@
 			<key>Title</key>
 			<string>Credits and License</string>
 			<key>File</key>
-			<string>credits.plist</string>
+			<string>Credits</string>
 		</dict>
 		<dict>
 			<key>Type</key>

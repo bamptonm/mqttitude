@@ -1,16 +1,16 @@
 //
-//  mqttitudePublishTVC.m
+//  mqttitudePublicationTVC.m
 //  mqttitude
 //
 //  Created by Christoph Krey on 01.09.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
-#import "mqttitudePublishTVC.h"
+#import "mqttitudePublicationTVC.h"
 #import "mqttitudeQoSTVC.h"
 #import "Connection.h"
 
-@interface mqttitudePublishTVC ()
+@interface mqttitudePublicationTVC ()
 @property (weak, nonatomic) IBOutlet UITextField *UItopic;
 @property (weak, nonatomic) IBOutlet UITextView *UIdata;
 @property (weak, nonatomic) IBOutlet UITextField *UIqos;
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation mqttitudePublishTVC 
+@implementation mqttitudePublicationTVC
 
 - (void)viewDidLoad
 {

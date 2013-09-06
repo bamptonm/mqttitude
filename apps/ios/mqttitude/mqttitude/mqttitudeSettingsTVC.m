@@ -9,7 +9,7 @@
 #import "mqttitudeSettingsTVC.h"
 #import "mqttitudeQoSTVC.h"
 #import "mqttitudeSubscriptionsTVC.h"
-#import "mqttitudePublishsTVC.h"
+#import "mqttitudePublicationsTVC.h"
 #import "mqttitudeViewController.h"
 #import "mqttitudeAppDelegate.h"
 #import "mqttitudeLogTVC.h"

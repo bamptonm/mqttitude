@@ -54,7 +54,7 @@
     self.keepAliveInterval = keepAliveInterval;
     self.runLoop = runLoop;
     self.runLoopMode = runLoopMode;
-    
+   
     self.queue = [NSMutableArray array];
     self.txMsgId = 1;
     self.txFlows = [[NSMutableDictionary alloc] init];

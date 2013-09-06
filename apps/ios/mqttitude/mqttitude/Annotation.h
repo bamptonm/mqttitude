@@ -21,7 +21,6 @@
 @property (strong, nonatomic) CLPlacemark *placemark;
 @property (strong, nonatomic) NSString *topic;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
-
-
+- (void) getReverseGeoCode;
 
 @end

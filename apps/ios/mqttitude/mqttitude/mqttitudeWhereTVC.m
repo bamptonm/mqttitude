@@ -72,6 +72,7 @@
     } else {
         annotation = [self.annotations myLastAnnotation];
     }
+    [annotation getReverseGeoCode];
     cell.textLabel.text = [annotation title];
     cell.detailTextLabel.text = [annotation subtitle];
     

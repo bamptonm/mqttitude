@@ -1,5 +1,5 @@
 //
-//  mqttitudePublishsTVC.h
+//  mqttitudePublicationsTVC.h
 //  mqttitude
 //
 //  Created by Christoph Krey on 01.09.13.
@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "Connection.h"
 
-@interface mqttitudePublishsTVC : UITableViewController
+@interface mqttitudePublicationsTVC : UITableViewController
 @end

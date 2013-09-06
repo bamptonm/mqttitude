@@ -47,9 +47,9 @@
                                  @"willtopic_preference": @"loc",
                                  @"willretain_preference":@(NO),
                                  @"willqos_preference": @(1),
-                                 @"subs_preference": @{},
-                                 @"subs_preference": @{}
-                                 };
+                                 @"subs_preference": @{@"loc/#": @(0)},
+                                 @"pubs_preference": @{@"wheater/here" :@{@"QOS": @(0), @"RETAINFLAG": @(NO),@"DATA": [@"Sunny" dataUsingEncoding:NSUTF8StringEncoding]}}
+                                };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
@@ -271,15 +271,16 @@
                               @"Reserved15"
                               ];
     
-    [self.lllogs log:[NSString stringWithFormat:@"%@ %@ (%@ q%@ r%@ d%@) %@",
+    [self.lllogs log:[NSString stringWithFormat:@"%@ %@ %@",
                       component,
                       message,
-                      mqttmsg ? mqttMsgTypes[mqttmsg.type] : @"---",
-                      mqttmsg ? [NSString stringWithFormat:@"%d", mqttmsg.qos] : @"-",
-                      mqttmsg ? [NSString stringWithFormat:@"%d", mqttmsg.retainFlag] : @"-",
-                      mqttmsg ? [NSString stringWithFormat:@"%d", mqttmsg.dupFlag] : @"-",
-                      mqttmsg ? [Connection dataToString:mqttmsg.data] : @"---"]];
-}
+                      mqttmsg ? [NSString stringWithFormat:@"(%@ q%@ r%@ d%@) %@",
+                                 mqttMsgTypes[mqttmsg.type],
+                                 [NSString stringWithFormat:@"%d", mqttmsg.qos],
+                                 [NSString stringWithFormat:@"%d", mqttmsg.retainFlag],
+                                 [NSString stringWithFormat:@"%d", mqttmsg.dupFlag],
+                                 [Connection dataToString:mqttmsg.data]] : @""]];
+     }
 
 
 - (void)alert:(NSString *)message
@@ -357,6 +358,22 @@
 
 - (void)publishLocation:(CLLocation *)location
 {
+    [self.annotations addLocation:location topic:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]];
+    Annotation *annotation = [self.annotations myLastAnnotation];
+    NSString *message = [NSString stringWithFormat:@"Published %@ %@", annotation.title, annotation.subtitle];
+    [self.logs log:message];
+    [self notification:message];
+    
+    NSData *data = [self formatLocationData:location];
+    [self.connection sendData:data
+                        topic:[[NSUserDefaults standardUserDefaults]
+                               stringForKey:@"topic_preference"]
+                          qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
+                       retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+    
+    /**
+     *   In background, set timer to disconnect after 5 sec. IOS will suspend app after 10 sec.
+     **/
     
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
         self.disconnectTimer = [NSTimer timerWithTimeInterval:5.0
@@ -367,19 +384,6 @@
         [runLoop addTimer:self.disconnectTimer
                   forMode:NSDefaultRunLoopMode];
     }
-    
-    [self.annotations addLocation:location topic:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]];
-    NSData *data = [self formatLocationData:location];
-    NSString *message = [NSString stringWithFormat:@"publish: %@", [location description]];
-    [self.logs log:message];
-    [self notification:message];
-    
-    [self.connection sendData:data
-                        topic:[[NSUserDefaults standardUserDefaults]
-                               stringForKey:@"topic_preference"]
-                          qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
-                       retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
-    
 }
 
 - (void)disconnectInBackground

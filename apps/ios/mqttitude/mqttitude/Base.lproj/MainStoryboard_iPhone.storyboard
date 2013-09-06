@@ -14,7 +14,7 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DCB-8M-xaX">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="504" id="6lq-UN-CuA"/>
+                                    <constraint firstAttribute="width" constant="322" id="uCl-NW-hrt"/>
                                 </constraints>
                             </mapView>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xeY-j2-hlx" customClass="mqttitudeIndicatorView">
@@ -42,14 +42,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="DCB-8M-xaX" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="0ey-cv-ldc"/>
-                            <constraint firstItem="DCB-8M-xaX" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="7av-WU-4Gg"/>
+                            <constraint firstItem="DCB-8M-xaX" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="069-vK-51p"/>
+                            <constraint firstItem="DCB-8M-xaX" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="91Y-Jp-Gd3"/>
                             <constraint firstAttribute="trailing" secondItem="xeY-j2-hlx" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="GXU-3F-vcU"/>
                             <constraint firstItem="2fE-Ox-8iX" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="RTY-pL-ZVQ"/>
+                            <constraint firstItem="2fE-Ox-8iX" firstAttribute="top" secondItem="DCB-8M-xaX" secondAttribute="bottom" type="default" id="YJX-cj-ta0"/>
                             <constraint firstItem="2fE-Ox-8iX" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="bsy-L9-8ge"/>
                             <constraint firstItem="2fE-Ox-8iX" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="user" id="d0K-ts-vw1"/>
                             <constraint firstItem="xeY-j2-hlx" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="myL-1Q-aib"/>
-                            <constraint firstItem="DCB-8M-xaX" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="tpi-rU-Cqq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MQTTitude" id="x0N-7e-ll2">
@@ -390,7 +390,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
-                                    <segue destination="1xJ-6k-QHO" kind="push" trigger="accessoryAction" id="jMW-nZ-G2S"/>
+                                    <segue destination="1xJ-6k-QHO" kind="push" identifier="subscription" trigger="accessoryAction" id="jMW-nZ-G2S"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -619,10 +619,10 @@
             </objects>
             <point key="canvasLocation" x="3580" y="-688"/>
         </scene>
-        <!--Mqttitude PublishTVC - Publication-->
+        <!--Mqttitude PublicationTVC - Publication-->
         <scene sceneID="hvt-Ze-XFw">
             <objects>
-                <tableViewController id="fMc-NL-JO1" customClass="mqttitudePublishTVC" sceneMemberID="viewController">
+                <tableViewController id="fMc-NL-JO1" customClass="mqttitudePublicationTVC" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0sa-kw-0JI">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -639,7 +639,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Topic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z4A-yW-hTA">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="42" id="hN1-Sl-Lgw"/>
+                                                        <constraint firstAttribute="width" constant="68" id="QP3-xP-wo9"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -661,7 +661,7 @@
                                         </view>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="uIX-1Y-nnx" secondAttribute="trailing" constant="20" type="default" id="ALA-97-U4k"/>
-                                            <constraint firstItem="uIX-1Y-nnx" firstAttribute="leading" secondItem="Z4A-yW-hTA" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="E7D-eo-QzR"/>
+                                            <constraint firstItem="uIX-1Y-nnx" firstAttribute="leading" secondItem="Z4A-yW-hTA" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="VNj-XQ-tpu"/>
                                             <constraint firstItem="Z4A-yW-hTA" firstAttribute="leading" secondItem="Kgb-Ui-hZM" secondAttribute="leading" constant="20" type="default" id="Y5h-sw-sd1"/>
                                             <constraint firstItem="Z4A-yW-hTA" firstAttribute="top" secondItem="Kgb-Ui-hZM" secondAttribute="top" constant="11" id="gA9-BK-8Uo"/>
                                             <constraint firstItem="uIX-1Y-nnx" firstAttribute="centerY" secondItem="Kgb-Ui-hZM" secondAttribute="centerY" type="default" id="m3Q-0j-moT"/>
@@ -787,10 +787,10 @@
             </objects>
             <point key="canvasLocation" x="2880" y="-330"/>
         </scene>
-        <!--Mqttitude PublishsTVC - Publications-->
+        <!--Mqttitude PublicationsTVC - Publications-->
         <scene sceneID="I7t-8t-OEi">
             <objects>
-                <tableViewController id="bzc-Hw-7Hn" customClass="mqttitudePublishsTVC" sceneMemberID="viewController">
+                <tableViewController id="bzc-Hw-7Hn" customClass="mqttitudePublicationsTVC" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="v6f-Bf-nmI">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -817,7 +817,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
-                                    <segue destination="fMc-NL-JO1" kind="push" trigger="accessoryAction" id="fkg-Ho-fqp"/>
+                                    <segue destination="fMc-NL-JO1" kind="push" identifier="publication" trigger="accessoryAction" id="fkg-Ho-fqp"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -953,98 +953,12 @@
     <resources>
         <image name="mapbutton.png" width="25" height="33"/>
     </resources>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
-        </class>
-        <class className="mqttitudeIndicatorView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeIndicatorView.h"/>
-        </class>
-        <class className="mqttitudeLogTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeLogTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="action:" candidateClass="UIBarButtonItem"/>
-            </relationships>
-        </class>
-        <class className="mqttitudePublishTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudePublishTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="retainChange:" candidateClass="UISwitch"/>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="topicChange:" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIdata" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="UIqos" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIretainFlag" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItopic" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudePublishsTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudePublishsTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeQoSTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeQoSTVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="UIqos0" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="UIqos1" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="UIqos2" candidateClass="UITableViewCell"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeSettingsTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeSettingsTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="save:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="sendNow1:" candidateClass="UIButton"/>
-                <relationship kind="action" name="switchOff1:" candidateClass="UIButton"/>
-                <relationship kind="action" name="switchOff:" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="UIpublishs" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIsubscriptions" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeSubscriptionTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeSubscriptionTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="topicChange:" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIqos" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UItopic" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeSubscriptionsTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeSubscriptionsTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="action:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="showAll:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="showCenter:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="indicatorView" candidateClass="mqttitudeIndicatorView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeWhereTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeWhereTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="action:" candidateClass="UIBarButtonItem"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Kez-an-748"/>
+        <segue reference="aug-qm-Y2P"/>
     </inferredMetricsTieBreakers>
 </document>

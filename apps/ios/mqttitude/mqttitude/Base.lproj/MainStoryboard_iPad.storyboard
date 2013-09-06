@@ -124,7 +124,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="log" id="cev-tm-sZk">
-                                <rect key="frame" x="0.0" y="54" width="768" height="45"/>
+                                <rect key="frame" x="0.0" y="54" width="768" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="45" y="1" width="678" height="43"/>
@@ -174,7 +174,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="log" id="a39-qO-ZzO">
-                                <rect key="frame" x="0.0" y="54" width="768" height="45"/>
+                                <rect key="frame" x="0.0" y="54" width="768" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="45" y="1" width="678" height="43"/>
@@ -214,7 +214,7 @@
             </objects>
             <point key="canvasLocation" x="4159" y="1454"/>
         </scene>
-        <!--Mqttitude PublishsTVC - Publishs-->
+        <!--Mqttitude PublishsTVC - Publications-->
         <scene sceneID="rNK-L1-hzS">
             <objects>
                 <tableViewController id="BXn-On-maB" customClass="mqttitudePublishsTVC" sceneMemberID="viewController">
@@ -244,7 +244,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
-                                    <segue destination="VFE-6v-UgM" kind="push" identifier="publish" trigger="accessoryAction" id="mOS-4w-iNw"/>
+                                    <segue destination="VFE-6v-UgM" kind="push" identifier="publication" trigger="accessoryAction" id="mOS-4w-iNw"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -253,7 +253,7 @@
                             <outlet property="delegate" destination="BXn-On-maB" id="NlU-jf-x1A"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Publishs" id="axN-OA-Vq6"/>
+                    <navigationItem key="navigationItem" title="Publications" id="axN-OA-Vq6"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m7y-rp-dzG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -507,7 +507,7 @@
             </objects>
             <point key="canvasLocation" x="2600" y="-1580"/>
         </scene>
-        <!--Mqttitude PublishTVC - Publish-->
+        <!--Mqttitude PublishTVC - Publication-->
         <scene sceneID="812-sm-39b">
             <objects>
                 <tableViewController id="VFE-6v-UgM" customClass="mqttitudePublishTVC" sceneMemberID="viewController">
@@ -654,7 +654,7 @@
                             <outlet property="delegate" destination="VFE-6v-UgM" id="JJD-WR-n95"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Publish" id="J2n-8m-1EM">
+                    <navigationItem key="navigationItem" title="Publication" id="J2n-8m-1EM">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="wkc-eS-Ewj">
                             <connections>
                                 <segue destination="1Nx-0u-L0z" kind="unwind" unwindAction="settingsSaved:" id="Gfr-qF-vkI"/>
@@ -958,6 +958,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="umA-lO-pYQ"/>
+        <segue reference="MTi-ML-vSL"/>
     </inferredMetricsTieBreakers>
 </document>

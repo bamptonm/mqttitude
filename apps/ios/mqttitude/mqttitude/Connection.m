@@ -289,7 +289,7 @@
                                      @"RETAINFLAG": [NSString stringWithFormat:@"%d",  self.lastRetainFlag]
                                      };
         [self.fifo addObject:parameters];
-        [self connectToInternal];
+        [self connectToLast];
     } else {
 #ifdef DEBUG
         NSLog(@"Sending: %@", [Connection dataToString:self.lastData]);

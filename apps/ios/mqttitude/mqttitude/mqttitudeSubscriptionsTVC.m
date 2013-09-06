@@ -55,6 +55,10 @@
         mqttitudeSubscriptionTVC *sub = (mqttitudeSubscriptionTVC *)segue.sourceViewController;
         mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
         
+        if (delegate.connection.state != state_connected) {
+            [delegate reconnect];
+        }
+        
         NSMutableDictionary *subs = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"subs_preference"] mutableCopy];
         if (sub.oldTopic) {
             [subs removeObjectForKey:sub.oldTopic];
