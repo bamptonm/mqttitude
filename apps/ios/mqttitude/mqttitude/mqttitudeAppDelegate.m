@@ -7,12 +7,9 @@
 //
 
 #import "mqttitudeAppDelegate.h"
-#import "mqttitudeLogTVC.h"
 
 
 @interface mqttitudeAppDelegate()
-@property (strong, nonatomic) Logs *logs;
-@property (strong, nonatomic) Logs *lllogs;
 @property (strong, nonatomic) Annotations *annotations;
 @property (strong, nonatomic) NSTimer *disconnectTimer;
 
@@ -32,7 +29,9 @@
     }
 #endif
     NSDictionary *appDefaults = @{
-                                 @"topic_preference" : @"loc",
+                                  @"subscription_preference" : @"#",
+                                  @"subscriptionqos_preference": @(1),
+                                  @"topic_preference" : @"loc",
                                  @"retain_preference": @(TRUE),
                                  @"qos_preference": @(1),
                                  @"host_preference" : @"host",
@@ -47,39 +46,16 @@
                                  @"willtopic_preference": @"loc",
                                  @"willretain_preference":@(NO),
                                  @"willqos_preference": @(1),
-                                 @"subs_preference": @{@"loc/#": @(0)},
-                                 @"pubs_preference": @{@"wheater/here" :@{@"QOS": @(0), @"RETAINFLAG": @(NO),@"DATA": [@"Sunny" dataUsingEncoding:NSUTF8StringEncoding]}}
                                 };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    self.logs = [[Logs alloc] init];
-    self.lllogs = [[Logs alloc] init];
     self.annotations = [[Annotations alloc] init];
     self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
 
-    for (UIViewController *vc in [self myTabBC].viewControllers) {
-        if ([vc isKindOfClass:[UINavigationController class]]) {
-            UINavigationController *uiNC = (UINavigationController *)vc;
-            if ([uiNC.topViewController respondsToSelector:@selector(setAnnotations:)]) {
-                [uiNC.topViewController performSelector:@selector(setAnnotations:) withObject:self.annotations];
-            }
-            if ([uiNC.topViewController respondsToSelector:@selector(setLogs:)]) {
-                if (vc.tabBarItem.tag == 4) {
-                    [uiNC.topViewController performSelector:@selector(setLogs:) withObject:self.logs];
-                } else if (vc.tabBarItem.tag == 5) {
-                    [uiNC.topViewController performSelector:@selector(setLogs:) withObject:self.lllogs];
-                }
-            }
-        }
+    if ([self.window.rootViewController respondsToSelector:@selector(setAnnotations:)]) {
+        [self.window.rootViewController performSelector:@selector(setAnnotations:) withObject:self.annotations];
     }
-
-    [self.logs log:[NSString stringWithFormat:@"%@ v%@ on %@",
-                    [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
-                    [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
-                    [[[UIDevice currentDevice] identifierForVendor] UUIDString]]];
-    
-    [self.lllogs log:@"Low Level Logs"];
     
     if ([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
@@ -88,7 +64,6 @@
             [self.manager startMonitoringSignificantLocationChanges];
         } else {
             NSString *message = NSLocalizedString(@"No significant location change monitoring available", @"No significant location change monitoring available");
-            [self.logs log:message];
             [self alert:message];
         }
     } else {
@@ -96,14 +71,12 @@
         NSString *message = [NSString stringWithFormat:@"%@ %d",
                      NSLocalizedString(@"Application not authorized for CoreLocation", @"Application not authorized for CoreLocation"),
                      status];
-        [self.logs log:message];
         [self alert:message];
     }
         
     self.connection = [[Connection alloc] init];
     self.connection.delegate = self;
     
-            
     [self.connection connectTo:[[NSUserDefaults standardUserDefaults] stringForKey:@"host_preference"]
                           port:[[NSUserDefaults standardUserDefaults] integerForKey:@"port_preference"]
                            tls:[[NSUserDefaults standardUserDefaults] boolForKey:@"tls_preference"]
@@ -183,7 +156,6 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSString *message = [NSString stringWithFormat:@"locationMangager failed with Error %@", [error description]];
-    [self.logs log:message];
     [self alert:message];
 }
 
@@ -192,32 +164,15 @@
 
 - (void)showState:(NSInteger)state
 {
-    if (state == state_connected)  {
-        NSString *message = [NSString stringWithFormat:@"Connected to %@@%@:%d %@",
-                             [[NSUserDefaults standardUserDefaults] boolForKey:@"auth_preference"] ?
-                             [[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"] : @"<anonymous>",
-                             [[NSUserDefaults standardUserDefaults] stringForKey:@"host_preference"],
-                             [[NSUserDefaults standardUserDefaults] integerForKey:@"port_preference"],
-                             [[NSUserDefaults standardUserDefaults] boolForKey:@"tls_preference"] ? @"TLS" : @"PLAIN"];
-        
-        [self.logs log:message];
-    }
-        
-    for (id siblingsViewController in [self myTabBC].viewControllers) {
-        if ([siblingsViewController isKindOfClass:[UINavigationController class]]) {
-            UINavigationController *uiNC = (UINavigationController *)siblingsViewController;
-            if ([uiNC.topViewController respondsToSelector:@selector(showState:)]) {
-                id<ConnectionDelegate> cd = (id<ConnectionDelegate>)uiNC.topViewController;
-                [cd showState:state];
-            }
-        }
+    if ([self.window.rootViewController respondsToSelector:@selector(showState:)]) {
+        id<ConnectionDelegate> cd = (id<ConnectionDelegate>)self.window.rootViewController;
+        [cd showState:state];
     }
 }
 
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic
 {
     NSString *message = [NSString stringWithFormat:@"%@: %@", topic, [Connection dataToString:data]];
-    [self.logs log:[NSString stringWithFormat:@"Received: %@", message]];
     if ([topic isEqualToString:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]]) {
         // received own data
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"listento"]]) {
@@ -227,7 +182,6 @@
             [self publishLocation:self.manager.location];
         } else {
             NSString *message = NSLocalizedString(@"MQTTitude received an unknown command", @"MQTTitude received an unknown command");
-            [self.logs log:message];
             [self alert:message];
         }
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"message"]]) {
@@ -250,37 +204,6 @@
         }
     }
 }
-
-- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg
-{
-    NSArray *mqttMsgTypes = @[@"Reserved0",
-                              @"CONNECT",
-                              @"CONNACK",
-                              @"PUBLISH",
-                              @"PUBACK",
-                              @"PUBREC",
-                              @"PUBREL",
-                              @"PUBCOMP",
-                              @"SUBSCRIBE",
-                              @"SUBACK",
-                              @"UNSUBSCRIBE",
-                              @"UNSUBACK",
-                              @"PINGREQ",
-                              @"PINGRESP",
-                              @"DISCONNECT",
-                              @"Reserved15"
-                              ];
-    
-    [self.lllogs log:[NSString stringWithFormat:@"%@ %@ %@",
-                      component,
-                      message,
-                      mqttmsg ? [NSString stringWithFormat:@"(%@ q%@ r%@ d%@) %@",
-                                 mqttMsgTypes[mqttmsg.type],
-                                 [NSString stringWithFormat:@"%d", mqttmsg.qos],
-                                 [NSString stringWithFormat:@"%d", mqttmsg.retainFlag],
-                                 [NSString stringWithFormat:@"%d", mqttmsg.dupFlag],
-                                 [Connection dataToString:mqttmsg.data]] : @""]];
-     }
 
 
 - (void)alert:(NSString *)message
@@ -345,12 +268,10 @@
         data = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 /* not pretty printed */ error:&error];
         if (!data) {
             NSString *message = [NSString stringWithFormat:@"Error %@ serializing JSON Object: %@", [error description], [jsonObject description]];
-            [self.logs log:message];
             [self alert:message];
         }
     } else {
         NSString *message = [NSString stringWithFormat:@"No valid JSON Object: %@", [jsonObject description]];
-        [self.logs log:message];
         [self alert:message];
     }
     return data;
@@ -361,7 +282,6 @@
     [self.annotations addLocation:location topic:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]];
     Annotation *annotation = [self.annotations myLastAnnotation];
     NSString *message = [NSString stringWithFormat:@"Published %@ %@", annotation.title, annotation.subtitle];
-    [self.logs log:message];
     [self notification:message];
     
     NSData *data = [self formatLocationData:location];
@@ -409,17 +329,9 @@
     return [self jsonToData:jsonObject];
 }
 
-- (UITabBarController *)myTabBC
+- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg
 {
-    UITabBarController *tabBC;
-    id rootVC = self.window.rootViewController;
-    if ([rootVC isKindOfClass:[UISplitViewController class]]) {
-        UISplitViewController *splitVC = (UISplitViewController *)rootVC;
-        tabBC = [splitVC.viewControllers lastObject];
-    } else if ([rootVC isKindOfClass:[UITabBarController class]]) {
-        tabBC = (UITabBarController *)rootVC;
-    }
-    return tabBC;
+    // Nothing to do here
 }
 
 @end

@@ -10,7 +10,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "Connection.h"
-#import "Logs.h"
 #import "Annotations.h"
 
 @interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate>
@@ -22,8 +21,5 @@
 - (void)switchOff;
 - (void)sendNow;
 - (void)reconnect;
-
-//@property (weak, nonatomic) MKMapView *mapView;
-
 
 @end

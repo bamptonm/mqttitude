@@ -7,15 +7,11 @@
 //
 
 #import "mqttitudeViewController.h"
-#import "mqttitudeSettingsTVC.h"
-#import "mqttitudeLogTVC.h"
 #import "mqttitudeAppDelegate.h"
 #import "Annotation.h"
-#import "Logs.h"
 #import "mqttitudeIndicatorView.h"
 
 @interface mqttitudeViewController ()
-@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet mqttitudeIndicatorView *indicatorView;
 
@@ -53,6 +49,10 @@
 - (IBAction)action:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     [delegate sendNow];
+}
+- (IBAction)stop:(UIBarButtonItem *)sender {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+    [delegate switchOff];
 }
 
 - (IBAction)showAll:(UIBarButtonItem *)sender {
@@ -102,19 +102,19 @@
     
     switch (state) {
         case state_connected:
-            color = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5];
+            color = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:1.0];
             break;
         case state_error:
-            color = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
+            color = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0];
             break;
         case state_connecting:
         case state_closing:
-            color = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.5];
+            color = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:1.0];
             break;
         case state_starting:
         case state_exit:
         default:
-            color = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.5];
+            color = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:1.0];
             break;
     }
         
@@ -161,19 +161,6 @@
     }
 }
 
-
-#pragma SplitViewBarButtonItem
-
-- (void)setSplitViewBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-    UIToolbar *toolbar = [self toolbar];
-    NSMutableArray *toolbarItems = [toolbar.items mutableCopy];
-    if (_splitViewBarButtonItem) [toolbarItems removeObject:self.splitViewBarButtonItem];
-    if (barButtonItem) [toolbarItems insertObject:barButtonItem atIndex:0];
-    toolbar.items = toolbarItems;
-    _splitViewBarButtonItem = barButtonItem;
-    
-}
 
 
 @end

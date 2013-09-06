@@ -16,6 +16,40 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
+			<string>Subscription</string>
+			<key>Key</key>
+			<string>subscription_preference</string>
+			<key>KeyboardType</key>
+			<string>URL</string>
+			<key>DefaultValue</key>
+			<string>loc</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Subscription QoS Level</string>
+			<key>Key</key>
+			<string>subscriptionQos_preference</string>
+			<key>DefaultValue</key>
+			<string>2</string>
+			<key>Titles</key>
+			<array>
+				<string>At most once (0)</string>
+				<string>At least once (1)</string>
+				<string>Exactly once (2)</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
 			<string>Topic Name</string>
 			<key>Key</key>
 			<string>topic_preference</string>

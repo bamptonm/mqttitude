@@ -20,6 +20,7 @@
     UIRectFill(self.bounds);
     
     [[UIColor blackColor] setStroke];
+    circle.lineWidth = 5.0;
     [circle stroke];
 }
 @end

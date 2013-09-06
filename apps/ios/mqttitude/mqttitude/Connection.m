@@ -136,9 +136,7 @@
 {
     if (self.state == state_connected) {
         self.state = state_closing;
-        for (NSString *topic in [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"subs_preference"]) {
-            [self.session unsubscribeTopic:topic];
-        }
+        [self.session unsubscribeTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]];
         [self.session close];
     } else {
         self.state = state_starting;
@@ -155,22 +153,13 @@
 
 - (void)subscribe:(NSString *)topic qos:(NSInteger)qos
 {
-    NSMutableDictionary *subs = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"subs_preference"] mutableCopy];
-    [subs setObject:@(qos) forKey:topic];
-    [[NSUserDefaults standardUserDefaults]  setObject:subs forKey:@"subs_preference"];
     [self.session subscribeToTopic:topic atLevel:qos];
 }
 
 - (void)unsubscribe:(NSString *)topic
 {
-    NSMutableDictionary *subs = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"subs_preference"] mutableCopy];
-    [subs removeObjectForKey:topic];
-    [[NSUserDefaults standardUserDefaults]  setObject:subs forKey:@"subs_preference"];
-
     [self.session unsubscribeTopic:topic];
 }
-
-
 
 #pragma mark - MQtt Callback methods
 
@@ -185,11 +174,8 @@
         case MQTTSessionEventConnected:
         {
             self.state = state_connected;
-            NSDictionary *subs = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"subs_preference"];
-            for (NSString *topic in subs) {
-                NSInteger qos = [[subs objectForKey:topic] integerValue];
-                [self.session subscribeToTopic:topic atLevel:qos];
-            }
+            [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
+                                   atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
             while ([self.fifo count]) {
                 /*
                  * if there are some queued send messages, send them

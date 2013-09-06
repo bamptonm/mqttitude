@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Title</key>
+	<string>Credits and License</string>
 	<key>StringsTable</key>
 	<string>Credits</string>
-	<key>Credits and License</key>
-	<string></string>
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
@@ -14,7 +14,7 @@
 			<key>Title</key>
 			<string>MQTTitude
 
-A Google Latitude replacement that allows to upload the current location data to an own server
+A Google Latitude replacement that allows to upload the current location data to an own server.
 
 Copyright © 2013 by Christoph Krey, mqttitude.org
 

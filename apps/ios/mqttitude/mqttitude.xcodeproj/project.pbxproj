@@ -8,25 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		8406F23C17D8A78B00C463F5 /* Location.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 8406F23B17D8A78B00C463F5 /* Location.gpx */; };
-		8406F23E17D8E81000C463F5 /* mapbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8406F23D17D8E81000C463F5 /* mapbutton.png */; };
-		8406F24117D8FCCC00C463F5 /* mqttitudeSubscriptionTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8406F23F17D8FCCB00C463F5 /* mqttitudeSubscriptionTVC.m */; };
 		8414726A17C9E5F900F76EAB /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8414726917C9E5F900F76EAB /* Connection.m */; };
 		84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84502C3217D870CF00874489 /* MainStoryboard_iPad.storyboard */; };
-		84540E1E17D20B480088DF92 /* mqttitudeSubscriptionsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E1D17D20B480088DF92 /* mqttitudeSubscriptionsTVC.m */; };
-		84540E2A17D2B9610088DF92 /* mqttitudePublicationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E2917D2B9610088DF92 /* mqttitudePublicationsTVC.m */; };
-		84540E2D17D2B9780088DF92 /* mqttitudePublicationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E2C17D2B9770088DF92 /* mqttitudePublicationTVC.m */; };
-		84540E3017D2D0C60088DF92 /* mqttitudeWhereTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E2F17D2D0C60088DF92 /* mqttitudeWhereTVC.m */; };
 		84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E3217D2D1ED0088DF92 /* Annotations.m */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
 		8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8485A8A617C178AF00D3348A /* AddressBookUI.framework */; };
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19217C7B11000C47B65 /* mqttitudeIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18817C7B11000C47B65 /* mqttitudeIndicatorView.m */; };
-		84BDE19317C7B11000C47B65 /* mqttitudeLogTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18A17C7B11000C47B65 /* mqttitudeLogTVC.m */; };
-		84BDE19417C7B11000C47B65 /* mqttitudeQoSTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18C17C7B11000C47B65 /* mqttitudeQoSTVC.m */; };
-		84BDE19517C7B11000C47B65 /* mqttitudeSettingsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18E17C7B11000C47B65 /* mqttitudeSettingsTVC.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
 		84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19817C7B12C00C47B65 /* Annotation.m */; };
-		84BDE1A217C7B12C00C47B65 /* Logs.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19E17C7B12C00C47B65 /* Logs.m */; };
 		84BDE1A817C7B15F00C47B65 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1A717C7B15F00C47B65 /* icon_57x57.png */; };
 		84BDE1AA17C7B16800C47B65 /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1A917C7B16700C47B65 /* icon_114x114.png */; };
 		84BDE1B617C7B1D600C47B65 /* MQTTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE1AD17C7B1D600C47B65 /* MQTTDecoder.m */; };
@@ -56,24 +46,9 @@
 
 /* Begin PBXFileReference section */
 		8406F23B17D8A78B00C463F5 /* Location.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Location.gpx; sourceTree = "<group>"; };
-		8406F23D17D8E81000C463F5 /* mapbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapbutton.png; sourceTree = "<group>"; };
-		8406F23F17D8FCCB00C463F5 /* mqttitudeSubscriptionTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeSubscriptionTVC.m; sourceTree = "<group>"; };
-		8406F24017D8FCCB00C463F5 /* mqttitudeSubscriptionTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeSubscriptionTVC.h; sourceTree = "<group>"; };
-		8406F24317D8FDCD00C463F5 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
-		8406F24517D8FDD100C463F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
-		8406F24717D8FDD700C463F5 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPad.strings; sourceTree = "<group>"; };
-		8406F24917D8FDDB00C463F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPad.strings; sourceTree = "<group>"; };
 		8414726817C9E5F900F76EAB /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		8414726917C9E5F900F76EAB /* Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connection.m; sourceTree = "<group>"; };
 		84502C3717D870F000874489 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		84540E1C17D20B480088DF92 /* mqttitudeSubscriptionsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeSubscriptionsTVC.h; sourceTree = "<group>"; };
-		84540E1D17D20B480088DF92 /* mqttitudeSubscriptionsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeSubscriptionsTVC.m; sourceTree = "<group>"; };
-		84540E2817D2B9610088DF92 /* mqttitudePublicationsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudePublicationsTVC.h; sourceTree = "<group>"; };
-		84540E2917D2B9610088DF92 /* mqttitudePublicationsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudePublicationsTVC.m; sourceTree = "<group>"; };
-		84540E2B17D2B9770088DF92 /* mqttitudePublicationTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudePublicationTVC.h; sourceTree = "<group>"; };
-		84540E2C17D2B9770088DF92 /* mqttitudePublicationTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudePublicationTVC.m; sourceTree = "<group>"; };
-		84540E2E17D2D0C60088DF92 /* mqttitudeWhereTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeWhereTVC.h; sourceTree = "<group>"; };
-		84540E2F17D2D0C60088DF92 /* mqttitudeWhereTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeWhereTVC.m; sourceTree = "<group>"; };
 		84540E3117D2D1ED0088DF92 /* Annotations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotations.h; sourceTree = "<group>"; };
 		84540E3217D2D1ED0088DF92 /* Annotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotations.m; sourceTree = "<group>"; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -82,18 +57,10 @@
 		84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAppDelegate.m; sourceTree = "<group>"; };
 		84BDE18717C7B11000C47B65 /* mqttitudeIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeIndicatorView.h; sourceTree = "<group>"; };
 		84BDE18817C7B11000C47B65 /* mqttitudeIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeIndicatorView.m; sourceTree = "<group>"; };
-		84BDE18917C7B11000C47B65 /* mqttitudeLogTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeLogTVC.h; sourceTree = "<group>"; };
-		84BDE18A17C7B11000C47B65 /* mqttitudeLogTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeLogTVC.m; sourceTree = "<group>"; };
-		84BDE18B17C7B11000C47B65 /* mqttitudeQoSTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeQoSTVC.h; sourceTree = "<group>"; };
-		84BDE18C17C7B11000C47B65 /* mqttitudeQoSTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeQoSTVC.m; sourceTree = "<group>"; };
-		84BDE18D17C7B11000C47B65 /* mqttitudeSettingsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeSettingsTVC.h; sourceTree = "<group>"; };
-		84BDE18E17C7B11000C47B65 /* mqttitudeSettingsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeSettingsTVC.m; sourceTree = "<group>"; };
 		84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeViewController.h; sourceTree = "<group>"; };
 		84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeViewController.m; sourceTree = "<group>"; };
 		84BDE19717C7B12C00C47B65 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
 		84BDE19817C7B12C00C47B65 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
-		84BDE19D17C7B12C00C47B65 /* Logs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; };
-		84BDE19E17C7B12C00C47B65 /* Logs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logs.m; sourceTree = "<group>"; };
 		84BDE1A717C7B15F00C47B65 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
 		84BDE1A917C7B16700C47B65 /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x114.png; sourceTree = "<group>"; };
 		84BDE1AC17C7B1D600C47B65 /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
@@ -174,7 +141,6 @@
 				84BDE1A717C7B15F00C47B65 /* icon_57x57.png */,
 				84BDE1C317C7B46F00C47B65 /* icon_72x72.png */,
 				84BDE1C417C7B46F00C47B65 /* icon_144x144.png */,
-				8406F23D17D8E81000C463F5 /* mapbutton.png */,
 				84BDE1BB17C7B3B800C47B65 /* iTunesArtwork */,
 				84BDE1BC17C7B3B800C47B65 /* iTunesArtwork.png */,
 				84BDE1BD17C7B3B800C47B65 /* iTunesArtwork@2x */,
@@ -218,30 +184,12 @@
 				84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */,
 				84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */,
 				84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */,
-				84BDE18D17C7B11000C47B65 /* mqttitudeSettingsTVC.h */,
-				84BDE18E17C7B11000C47B65 /* mqttitudeSettingsTVC.m */,
-				84540E2817D2B9610088DF92 /* mqttitudePublicationsTVC.h */,
-				84540E2917D2B9610088DF92 /* mqttitudePublicationsTVC.m */,
-				84540E2B17D2B9770088DF92 /* mqttitudePublicationTVC.h */,
-				84540E2C17D2B9770088DF92 /* mqttitudePublicationTVC.m */,
-				8406F23F17D8FCCB00C463F5 /* mqttitudeSubscriptionTVC.m */,
-				8406F24017D8FCCB00C463F5 /* mqttitudeSubscriptionTVC.h */,
-				84540E1C17D20B480088DF92 /* mqttitudeSubscriptionsTVC.h */,
-				84540E1D17D20B480088DF92 /* mqttitudeSubscriptionsTVC.m */,
-				84BDE18917C7B11000C47B65 /* mqttitudeLogTVC.h */,
-				84BDE18A17C7B11000C47B65 /* mqttitudeLogTVC.m */,
-				84BDE18B17C7B11000C47B65 /* mqttitudeQoSTVC.h */,
-				84BDE18C17C7B11000C47B65 /* mqttitudeQoSTVC.m */,
 				84BDE19717C7B12C00C47B65 /* Annotation.h */,
 				84BDE19817C7B12C00C47B65 /* Annotation.m */,
 				84540E3117D2D1ED0088DF92 /* Annotations.h */,
 				84540E3217D2D1ED0088DF92 /* Annotations.m */,
 				8414726817C9E5F900F76EAB /* Connection.h */,
 				8414726917C9E5F900F76EAB /* Connection.m */,
-				84540E2E17D2D0C60088DF92 /* mqttitudeWhereTVC.h */,
-				84540E2F17D2D0C60088DF92 /* mqttitudeWhereTVC.m */,
-				84BDE19D17C7B12C00C47B65 /* Logs.h */,
-				84BDE19E17C7B12C00C47B65 /* Logs.m */,
 				84BDE18717C7B11000C47B65 /* mqttitudeIndicatorView.h */,
 				84BDE18817C7B11000C47B65 /* mqttitudeIndicatorView.m */,
 				84F93C0517C029580060E809 /* Localizable.strings */,
@@ -333,7 +281,6 @@
 				84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */,
 				84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */,
 				8406F23C17D8A78B00C463F5 /* Location.gpx in Resources */,
-				8406F23E17D8E81000C463F5 /* mapbutton.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,24 +294,15 @@
 				84CF9A1517BEED5B00E1333C /* main.m in Sources */,
 				84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */,
 				84BDE19217C7B11000C47B65 /* mqttitudeIndicatorView.m in Sources */,
-				84BDE19317C7B11000C47B65 /* mqttitudeLogTVC.m in Sources */,
-				84BDE19417C7B11000C47B65 /* mqttitudeQoSTVC.m in Sources */,
-				84BDE19517C7B11000C47B65 /* mqttitudeSettingsTVC.m in Sources */,
 				84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */,
 				84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */,
-				84BDE1A217C7B12C00C47B65 /* Logs.m in Sources */,
 				84BDE1B617C7B1D600C47B65 /* MQTTDecoder.m in Sources */,
 				84BDE1B717C7B1D600C47B65 /* MQTTEncoder.m in Sources */,
 				84BDE1B817C7B1D600C47B65 /* MQTTMessage.m in Sources */,
 				84BDE1B917C7B1D600C47B65 /* MQTTSession.m in Sources */,
 				84BDE1BA17C7B1D600C47B65 /* MQttTxFlow.m in Sources */,
 				8414726A17C9E5F900F76EAB /* Connection.m in Sources */,
-				84540E1E17D20B480088DF92 /* mqttitudeSubscriptionsTVC.m in Sources */,
-				84540E2A17D2B9610088DF92 /* mqttitudePublicationsTVC.m in Sources */,
-				84540E2D17D2B9780088DF92 /* mqttitudePublicationTVC.m in Sources */,
-				84540E3017D2D0C60088DF92 /* mqttitudeWhereTVC.m in Sources */,
 				84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */,
-				8406F24117D8FCCC00C463F5 /* mqttitudeSubscriptionTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,8 +313,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				84502C3717D870F000874489 /* Base */,
-				8406F24717D8FDD700C463F5 /* de */,
-				8406F24917D8FDDB00C463F5 /* en */,
 			);
 			name = MainStoryboard_iPad.storyboard;
 			sourceTree = "<group>";
@@ -385,8 +321,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				84F93C0417C028690060E809 /* Base */,
-				8406F24317D8FDCD00C463F5 /* de */,
-				8406F24517D8FDD100C463F5 /* en */,
 			);
 			name = MainStoryboard_iPhone.storyboard;
 			sourceTree = "<group>";
