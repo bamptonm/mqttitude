@@ -1,5 +1,9 @@
 # Changelog: iOS app
 
+### 2013-09-05 version 2.1
+
+* Reverse-geo performed in Friends&Family only
+
 ### 2013-09-05 version 2.0
 
 * Configuration in System Settings
