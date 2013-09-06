@@ -19,7 +19,6 @@
 
 @interface Logs : NSObject
 @property (weak, nonatomic) id<LogsDelegate> delegate;
-- (Logs *)initWithName:(NSString *)name;
 - (void)log:(NSString *)message;
 - (NSString *)elementAtPosition:(NSInteger)pos;
 - (NSInteger)count;

@@ -48,15 +48,13 @@
                                  @"willretain_preference":@(NO),
                                  @"willqos_preference": @(1),
                                  @"subs_preference": @{},
-                                 @"subs_preference": @{},
-                                 @"logs_preference": @[],
-                                 @"llogs_preference": @[]
+                                 @"subs_preference": @{}
                                  };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    self.logs = [[Logs alloc] initWithName:@"logs_preference"];
-    self.lllogs = [[Logs alloc] initWithName:@"llogs_preference"];
+    self.logs = [[Logs alloc] init];
+    self.lllogs = [[Logs alloc] init];
     self.annotations = [[Annotations alloc] init];
     self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
 

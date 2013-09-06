@@ -10,27 +10,14 @@
 
 @interface Logs()
 @property (strong, nonatomic) NSMutableArray *logArray;
-@property (strong, nonatomic) NSString *name;
 @end
 
 @implementation Logs
 
-- (Logs *)initWithName:(NSString *)name
-{
-    self = [super init];
-    _name = name;
-    return self;
-}
-
 - (NSMutableArray *)logArray
 {
     if (!_logArray) {
-        if (self.name) {
-            _logArray =  [[[NSUserDefaults standardUserDefaults] arrayForKey:self.name] mutableCopy];
-        }
-        if (!_logArray) {
-            _logArray = [[NSMutableArray alloc] init];
-        }
+        _logArray = [[NSMutableArray alloc] init];
     }
     return _logArray;
 }
@@ -56,9 +43,6 @@
     if ([self.logArray count] > MAX_LOGS) {
         [self.logArray removeLastObject];
         [self.delegate remove:self at:MAX_LOGS];
-    }
-    if (self.name){
-        [[NSUserDefaults standardUserDefaults] setObject:self.logArray forKey:self.name];
     }
     [self.delegate changed:self];
 }
