@@ -19,24 +19,24 @@
                             </navigationBar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4V6-lN-umV">
                                 <items>
-                                    <barButtonItem systemItem="stop" id="MgA-Nt-u2G">
+                                    <barButtonItem image="exit.png" id="MgA-Nt-u2G">
                                         <connections>
                                             <action selector="stop:" destination="fbj-fn-YPj" id="Hm1-8D-4no"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="BJ4-uw-hPi"/>
-                                    <barButtonItem systemItem="play" id="XS8-Ph-iJD">
+                                    <barButtonItem image="center.png" id="XS8-Ph-iJD">
                                         <connections>
                                             <action selector="showCenter:" destination="fbj-fn-YPj" id="vtD-Bl-QJQ"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="bookmarks" id="43d-7m-lPM">
+                                    <barButtonItem image="friends.png" id="43d-7m-lPM">
                                         <connections>
                                             <action selector="showAll:" destination="fbj-fn-YPj" id="dTd-Ya-SHy"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="bAa-Px-smi"/>
-                                    <barButtonItem systemItem="action" id="CKU-jv-ez1">
+                                    <barButtonItem image="send.png" id="CKU-jv-ez1">
                                         <connections>
                                             <action selector="action:" destination="fbj-fn-YPj" id="Ydu-vR-eSa"/>
                                         </connections>
@@ -78,6 +78,12 @@
             <point key="canvasLocation" x="-937" y="-4731"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="center.png" width="20" height="20"/>
+        <image name="exit.png" width="20" height="20"/>
+        <image name="friends.png" width="20" height="20"/>
+        <image name="send.png" width="20" height="20"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

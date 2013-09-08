@@ -145,6 +145,14 @@
 #endif
 }
 
+- (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification {
+#ifdef DEBUG
+    NSLog(@"didReceiveLocalNotification");
+#endif
+
+    [self alert:notification.alertBody];
+}
+
 #pragma CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
@@ -186,7 +194,6 @@
         }
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"message"]]) {
         [self notification:message];
-        [self alert:message];
     } else {
         // received other data
         NSError *error;
