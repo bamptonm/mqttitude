@@ -15,12 +15,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MQTTMessage : NSObject {
-    UInt8    type;
-    UInt8    qos;
-    BOOL     retainFlag;
-    BOOL     dupFlag;
-}
+@interface MQTTMessage : NSObject
+@property (nonatomic)    UInt8    type;
+@property (nonatomic)    UInt8    qos;
+@property (nonatomic)    BOOL     retainFlag;
+@property (nonatomic)    BOOL     dupFlag;
 
 enum {
     MQTTConnect = 1,
@@ -88,9 +87,6 @@ enum {
            dupFlag:(BOOL)aDupFlag
               data:(NSData*)aData;
 - (void)setDupFlag;
-- (UInt8)type;
-- (UInt8)qos;
-- (BOOL)retainFlag;
 - (BOOL)isDuplicate;
 @property (strong,nonatomic) NSData * data;
 

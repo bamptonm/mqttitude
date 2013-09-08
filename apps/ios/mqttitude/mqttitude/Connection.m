@@ -9,36 +9,37 @@
 #import "Connection.h"
 
 @interface Connection()
+
+@property (nonatomic) NSInteger state;
+
 @property (strong, nonatomic) NSTimer *reconnectTimer;
 @property (nonatomic) float reconnectTime;
-@property (nonatomic) NSInteger state;
 
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) NSMutableArray *fifo;
 
+@property (strong, nonatomic) NSData *lastData;
+@property (strong, nonatomic) NSString *lastTopic;
+@property (nonatomic) NSInteger lastQos;
+@property (nonatomic) BOOL lastRetainFlag;
 
-@property (strong, nonatomic) NSString *host;
-@property (strong, nonatomic) NSString *user;
-@property (strong, nonatomic) NSString *pass;
-@property (strong, nonatomic) NSString *topic;
-@property (strong, nonatomic) NSString *willTopic;
-@property (strong, nonatomic) NSData *willMessage;
-@property (nonatomic) BOOL tls;
-@property (nonatomic) BOOL auth;
-@property (nonatomic) NSInteger port;
-@property (nonatomic) BOOL retainFlag;
-@property (nonatomic) NSInteger qos;
+@property (strong, nonatomic) NSString *lastHost;
+@property (nonatomic) NSInteger lastPort;
+@property (nonatomic) BOOL lastTls;
+@property (nonatomic) BOOL lastAuth;
+@property (strong, nonatomic) NSString *lastUser;
+@property (strong, nonatomic) NSString *lastPass;
+
+@property (strong, nonatomic) NSData *lastWill;
+@property (strong, nonatomic) NSString *lastWillTopic;
+@property (nonatomic) BOOL lastClean;
+@property (nonatomic) BOOL lastWillRetainFlag;
+@property (nonatomic) NSInteger lastKeepalive;
+@property (nonatomic) NSInteger lastWillQos;
+
+
 
 @end
-
-enum state {
-    state_starting,
-    state_connecting,
-    state_error,
-    state_connected,
-    state_closing,
-    state_exit
-};
 
 #define RECONNECT_TIMER 1.0
 #define RECONNECT_TIMER_MAX 300.0
@@ -56,36 +57,10 @@ enum state {
 {
     _state = state;
 #ifdef DEBUG
-    NSLog(@"Connection thread state:%d", self.state);
+    NSLog(@"Connection state:%d", self.state);
 #endif
-    [self showIndicator];
+    [self.delegate showState:self.state];
 }
-
-- (void)showIndicator
-{
-    NSInteger indicator;
-    
-    switch (self.state) {
-        case state_connected:
-            indicator = indicator_green;
-            break;
-        case state_error:
-            indicator = indicator_red;
-            break;
-        case state_connecting:
-        case state_closing:
-            indicator = indicator_amber;
-            break;
-        case state_starting:
-        case state_exit:
-        default:
-            indicator = indicator_idle;
-            break;
-    }
-    
-    [self.delegate showIndicator:indicator];
-}
-
 
 - (NSArray *)fifo
 {
@@ -116,50 +91,52 @@ enum state {
 #define OTHERS @"#"
 #define MQTT_KEEPALIVE 60
 
-- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will
+- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls keepalive:(NSInteger)keepalive auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will willQos:(NSInteger)willQos willRetainFlag:(BOOL)willRetainFlag
 {
-    self.host = host;
-    self.port = port;
-    self.tls = tls;
-    self.auth = auth;
-    self.user = user;
-    self.pass = pass;
-    self.willTopic = willTopic;
-    self.topic = willTopic;
-    self.willMessage = will;
+    self.lastHost = host;
+    self.lastPort = port;
+    self.lastTls = tls;
+    self.lastKeepalive = keepalive;
+    self.lastAuth = auth;
+    self.lastUser = user;
+    self.lastPass = pass;
+    self.lastWillTopic = willTopic;
+    self.lastWill = will;
+    self.lastWillQos = willQos;
+    self.lastWillRetainFlag = willRetainFlag;
     
     self.reconnectTime = RECONNECT_TIMER;
     
     [self connectToInternal];
 }
 
-- (void)connectToInternal
+- (void)connectToLast
 {
-    if (self.state == state_starting) {
-        self.state = state_connecting;
-        NSString *clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-        
-        self.session = [[MQTTSession alloc] initWithClientId:clientId userName:self.auth ? self.user : @"" password:self.auth ? self.pass : @"" keepAlive:MQTT_KEEPALIVE cleanSession:YES
-                                                   willTopic:self.willTopic willMsg:self.willMessage willQoS:1 willRetainFlag:NO runLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [self.session setDelegate:self];
-        [self.session connectToHost:self.host
-                               port:self.port
-                           usingSSL:self.tls];
-        [self.session subscribeToTopic:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO] atLevel:1];
-        [self.session subscribeToTopic:[NSString stringWithFormat:OTHERS] atLevel:1];
-    } else {
-        NSLog(@"MQTTitude not starting, can't connect");
-    }
+    self.reconnectTime = RECONNECT_TIMER;
+    
+    [self connectToInternal];
 }
 
+- (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
+{
+    self.lastData = data;
+    self.lastTopic = topic;
+    self.lastQos = qos;
+    self.lastRetainFlag = retainFlag;
+    
+    [self sendInternal];
+}
 
+- (void)sendDataAsLast
+{
+    [self sendInternal];
+}
 
 - (void)disconnect
 {
     if (self.state == state_connected) {
         self.state = state_closing;
-        [self.session unsubscribeTopic:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO]];
-        [self.session unsubscribeTopic:[NSString stringWithFormat:OTHERS]];
+        [self.session unsubscribeTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]];
         [self.session close];
     } else {
         self.state = state_starting;
@@ -174,7 +151,15 @@ enum state {
     self.state = state_exit;
 }
 
+- (void)subscribe:(NSString *)topic qos:(NSInteger)qos
+{
+    [self.session subscribeToTopic:topic atLevel:qos];
+}
 
+- (void)unsubscribe:(NSString *)topic
+{
+    [self.session unsubscribeTopic:topic];
+}
 
 #pragma mark - MQtt Callback methods
 
@@ -187,7 +172,10 @@ enum state {
     [self.reconnectTimer invalidate];
     switch (eventCode) {
         case MQTTSessionEventConnected:
+        {
             self.state = state_connected;
+            [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
+                                   atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
             while ([self.fifo count]) {
                 /*
                  * if there are some queued send messages, send them
@@ -199,6 +187,7 @@ enum state {
             break;
             self.state = state_error;
             break;
+        }
         case MQTTSessionEventConnectionClosed:
             self.state = state_starting;
             break;
@@ -236,39 +225,69 @@ enum state {
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic
 {
 #ifdef DEBUG
-    NSLog(@"Received %@ %@", topic, [self dataToString:data]);
+    NSLog(@"Received %@ %@", topic, [Connection dataToString:data]);
 #endif
     [self.delegate handleMessage:data onTopic:topic];
 }
 
-
-- (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
+- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg
 {
-    self.topic = topic;
-    self.qos = qos;
-    self.retainFlag = retainFlag;
-    
+    [self.delegate lowlevellog:session component:component message:message mqttmsg:mqttmsg];
+}
+
+- (void)connectToInternal
+{
+    if (self.state == state_starting) {
+        self.state = state_connecting;
+        
+        self.session = [[MQTTSession alloc] initWithClientId:[[[UIDevice currentDevice] identifierForVendor] UUIDString]
+                                                    userName:self.lastAuth ? self.lastUser : @""
+                                                    password:self.lastAuth ? self.lastPass : @""
+                                                   keepAlive:self.lastKeepalive
+                                                cleanSession:self.lastClean
+                                                   willTopic:self.lastWillTopic
+                                                     willMsg:self.lastWill
+                                                     willQoS:self.lastWillQos
+                                              willRetainFlag:self.lastWillRetainFlag
+                                                     runLoop:[NSRunLoop currentRunLoop]
+                                                     forMode:NSDefaultRunLoopMode];
+        [self.session setDelegate:self];
+        [self.session connectToHost:self.lastHost
+                               port:self.lastPort
+                           usingSSL:self.lastTls];
+    } else {
+        NSLog(@"MQTTitude not starting, can't connect");
+    }
+}
+
+
+
+- (void)sendInternal
+{    
     if (self.state != state_connected) {
 #ifdef DEBUG
         NSLog(@"into fifo");
 #endif
         NSDictionary *parameters = @{
-                                     @"DATA": data,
-                                     @"TOPIC": topic,
-                                     @"QOS": [NSString stringWithFormat:@"%d",  qos],
-                                     @"RETAINFLAG": [NSString stringWithFormat:@"%d",  retainFlag]
+                                     @"DATA": self.lastData,
+                                     @"TOPIC": self.lastTopic,
+                                     @"QOS": [NSString stringWithFormat:@"%d",  self.lastQos],
+                                     @"RETAINFLAG": [NSString stringWithFormat:@"%d",  self.lastRetainFlag]
                                      };
         [self.fifo addObject:parameters];
-        [self connectToInternal];
+        [self connectToLast];
     } else {
 #ifdef DEBUG
-        NSLog(@"Sending: %@", [self dataToString:data]);
+        NSLog(@"Sending: %@", [Connection dataToString:self.lastData]);
 #endif
-        [self.session publishData:data onTopic:topic retain:retainFlag qos:qos];
+        [self.session publishData:self.lastData
+                          onTopic:self.lastTopic
+                           retain:self.lastRetainFlag
+                              qos:self.lastQos];
     }
 }
 
-- (NSString *)dataToString:(NSData *)data
++ (NSString *)dataToString:(NSData *)data
 {
     /* the following lines are necessary to convert data which is possibly not null-terminated into a string */
     NSString *message = [[NSString alloc] init];
@@ -279,5 +298,7 @@ enum state {
     }
     return message;
 }
+
+
 
 @end

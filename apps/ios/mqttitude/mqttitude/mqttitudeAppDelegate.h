@@ -8,10 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
+#import "Connection.h"
+#import "Annotations.h"
 
-@interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate>
+@interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (weak, nonatomic) CLLocationManager *manager;
+@property (strong, nonatomic) CLLocationManager *manager;
+@property (strong, nonatomic) Connection *connection;
+
+- (void)switchOff;
+- (void)sendNow;
+- (void)reconnect;
 
 @end

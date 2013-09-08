@@ -21,6 +21,8 @@ typedef enum {
     MQTTSessionStatusCreated,
     MQTTSessionStatusConnecting,
     MQTTSessionStatusConnected,
+    MQTTSessionStatusDisconnecting,
+    MQTTSessionStatusClosed,
     MQTTSessionStatusError
 } MQTTSessionStatus;
 
@@ -38,6 +40,7 @@ typedef enum {
 
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode;
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic;
+- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg;
 
 @end
 

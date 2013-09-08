@@ -15,13 +15,12 @@
     UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:self.bounds];
     
     [circle addClip];
-    
-    self.alpha = 0.5;
-    
+        
     [self.color setFill];
     UIRectFill(self.bounds);
     
-    [self.color setStroke];
+    [[UIColor blackColor] setStroke];
+    circle.lineWidth = 5.0;
     [circle stroke];
 }
 @end

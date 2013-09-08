@@ -191,13 +191,13 @@
 }
 
 - (id)initWithType:(UInt8)aType {
-    type = aType;
-    self.data = nil;
+    _type = aType;
+    _data = nil;
     return self;
 }
 
 - (id)initWithType:(UInt8)aType data:(NSData*)aData {
-    type = aType;
+    _type = aType;
     self.data = aData;
     return self;
 }
@@ -205,9 +205,9 @@
 - (id)initWithType:(UInt8)aType
                qos:(UInt8)aQos
               data:(NSData*)aData {
-    type = aType;
-    qos = aQos;
-    self.data = aData;
+    _type = aType;
+    _qos = aQos;
+    _data = aData;
     return self;
 }
 
@@ -216,32 +216,22 @@
         retainFlag:(BOOL)aRetainFlag
            dupFlag:(BOOL)aDupFlag
               data:(NSData*)aData {
-    type = aType;
-    qos = aQos;
-    retainFlag = aRetainFlag;
-    dupFlag = aDupFlag;
-    self.data = aData;
+    _type = aType;
+    _qos = aQos;
+    _retainFlag = aRetainFlag;
+    _dupFlag = aDupFlag;
+    _data = aData;
     return self;
 }
 
-- (void)setDupFlag {
-    dupFlag = true;
+- (void)setDupFlag
+{
+    _dupFlag = TRUE;
 }
 
-- (UInt8)type {
-    return type;
-}
-
-- (UInt8)qos {
-    return qos;
-}
-
-- (BOOL)retainFlag {
-    return retainFlag;
-}
-
-- (BOOL)isDuplicate {
-    return dupFlag;
+- (BOOL)isDuplicate
+{
+    return _dupFlag;
 }
 
 

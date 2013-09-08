@@ -45,18 +45,16 @@ ones, or user provided ones that require a lock screen password to be set)
 
 * Runs on iPhones running IOS >=6.1 (3GS, 4, 4S, 5) and iPads running IOS >=6.1 as an iPhone app. Not tested on iPods yet.
 
-* Monitors "significant location changes" as define by Apple Inc (about 5 minutes and
+* Monitors "significant location changes" as define by Apple Inc (about 5 minutes AND 
   "significant location changes" (>500m))
 
-* Displays a map with the current location and marks the last ~50 locations with timestamp, name and reverse-geocoded location
+* publishes this locations via MQTT to the configured server while in foreground and background.
 
-* Shows the well-known map-user-tracking-button
+* The current location can be send on request.
 
-* Shows a button to explicitly mark the current location on the map and...
+### Configuration
 
-* ... publish this location via MQTT to the configured server
-
-* All configration parameters are accessible via the settings-button
+Configuration is done via the system settings app.
 
 * MQTT server is configured by 
 	* specifying hostname/ip-address,
@@ -66,33 +64,38 @@ ones, or user provided ones that require a lock screen password to be set)
 
 * If TLS is used, the server certificate needs to be distributed separately and installed on the IOS device
 
-* Data published on the server lablelled with a user-configurable `topic`. The data in JSON format contains
-	* a timestamp
-	* longitude and latitude and horizontal accuracy
-	* altitude and vertical accuracy
-	* velocity and direction
-
-* MQTT parameters are
+* Data is published on the server under a user-configurable `topic` with
 	* QoS and
 	* Retain
 
-* Scrollable log of last 50 locations published on the map
+* App listens to one subscription topic and receives publications with the specified QoS lebel
+
+### Map Display
+
+* Displays a map with the current location and marks the last ~50 locations with timestamp and topic
+
+* Shows a button to center the map on the current location and follow the current user location
+
+* Shows a button to zoom out until all marked locations of user and friends are displayed.
+* Shows a button to exit the app. If not exited, the app continues in the background.
 
 * Connection indicator light shows current status of the MQTT server connection
-  The server connection is established automatically when a new location shall be published. In order to save 
-  battery power, the connection is closed after 15 seconds to save enery on the IOS device.
-	* BLUE=IDLE, no connection established to save battery power
+  The server connection is established automatically when a new location shall be published.
+  When the applicationo is moved to background, the connection is disconnected.
+	* BLUE=IDLE, no connection established
 	* GREEN=CONNECTED, server connection established
 	* AMBER=ERROR OCCURED, WAITING FOR RECONNECT, app will automatically try to reconnect to the server
-	* RED=ERROR, no to the server possible or transient errror condition
+	* RED=ERROR, no connection to the server possible or transient errror condition
 
-* Stop-Button to complete shut down the app, location monitoring and server publishes und subscriptions (quiet and private)
+### Background Mode
 
-* Application supports a background-mode
-	* "significant location changes" are automatically published to the MQTT server
-	* app listens to commands published by the server on topic <my topic>/listento. commands defined are
+The Application supports background-mode
+* "significant location changes" are automatically published to the MQTT server
+* If connected the listens to 
+	* commands published by the server on topic <my topic>/listento. commands defined are
 		* `publish`: app publishes current location immediately to the server
 		* ...
-	* app listens to all published locations of other devices and displays the last location published per device on it's map
-	* app shows an application badge indicating the number of other device's loctions on it's map
-	* app connects once per hour to collect commands or other device's locations
+	* published locations of other devices and displays the last location published per device on it's map
+* app shows an application badge indicating the number of other device's loctions on it's map
+* app shows notifications (in notification center) when publishing the user's location
+* 
