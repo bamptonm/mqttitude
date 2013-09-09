@@ -29,6 +29,7 @@
     }
 #endif
     NSDictionary *appDefaults = @{
+                                  @"clientid_preference" : [UIDevice currentDevice].name,
                                   @"subscription_preference" : @"#",
                                   @"subscriptionqos_preference": @(1),
                                   @"topic_preference" : @"loc",
