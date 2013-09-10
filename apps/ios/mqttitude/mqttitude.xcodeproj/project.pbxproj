@@ -12,6 +12,10 @@
 		84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84502C3217D870CF00874489 /* MainStoryboard_iPad.storyboard */; };
 		84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E3217D2D1ED0088DF92 /* Annotations.m */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
+		846BD30117DDEBD5006AF798 /* center.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FD17DDEBD5006AF798 /* center.png */; };
+		846BD30217DDEBD5006AF798 /* exit.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FE17DDEBD5006AF798 /* exit.png */; };
+		846BD30317DDEBD5006AF798 /* friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FF17DDEBD5006AF798 /* friends.png */; };
+		846BD30417DDEBD5006AF798 /* send.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD30017DDEBD5006AF798 /* send.png */; };
 		8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8485A8A617C178AF00D3348A /* AddressBookUI.framework */; };
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19217C7B11000C47B65 /* mqttitudeIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18817C7B11000C47B65 /* mqttitudeIndicatorView.m */; };
@@ -52,6 +56,10 @@
 		84540E3117D2D1ED0088DF92 /* Annotations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotations.h; sourceTree = "<group>"; };
 		84540E3217D2D1ED0088DF92 /* Annotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotations.m; sourceTree = "<group>"; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		846BD2FD17DDEBD5006AF798 /* center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = center.png; sourceTree = "<group>"; };
+		846BD2FE17DDEBD5006AF798 /* exit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exit.png; sourceTree = "<group>"; };
+		846BD2FF17DDEBD5006AF798 /* friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends.png; sourceTree = "<group>"; };
+		846BD30017DDEBD5006AF798 /* send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = send.png; sourceTree = "<group>"; };
 		8485A8A617C178AF00D3348A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAppDelegate.h; sourceTree = "<group>"; };
 		84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAppDelegate.m; sourceTree = "<group>"; };
@@ -141,6 +149,10 @@
 				84BDE1A717C7B15F00C47B65 /* icon_57x57.png */,
 				84BDE1C317C7B46F00C47B65 /* icon_72x72.png */,
 				84BDE1C417C7B46F00C47B65 /* icon_144x144.png */,
+				846BD2FD17DDEBD5006AF798 /* center.png */,
+				846BD2FE17DDEBD5006AF798 /* exit.png */,
+				846BD2FF17DDEBD5006AF798 /* friends.png */,
+				846BD30017DDEBD5006AF798 /* send.png */,
 				84BDE1BB17C7B3B800C47B65 /* iTunesArtwork */,
 				84BDE1BC17C7B3B800C47B65 /* iTunesArtwork.png */,
 				84BDE1BD17C7B3B800C47B65 /* iTunesArtwork@2x */,
@@ -281,6 +293,10 @@
 				84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */,
 				84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */,
 				8406F23C17D8A78B00C463F5 /* Location.gpx in Resources */,
+				846BD30117DDEBD5006AF798 /* center.png in Resources */,
+				846BD30217DDEBD5006AF798 /* exit.png in Resources */,
+				846BD30317DDEBD5006AF798 /* friends.png in Resources */,
+				846BD30417DDEBD5006AF798 /* send.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

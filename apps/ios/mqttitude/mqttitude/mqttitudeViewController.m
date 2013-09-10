@@ -93,7 +93,26 @@
 
 - (void)changed:(NSArray *)annotations
 {
-    [self.mapView addAnnotations:annotations];
+    /**
+     * remove all annnotations no longer in the annotions array from the map
+     * with the exception of the current user location
+     **/
+    for (id a in self.mapView.annotations) {
+        if (![a isKindOfClass:[MKUserLocation class]]) {
+            if (![annotations containsObject:a]) {
+                [self.mapView removeAnnotation:a];
+            }
+        }
+    }
+    
+    /**
+     * add all new annotations
+     **/
+    for (id a in annotations) {
+        if (![self.mapView.annotations containsObject:a]) {
+            [self.mapView addAnnotation:a];
+        }
+    }
 }
 
 - (void)showState:(NSInteger)state

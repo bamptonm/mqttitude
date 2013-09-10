@@ -19,24 +19,24 @@
                             </navigationBar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ADW-aD-LPR">
                                 <items>
-                                    <barButtonItem systemItem="stop" id="BCW-Nj-aGy">
+                                    <barButtonItem image="exit.png" id="BCW-Nj-aGy">
                                         <connections>
                                             <action selector="stop:" destination="HII-kF-avN" id="ROZ-Df-N3s"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="iAt-gI-5ll"/>
-                                    <barButtonItem systemItem="play" id="8yY-FE-dno">
+                                    <barButtonItem image="center.png" id="8yY-FE-dno">
                                         <connections>
                                             <action selector="showCenter:" destination="HII-kF-avN" id="VaW-hG-zZz"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="bookmarks" id="cHH-1Y-Pca">
+                                    <barButtonItem image="friends.png" id="cHH-1Y-Pca">
                                         <connections>
                                             <action selector="showAll:" destination="HII-kF-avN" id="dia-TY-i71"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="At2-n2-Ea3"/>
-                                    <barButtonItem systemItem="action" id="qW5-G0-fsd">
+                                    <barButtonItem image="send.png" id="qW5-G0-fsd">
                                         <connections>
                                             <action selector="action:" destination="HII-kF-avN" id="ukg-CB-JB6"/>
                                         </connections>
@@ -78,25 +78,12 @@
             <point key="canvasLocation" x="609" y="-1073"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="mqttitudeIndicatorView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeIndicatorView.h"/>
-        </class>
-        <class className="mqttitudeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="action:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="showAll:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="showCenter:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="stop:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="indicatorView" candidateClass="mqttitudeIndicatorView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-            </relationships>
-        </class>
-    </classes>
+    <resources>
+        <image name="center.png" width="20" height="20"/>
+        <image name="exit.png" width="20" height="20"/>
+        <image name="friends.png" width="20" height="20"/>
+        <image name="send.png" width="20" height="20"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -240,7 +240,7 @@
     if (self.state == state_starting) {
         self.state = state_connecting;
         
-        self.session = [[MQTTSession alloc] initWithClientId:[[[UIDevice currentDevice] identifierForVendor] UUIDString]
+        self.session = [[MQTTSession alloc] initWithClientId:[[NSUserDefaults standardUserDefaults] stringForKey:@"clientid_preference"]
                                                     userName:self.lastAuth ? self.lastUser : @""
                                                     password:self.lastAuth ? self.lastPass : @""
                                                    keepAlive:self.lastKeepalive
