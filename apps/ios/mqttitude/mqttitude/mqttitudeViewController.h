@@ -13,7 +13,6 @@
 #import "Connection.h"
 #import "Annotations.h"
 
-@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, AnnotationsDelegate>
-@property (weak, nonatomic) Annotations *annotations;
+@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, AnnotationsDelegate, MKOverlay>
 
 @end

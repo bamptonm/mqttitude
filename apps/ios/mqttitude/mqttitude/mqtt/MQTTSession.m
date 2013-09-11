@@ -154,7 +154,7 @@
 - (void)close
 {
     [self closeInternal];
-    [self.delegate handleEvent:self event:MQTTSessionEventConnectionClosed];
+    [self.delegate handleEvent:self event:MQTTSessionEventConnectionClosed info:0];
 }
 
 - (void)closeInternal
@@ -188,7 +188,6 @@
 #endif
     if ([self.encoder status] == MQTTEncoderStatusReady) {
         MQTTMessage *msg = [MQTTMessage pingreqMessage];
-        [self.delegate lowlevellog:self component:@"encoder" message:@"senddirect" mqttmsg:msg];
         [self.encoder encodeMessage:msg];
     }
     
@@ -206,11 +205,8 @@
 {
     switch (eventCode) {
         case MQTTEncoderEventReady:
-            [self.delegate lowlevellog:self component:@"encoder" message:@"eventready" mqttmsg:nil];
-
             switch (self.status) {
                 case MQTTSessionStatusCreated:
-                    [self.delegate lowlevellog:self component:@"encoder" message:@"senddirect" mqttmsg:self.connectMessage];
                     [sender encodeMessage:self.connectMessage];
                     self.status = MQTTSessionStatusConnecting;
                     break;
@@ -220,7 +216,6 @@
                     if ([self.queue count] > 0) {
                         MQTTMessage *msg = [self.queue objectAtIndex:0];
                         [self.queue removeObjectAtIndex:0];
-                        [self.delegate lowlevellog:self component:@"encoder" message:@"senddirect" mqttmsg:msg];
                         [self.encoder encodeMessage:msg];
                     }
                     break;
@@ -234,8 +229,7 @@
             }
             break;
         case MQTTEncoderEventErrorOccurred:
-            [self.delegate lowlevellog:self component:@"encoder" message:@"eventerror" mqttmsg:nil];
-            [self error:MQTTSessionEventConnectionError];
+            [self error:MQTTSessionEventConnectionError info:-4];
             break;
     }
 }
@@ -245,30 +239,26 @@
     MQTTSessionEvent event;
     switch (eventCode) {
         case MQTTDecoderEventConnectionClosed:
-            [self.delegate lowlevellog:self component:@"decoder" message:@"eventconnectionclosed" mqttmsg:nil];
             event = MQTTSessionEventConnectionError;
             break;
         case MQTTDecoderEventConnectionError:
-            [self.delegate lowlevellog:self component:@"decoder" message:@"eventconnectionerror" mqttmsg:nil];
             event = MQTTSessionEventConnectionError;
             break;
         case MQTTDecoderEventProtocolError:
-            [self.delegate lowlevellog:self component:@"decoder" message:@"protocolerror" mqttmsg:nil];
             event = MQTTSessionEventProtocolError;
             break;
     }
-    [self error:event];
+    [self error:event info:-3];
 }
 
 - (void)decoder:(MQTTDecoder*)sender newMessage:(MQTTMessage*)msg
 {
     switch (self.status) {
         case MQTTSessionStatusConnecting:
-            [self.delegate lowlevellog:self component:@"decoder" message:@"received" mqttmsg:msg];
             switch ([msg type]) {
                 case MQTTConnack:
                     if ([[msg data] length] != 2) {
-                        [self error:MQTTSessionEventProtocolError];
+                        [self error:MQTTSessionEventProtocolError info:-2];
                     }
                     else {
                         const UInt8 *bytes = [[msg data] bytes];
@@ -280,20 +270,19 @@
                                                                         userInfo:nil
                                                                          repeats:YES];
                             [self.runLoop addTimer:self.keepAliveTimer forMode:self.runLoopMode];
-                            [self.delegate handleEvent:self event:MQTTSessionEventConnected];
+                            [self.delegate handleEvent:self event:MQTTSessionEventConnected info:bytes[1]];
                         }
                         else {
-                            [self error:MQTTSessionEventConnectionRefused];
+                            [self error:MQTTSessionEventConnectionRefused info:bytes[1]];
                         }
                     }
                     break;
                 default:
-                    [self error:MQTTSessionEventProtocolError];
+                    [self error:MQTTSessionEventProtocolError info:-1];
                     break;
             }
             break;
         case MQTTSessionStatusConnected:
-            [self.delegate lowlevellog:self component:@"decoder" message:@"received" mqttmsg:msg];
             switch ([msg type]) {
                 case MQTTPublish:
                     [self handlePublish:msg];
@@ -445,17 +434,16 @@
     [self.txFlows removeObjectForKey:msgId];
 }
 
-- (void)error:(MQTTSessionEvent)eventCode {
+- (void)error:(MQTTSessionEvent)eventCode info:(NSInteger)info {
     
     self.status = MQTTSessionStatusError;
     [self closeInternal];
     
-    [self.delegate handleEvent:self event:eventCode];
+    [self.delegate handleEvent:self event:eventCode info:info];
 }
 
 - (void)send:(MQTTMessage*)msg {
     if ([self.encoder status] == MQTTEncoderStatusReady) {
-        [self.delegate lowlevellog:self component:@"encoder" message:@"send" mqttmsg:msg];
         [self.encoder encodeMessage:msg];
     }
     else {
