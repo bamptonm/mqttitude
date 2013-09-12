@@ -38,9 +38,8 @@ typedef enum {
 
 @protocol MQTTSessionDelegate <NSObject>
 
-- (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode;
+- (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode info:(NSInteger)info;
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic;
-- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg;
 
 @end
 

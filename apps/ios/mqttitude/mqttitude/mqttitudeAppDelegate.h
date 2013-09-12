@@ -12,7 +12,7 @@
 #import "Connection.h"
 #import "Annotations.h"
 
-@interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate>
+@interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate, AnnotationsDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) CLLocationManager *manager;
@@ -21,5 +21,8 @@
 - (void)switchOff;
 - (void)sendNow;
 - (void)reconnect;
+- (void)connectionOff;
+- (void)locationOn;
+- (void)locationOff;
 
 @end

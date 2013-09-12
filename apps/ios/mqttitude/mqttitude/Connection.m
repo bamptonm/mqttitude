@@ -37,7 +37,10 @@
 @property (nonatomic) NSInteger lastKeepalive;
 @property (nonatomic) NSInteger lastWillQos;
 
-
+@property (strong, nonatomic, readwrite) NSDate *lastConnected;
+@property (strong, nonatomic, readwrite) NSDate *lastClosed;
+@property (strong, nonatomic, readwrite) NSDate *lastError;
+@property (nonatomic, readwrite) NSInteger lastErrorCode;
 
 @end
 
@@ -164,7 +167,7 @@
 #pragma mark - MQtt Callback methods
 
 
-- (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode
+- (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode info:(NSInteger)info
 {
 #ifdef DEBUG
     NSLog(@"MQTTitude eventCode: %d", eventCode);
@@ -173,6 +176,7 @@
     switch (eventCode) {
         case MQTTSessionEventConnected:
         {
+            self.lastConnected = [NSDate date];
             self.state = state_connected;
             [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
                                    atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
@@ -185,10 +189,9 @@
                 [self sendData:parameters[@"DATA"] topic:parameters[@"TOPIC"] qos:[parameters[@"QOS"] intValue] retain:[parameters[@"RETAINFLAG"] boolValue]];
             }
             break;
-            self.state = state_error;
-            break;
         }
         case MQTTSessionEventConnectionClosed:
+            self.lastClosed = [NSDate date];
             self.state = state_starting;
             break;
         case MQTTSessionEventProtocolError:
@@ -206,6 +209,9 @@
             [runLoop addTimer:self.reconnectTimer
                       forMode:NSDefaultRunLoopMode];
             
+            self.state = state_error;
+            self.lastError = [NSDate date];
+            self.lastErrorCode = info;
             break;
         }
         default:
@@ -228,11 +234,6 @@
     NSLog(@"Received %@ %@", topic, [Connection dataToString:data]);
 #endif
     [self.delegate handleMessage:data onTopic:topic];
-}
-
-- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg
-{
-    [self.delegate lowlevellog:session component:component message:message mqttmsg:mqttmsg];
 }
 
 - (void)connectToInternal
@@ -276,7 +277,7 @@
                                      };
         [self.fifo addObject:parameters];
         [self connectToLast];
-    } else {
+     } else {
 #ifdef DEBUG
         NSLog(@"Sending: %@", [Connection dataToString:self.lastData]);
 #endif
@@ -285,6 +286,15 @@
                            retain:self.lastRetainFlag
                               qos:self.lastQos];
     }
+}
+
+- (NSString *)url
+{
+    return [NSString stringWithFormat:@"%@%@:%d",
+            self.lastAuth ? [NSString stringWithFormat:@"%@@", self.lastUser] : @"",
+            self.lastHost,
+            self.lastPort
+            ];
 }
 
 + (NSString *)dataToString:(NSData *)data

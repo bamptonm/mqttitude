@@ -1,14 +1,14 @@
 //
-//  mqttitudeIndicatorView.h
+//  mqttitudeIndicatorButton.h
 //  mqttitude
 //
-//  Created by Christoph Krey on 23.08.13.
+//  Created by Christoph Krey on 11.09.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface mqttitudeIndicatorView : UIView
+@interface mqttitudeIndicatorButton : UIButton
 @property (strong, nonatomic) UIColor *color;
 
 @end

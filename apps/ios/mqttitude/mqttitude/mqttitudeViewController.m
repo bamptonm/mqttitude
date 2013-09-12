@@ -9,11 +9,18 @@
 #import "mqttitudeViewController.h"
 #import "mqttitudeAppDelegate.h"
 #import "Annotation.h"
-#import "mqttitudeIndicatorView.h"
+#import "mqttitudeIndicatorButton.h"
+#import "mqttitudeStatusTVC.h"
 
 @interface mqttitudeViewController ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet mqttitudeIndicatorView *indicatorView;
+@property (weak, nonatomic) IBOutlet mqttitudeIndicatorButton *indicatorButton;
+@property (strong, nonatomic) UIPopoverController *myPopoverController;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *connectionButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *locationButton;
+@property (weak, nonatomic) Annotations *annotations;
+@property (strong, nonatomic) MKCircle *circle;
+@property (strong, nonatomic) MKCircleView *circleView;
 
 @end
 
@@ -31,35 +38,69 @@
 
     self.mapView.delegate = self;
     [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+    self.locationButton.style = UIBarButtonItemStyleDone;
+    self.connectionButton.style = UIBarButtonItemStyleDone;
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
+    
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     [self.mapView addAnnotations:self.annotations.annotationArray];
     [self showState:delegate.connection.state];
+
+    self.circle = [MKCircle circleWithCenterCoordinate:[self.annotations myLastAnnotation].coordinate
+                                                radius:500.0];
+    self.circleView = [[MKCircleView alloc] initWithCircle:self.circle];
+    self.circleView.strokeColor = [UIColor blackColor];
+    [self.mapView addOverlay:self];
 }
 
-- (void)setAnnotations:(Annotations *)annotations
-{
-    _annotations = annotations;
-    [_annotations.delegates addObject:self];
-}
 - (IBAction)action:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     [delegate sendNow];
 }
 - (IBAction)stop:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
-    [delegate switchOff];
+    
+    if (self.mapView.showsUserLocation) {
+        self.mapView.showsUserLocation = NO;
+        [delegate locationOff];
+        self.locationButton.style = UIBarButtonItemStyleBordered;
+    } else {
+        self.mapView.showsUserLocation = YES;
+        [delegate locationOn];
+        self.locationButton.style = UIBarButtonItemStyleDone;
+    }
+}
+- (IBAction)connection:(UIBarButtonItem *)sender {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+    switch (delegate.connection.state) {
+        case state_connected:
+            [delegate connectionOff];
+            break;
+        case state_error:
+        case state_exit:
+        case state_starting:
+        case state_connecting:
+        case state_closing:
+        default:
+            [delegate reconnect];
+            break;
+    }
 }
 
 - (IBAction)showAll:(UIBarButtonItem *)sender {
     MKMapRect rect;
-    rect.origin = MKMapPointForCoordinate([self.annotations myLastAnnotation].coordinate);
-    rect.size.width = 100;
-    rect.size.height = 100;
+    CLLocationCoordinate2D coordinate = [self.annotations myLastAnnotation].coordinate;
+    double p = 1200 * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
+    
+    rect.origin = MKMapPointForCoordinate(coordinate);
+    rect.origin.x -= p/2;
+    rect.origin.y -= p/2;
+    rect.size.width = p;
+    rect.size.height = p;
     
     for (Annotation *annotation in self.annotations.annotationArray)
     {
@@ -88,18 +129,32 @@
     [self.mapView setVisibleMapRect:rect animated:YES];
 }
 - (IBAction)showCenter:(UIBarButtonItem *)sender {
-    [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+    if (self.mapView.showsUserLocation) {
+        [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+    } else {
+        MKMapRect rect;
+        CLLocationCoordinate2D coordinate = [self.annotations myLastAnnotation].coordinate;
+        double p = 1200 * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
+
+        rect.origin = MKMapPointForCoordinate(coordinate);
+        rect.origin.x -= p/2;
+        rect.origin.y -= p/2;
+        rect.size.width = p;
+        rect.size.height = p;
+        [self.mapView setVisibleMapRect:rect animated:YES];
+    }
 }
 
-- (void)changed:(NSArray *)annotations
+- (void)annotationsChanged:(Annotations *)annotations
 {
+    self.annotations = annotations;
     /**
      * remove all annnotations no longer in the annotions array from the map
      * with the exception of the current user location
      **/
     for (id a in self.mapView.annotations) {
         if (![a isKindOfClass:[MKUserLocation class]]) {
-            if (![annotations containsObject:a]) {
+            if (![annotations.annotationArray containsObject:a]) {
                 [self.mapView removeAnnotation:a];
             }
         }
@@ -108,10 +163,24 @@
     /**
      * add all new annotations
      **/
-    for (id a in annotations) {
+    for (id a in annotations.annotationArray) {
         if (![self.mapView.annotations containsObject:a]) {
             [self.mapView addAnnotation:a];
         }
+    }
+    self.circle = [MKCircle circleWithCenterCoordinate:[self.annotations myLastAnnotation].coordinate
+                                                radius:500.0];
+    self.circleView = [[MKCircleView alloc] initWithCircle:self.circle];
+    self.circleView.strokeColor = [UIColor blackColor];
+    [self.mapView removeOverlay:self];
+    [self.mapView addOverlay:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController respondsToSelector:@selector(setConnection:)]) {
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+        [segue.destinationViewController performSelector:@selector(setConnection:) withObject:delegate.connection];
     }
 }
 
@@ -137,12 +206,46 @@
             break;
     }
         
-    self.indicatorView.color  = color;
-    [self.indicatorView setNeedsDisplay];
+    self.indicatorButton.color  = color;
+    [self.indicatorButton setNeedsDisplay];
+    
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+    switch (delegate.connection.state) {
+        case state_connected:
+            self.connectionButton.style = UIBarButtonItemStyleDone;
+            break;
+        case state_error:
+        case state_exit:
+        case state_starting:
+        case state_connecting:
+        case state_closing:
+        default:
+            self.connectionButton.style = UIBarButtonItemStyleBordered;
+            break;
+    }
+}
 
+#pragma MKOverlay
+
+- (CLLocationCoordinate2D)coordinate
+{
+    return self.circle.coordinate;
+}
+
+- (MKMapRect)boundingMapRect
+{
+    return self.circle.boundingMapRect;
 }
 
 #pragma MKMapViewDelegate
+
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
+{
+    if (overlay == self) {
+        return self.circleView;
+    }
+    return nil;
+}
 
 #define REUSE_ID_SELF @"MQTTitude_Annotation_self"
 #define REUSE_ID_OTHER @"MQTTitude_Annotation_other"
@@ -179,7 +282,5 @@
         return nil;
     }
 }
-
-
 
 @end

@@ -23,7 +23,6 @@ enum state {
 
 - (void)showState:(NSInteger)state;
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic;
-- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg;
 
 @end
 
@@ -31,7 +30,13 @@ enum state {
 
 @property (weak, nonatomic) id<ConnectionDelegate> delegate;
 @property (nonatomic, readonly) NSInteger state;
+@property (nonatomic, readonly) NSDate *lastConnected;
+@property (nonatomic, readonly) NSDate *lastClosed;
+@property (nonatomic, readonly) NSDate *lastError;
+@property (nonatomic, readonly) NSInteger lastErrorCode;
 
+
+- (NSString *)url;
 
 - (void)connectToLast;
 - (void)sendDataAsLast;

@@ -16,13 +16,6 @@
 
 @implementation Annotations
 
-- (NSMutableArray *)delegates
-{
-    if (!_delegates) {
-        _delegates = [[NSMutableArray alloc] init];
-    }
-    return _delegates;
-}
 - (NSMutableArray *)annotationArray
 {
     if (!_annotationArray) {
@@ -111,18 +104,14 @@
     // show the user how many others are on the map
     [UIApplication sharedApplication].applicationIconBadgeNumber = others;
 
-    for (id<AnnotationsDelegate> delegate in self.delegates) {
-        [delegate changed:self.annotationArray];
-    }
+    [self.delegate annotationsChanged:self];
 }
 
 #pragma AnnotationDelegate
 
 - (void)changed:(Annotation *)annotation
 {
-    for (id<AnnotationsDelegate> delegate in self.delegates) {
-        [delegate changed:self.annotationArray];
-    }
+    [self.delegate annotationsChanged:self];
 }
 
 @end

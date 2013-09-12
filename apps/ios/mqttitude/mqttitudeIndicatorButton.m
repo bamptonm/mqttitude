@@ -1,21 +1,30 @@
 //
-//  mqttitudeIndicatorView.m
+//  mqttitudeIndicatorButton.m
 //  mqttitude
 //
-//  Created by Christoph Krey on 23.08.13.
+//  Created by Christoph Krey on 11.09.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
-#import "mqttitudeIndicatorView.h"
+#import "mqttitudeIndicatorButton.h"
 
-@implementation mqttitudeIndicatorView
+@implementation mqttitudeIndicatorButton
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+    }
+    return self;
+}
 
 - (void)drawRect:(CGRect)rect
-{    
+{
     UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:self.bounds];
     
     [circle addClip];
-        
+    
     [self.color setFill];
     UIRectFill(self.bounds);
     
@@ -23,4 +32,5 @@
     circle.lineWidth = 5.0;
     [circle stroke];
 }
+
 @end

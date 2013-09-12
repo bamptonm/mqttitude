@@ -7,11 +7,12 @@
 //
 
 #import "mqttitudeAppDelegate.h"
-
+#import "mqttitudeAlertView.h"
 
 @interface mqttitudeAppDelegate()
 @property (strong, nonatomic) Annotations *annotations;
 @property (strong, nonatomic) NSTimer *disconnectTimer;
+@property (strong, nonatomic) mqttitudeAlertView *alertView;
 
 @end
 
@@ -53,10 +54,19 @@
     
     self.annotations = [[Annotations alloc] init];
     self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
+    self.annotations.delegate = self;
 
-    if ([self.window.rootViewController respondsToSelector:@selector(setAnnotations:)]) {
-        [self.window.rootViewController performSelector:@selector(setAnnotations:) withObject:self.annotations];
+    id delegate;
+    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
+        if ([nc.topViewController respondsToSelector:@selector(etAnnotations:)]) {
+            delegate = nc.topViewController;
+        }
+    } else if ([self.window.rootViewController respondsToSelector:@selector(etAnnotations:)]) {
+        delegate = self.window.rootViewController;
     }
+    [delegate performSelector:@selector(setAnnotations:) withObject:self.annotations];
+
     
     if ([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
@@ -128,6 +138,7 @@
 #ifdef DEBUG
     NSLog(@"applicationWillEnterForeground");
 #endif
+    [self annotationsChanged:self.annotations];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -169,14 +180,38 @@
 }
 
 
+#pragma AnnotationsDelegate
+
+- (void)annotationsChanged:(NSArray *)annotations
+{
+    id<AnnotationsDelegate> ad;
+    
+    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
+        if ([nc.topViewController respondsToSelector:@selector(annotationsChanged:)]) {
+            ad = (id<AnnotationsDelegate>)nc.topViewController;
+        }
+    } else if ([self.window.rootViewController respondsToSelector:@selector(annotationsChanged:)]) {
+        ad = (id<AnnotationsDelegate>)self.window.rootViewController;
+    }
+    [ad annotationsChanged:self.annotations];
+}
+
 #pragma ConnectionDelegate
 
 - (void)showState:(NSInteger)state
 {
-    if ([self.window.rootViewController respondsToSelector:@selector(showState:)]) {
-        id<ConnectionDelegate> cd = (id<ConnectionDelegate>)self.window.rootViewController;
-        [cd showState:state];
+    id<ConnectionDelegate> cd;
+    
+    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
+        if ([nc.topViewController respondsToSelector:@selector(showState:)]) {
+            cd = (id<ConnectionDelegate>)nc.topViewController;
+        }
+    } else if ([self.window.rootViewController respondsToSelector:@selector(showState:)]) {
+        cd = (id<ConnectionDelegate>)self.window.rootViewController;
     }
+    [cd showState:state];
 }
 
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic
@@ -217,12 +252,7 @@
 - (void)alert:(NSString *)message
 {
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSBundle mainBundle].infoDictionary[@"CFBundleName"]
-                                                            message:message
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        self.alertView = [[mqttitudeAlertView alloc] initWithMessage:message dismissAfter:1.0];
     }
 }
 
@@ -245,6 +275,20 @@
 {
     [self publishLocation:[self.manager location]];
 }
+- (void)connectionOff
+{
+    [self.connection disconnect];
+}
+- (void)locationOn
+{
+    [self.manager startMonitoringSignificantLocationChanges];
+}
+
+- (void)locationOff
+{
+    [self.manager stopMonitoringSignificantLocationChanges];
+}
+
 - (void)reconnect
 {
     [self.connection disconnect];
@@ -300,11 +344,11 @@
                        retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
     
     /**
-     *   In background, set timer to disconnect after 5 sec. IOS will suspend app after 10 sec.
+     *   In background, set timer to disconnect after 8 sec. IOS will suspend app after 10 sec.
      **/
     
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-        self.disconnectTimer = [NSTimer timerWithTimeInterval:5.0
+        self.disconnectTimer = [NSTimer timerWithTimeInterval:8.0
                                                        target:self
                                                      selector:@selector(disconnectInBackground)
                                                      userInfo:Nil repeats:FALSE];
@@ -336,10 +380,4 @@
                                  };
     return [self jsonToData:jsonObject];
 }
-
-- (void)lowlevellog:(MQTTSession *)session component:(NSString *)component message:(NSString *)message mqttmsg:(MQTTMessage *)mqttmsg
-{
-    // Nothing to do here
-}
-
 @end
