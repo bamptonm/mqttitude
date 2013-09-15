@@ -16,6 +16,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) CLLocationManager *manager;
+@property (nonatomic) BOOL high;
 @property (strong, nonatomic) Connection *connection;
 
 - (void)switchOff;
@@ -24,5 +25,8 @@
 - (void)connectionOff;
 - (void)locationOn;
 - (void)locationOff;
+- (void)locationHigh;
+- (void)locationLow;
+
 
 @end

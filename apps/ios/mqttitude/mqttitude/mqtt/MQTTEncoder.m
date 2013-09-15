@@ -51,10 +51,10 @@
         case NSStreamEventHasSpaceAvailable:
             if (self.status == MQTTEncoderStatusInitializing) {
                 self.status = MQTTEncoderStatusReady;
-                [self.delegate encoder:self handleEvent:MQTTEncoderEventReady];
+                [self.delegate encoder:self handleEvent:MQTTEncoderEventReady error:nil];
             }
             else if (self.status == MQTTEncoderStatusReady) {
-                [self.delegate encoder:self handleEvent:MQTTEncoderEventReady];
+                [self.delegate encoder:self handleEvent:MQTTEncoderEventReady error:nil];
             }
             else if (self.status == MQTTEncoderStatusSending) {
                 UInt8* ptr;
@@ -66,7 +66,7 @@
                 n = [self.stream write:ptr maxLength:length];
                 if (n == -1) {
                     self.status = MQTTEncoderStatusError;
-                    [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
+                    [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred error:self.stream.streamError];
                 }
                 else if (n < length) {
                     self.byteIndex += n;
@@ -82,7 +82,16 @@
         case NSStreamEventEndEncountered:
             if (self.status != MQTTEncoderStatusError) {
                 self.status = MQTTEncoderStatusError;
-                [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
+                NSError *error = [self.stream streamError];
+                NSLog(@"Encoder Error: %d %@ %@ %@ %@ %@ %@",
+                      error.code,
+                      error.domain,
+                      error.userInfo,
+                      error.localizedDescription,
+                      error.localizedFailureReason,
+                      error.localizedRecoveryOptions,
+                      error.localizedRecoverySuggestion);
+                [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred error:error];
             }
             break;
         default:
@@ -136,7 +145,7 @@
     n = [self.stream write:[self.buffer bytes] maxLength:[self.buffer length]];
     if (n == -1) {
         self.status = MQTTEncoderStatusError;
-        [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
+        [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred error:self.stream.streamError];
     }
     else if (n < [self.buffer length]) {
         self.byteIndex += n;

@@ -19,18 +19,19 @@
 }
 
 - (NSString *)title {
-    NSString *timestampAsString = [NSDateFormatter localizedStringFromDate:self.timeStamp
-                                          dateStyle:NSDateFormatterShortStyle
-                                          timeStyle:NSDateFormatterMediumStyle];
-    return [NSString stringWithFormat:@"%@ %@", timestampAsString,  self.topic ? self.topic : @""];
+    return self.topic ? self.topic : @"";
 }
 
 - (NSString *)subtitle {
-    return  (self.placemark) ?
-    ABCreateStringWithAddressDictionary (self.placemark.addressDictionary, TRUE) :
-    [NSString stringWithFormat:@"%f,%f",
-     self.coordinate.latitude,
-     self.coordinate.longitude];
+    return  [NSString stringWithFormat:@"%@ %@",
+             [NSDateFormatter localizedStringFromDate:self.timeStamp
+                                            dateStyle:NSDateFormatterShortStyle
+                                            timeStyle:NSDateFormatterMediumStyle],
+             (self.placemark) ?
+             ABCreateStringWithAddressDictionary (self.placemark.addressDictionary, TRUE) :
+             [NSString stringWithFormat:@"%f,%f",
+              self.coordinate.latitude,
+              self.coordinate.longitude] ];
 }
 
 - (void)setCoordinate:(CLLocationCoordinate2D)coordinate

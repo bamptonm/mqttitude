@@ -64,6 +64,25 @@
     return lastAnnotation;
 }
 
+
+- (Annotation *)myOldestAnnotation
+{
+    Annotation *oldestAnnotation;
+    
+    for (Annotation *annotation in self.annotationArray) {
+        if ([annotation.topic isEqualToString:self.myTopic]) {
+            if (oldestAnnotation) {
+                if ([oldestAnnotation.timeStamp compare:annotation.timeStamp] == NSOrderedDescending) {
+                    oldestAnnotation = annotation;
+                }
+            } else {
+                oldestAnnotation = annotation;
+            }
+        }
+    }
+    return oldestAnnotation;
+}
+
 #define MAX_ANNOTATIONS 50
 
 - (void)addLocation:(CLLocation *)location topic:(NSString *)topic
@@ -88,19 +107,22 @@
     // add the new annotation to the map, for reference
     [self.annotationArray addObject:annotation];
     
-    // limit the total number of annotations
-    if ([self.annotationArray count] > MAX_ANNOTATIONS) {
-        [self.annotationArray removeObjectAtIndex:0];
-    }
-    
-    // count other's annotation
+    // count own and other's annotation
+    NSInteger own = 0;
     NSInteger others = 0;
     for (Annotation *theAnnotation in self.annotationArray) {
-        if (![theAnnotation.topic isEqualToString:self.myTopic]) {
+        if ([theAnnotation.topic isEqualToString:self.myTopic]) {
+            own++;
+        } else {
             others++;
         }
     }
     
+    // limit the total number of own annotations
+    if (own > MAX_ANNOTATIONS) {
+        [self.annotationArray removeObject:[self myOldestAnnotation]];
+    }
+        
     // show the user how many others are on the map
     [UIApplication sharedApplication].applicationIconBadgeNumber = others;
 

@@ -32,15 +32,28 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.4</string>
+	<string>3.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>LSApplicationCategoryType</key>
 	<false/>
+	<key>APFiles</key>
+	<dict>
+		<key>APFileDescriptionKey</key>
+		<string></string>
+		<key>APFileDestinationPath</key>
+		<string></string>
+		<key>APFileName</key>
+		<string></string>
+		<key>APFileSourcePath</key>
+		<string></string>
+	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSContactsUsageDescription</key>
+	<string>Uses Address Book Images on Map </string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

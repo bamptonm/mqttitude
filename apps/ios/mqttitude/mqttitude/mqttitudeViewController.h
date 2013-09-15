@@ -13,6 +13,6 @@
 #import "Connection.h"
 #import "Annotations.h"
 
-@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, AnnotationsDelegate, MKOverlay>
+@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, AnnotationsDelegate>
 
 @end

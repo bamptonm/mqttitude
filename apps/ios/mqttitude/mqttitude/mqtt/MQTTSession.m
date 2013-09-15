@@ -153,30 +153,33 @@
 
 - (void)close
 {
-    [self closeInternal];
-    [self.delegate handleEvent:self event:MQTTSessionEventConnectionClosed info:0];
+    if (self.status == MQTTSessionStatusConnected) {
+        NSLog(@"disconnecting");
+        self.status = MQTTSessionStatusDisconnecting;
+        [self send:[MQTTMessage disconnectMessage]];
+    } else {
+        [self closeInternal];
+    }
 }
 
 - (void)closeInternal
 {
-    if (self.status == MQTTSessionStatusConnected) {
-        self.status = MQTTSessionStatusDisconnecting;
-        [self send:[MQTTMessage disconnectMessage]];
-    } else {
-        if (self.encoder) {
-            [self.encoder close];
-            self.encoder = nil;
-        }
-        if (self.decoder) {
-            [self.decoder close];
-            self.decoder = nil;
-        }
-        if (self.keepAliveTimer) {
-            [self.keepAliveTimer invalidate];
-            self.keepAliveTimer = nil;
-        }
-        self.status = MQTTSessionStatusClosed;
+    NSLog(@"closing");
+    if (self.encoder) {
+        [self.encoder close];
+        self.encoder = nil;
     }
+    if (self.decoder) {
+        [self.decoder close];
+        self.decoder = nil;
+    }
+    if (self.keepAliveTimer) {
+        [self.keepAliveTimer invalidate];
+        self.keepAliveTimer = nil;
+    }
+    self.status = MQTTSessionStatusClosed;
+    [self.delegate handleEvent:self event:MQTTSessionEventConnectionClosed error:nil];
+
 }
 
 
@@ -191,7 +194,8 @@
         [self.encoder encodeMessage:msg];
     }
     
-    for (MQttTxFlow *flow in self.txFlows) {
+    for (NSNumber *msgId in [self.txFlows allKeys]) {
+        MQttTxFlow *flow = [self.txFlows objectForKey:msgId];
         if ([flow.deadline compare:[NSDate date]] == NSOrderedAscending) {
             MQTTMessage *msg = [flow msg];
             flow.deadline = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT];
@@ -201,7 +205,7 @@
     }
 }
 
-- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode
+- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode error:(NSError *)error
 {
     switch (eventCode) {
         case MQTTEncoderEventReady:
@@ -220,6 +224,7 @@
                     }
                     break;
                 case MQTTSessionStatusDisconnecting:
+                    NSLog(@"disconnect sent");
                     [self closeInternal];
                     break;
                 case MQTTSessionStatusClosed:
@@ -229,12 +234,12 @@
             }
             break;
         case MQTTEncoderEventErrorOccurred:
-            [self error:MQTTSessionEventConnectionError info:-4];
+            [self error:MQTTSessionEventConnectionError error:error];
             break;
     }
 }
 
-- (void)decoder:(MQTTDecoder*)sender handleEvent:(MQTTDecoderEvent)eventCode
+- (void)decoder:(MQTTDecoder*)sender handleEvent:(MQTTDecoderEvent)eventCode error:(NSError *)error
 {
     MQTTSessionEvent event;
     switch (eventCode) {
@@ -248,7 +253,7 @@
             event = MQTTSessionEventProtocolError;
             break;
     }
-    [self error:event info:-3];
+    [self error:event error:error];
 }
 
 - (void)decoder:(MQTTDecoder*)sender newMessage:(MQTTMessage*)msg
@@ -258,7 +263,9 @@
             switch ([msg type]) {
                 case MQTTConnack:
                     if ([[msg data] length] != 2) {
-                        [self error:MQTTSessionEventProtocolError info:-2];
+                        [self error:MQTTSessionEventProtocolError error:[NSError errorWithDomain:@"MQTT"
+                                                                                            code:-2
+                                                                                        userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"CONNACK expected", @"MQTT protocol CONNACK expected")}]];
                     }
                     else {
                         const UInt8 *bytes = [[msg data] bytes];
@@ -270,15 +277,41 @@
                                                                         userInfo:nil
                                                                          repeats:YES];
                             [self.runLoop addTimer:self.keepAliveTimer forMode:self.runLoopMode];
-                            [self.delegate handleEvent:self event:MQTTSessionEventConnected info:bytes[1]];
+                            [self.delegate handleEvent:self event:MQTTSessionEventConnected error:nil];
                         }
                         else {
-                            [self error:MQTTSessionEventConnectionRefused info:bytes[1]];
+                            NSString *errorDescription;
+                            switch (bytes[1]) {
+                                case 1:
+                                    errorDescription = NSLocalizedString(@"unacceptable protocol version", @"MQTT protocol no CONNACK");
+                                    break;
+                                case 2:
+                                    errorDescription = NSLocalizedString(@"identifier rejected", @"MQTT protocol no CONNACK");
+                                    break;
+                                case 3:
+                                    errorDescription = NSLocalizedString(@"server unavailable", @"MQTT protocol no CONNACK");
+                                    break;
+                                case 4:
+                                    errorDescription = NSLocalizedString(@"bad user name or password", @"MQTT protocol no CONNACK");
+                                    break;
+                                case 5:
+                                    errorDescription = NSLocalizedString(@"not authorized", @"MQTT protocol no CONNACK");
+                                    break;
+                                default:
+                                    errorDescription = NSLocalizedString(@"reserved for future use", @"MQTT protocol no CONNACK");
+                                    break;
+                            }
+
+                            [self error:MQTTSessionEventConnectionRefused error:[NSError errorWithDomain:@"MQTT"
+                                                                                                    code:bytes[1]
+                                                                                                userInfo:@{NSLocalizedDescriptionKey : errorDescription}]];
                         }
                     }
                     break;
                 default:
-                    [self error:MQTTSessionEventProtocolError info:-1];
+                    [self error:MQTTSessionEventProtocolError error:[NSError errorWithDomain:@"MQTT"
+                                                                                        code:-1
+                                                                                    userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"No CONNACK received", @"MQTT protocol no CONNACK")}]];
                     break;
             }
             break;
@@ -434,12 +467,12 @@
     [self.txFlows removeObjectForKey:msgId];
 }
 
-- (void)error:(MQTTSessionEvent)eventCode info:(NSInteger)info {
+- (void)error:(MQTTSessionEvent)eventCode error:(NSError *)error {
     
     self.status = MQTTSessionStatusError;
     [self closeInternal];
     
-    [self.delegate handleEvent:self event:eventCode info:info];
+    [self.delegate handleEvent:self event:eventCode error:error];
 }
 
 - (void)send:(MQTTMessage*)msg {

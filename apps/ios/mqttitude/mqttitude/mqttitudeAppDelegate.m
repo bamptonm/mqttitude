@@ -12,11 +12,14 @@
 @interface mqttitudeAppDelegate()
 @property (strong, nonatomic) Annotations *annotations;
 @property (strong, nonatomic) NSTimer *disconnectTimer;
+@property (strong, nonatomic) NSTimer *activityTimer;
 @property (strong, nonatomic) mqttitudeAlertView *alertView;
 
 @end
 
 @implementation mqttitudeAppDelegate
+
+#pragma ApplicationDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -30,6 +33,8 @@
     }
 #endif
     NSDictionary *appDefaults = @{
+                                  @"mindist_preference" : @(100),
+                                  @"mintime_preference" : @(300),
                                   @"clientid_preference" : [UIDevice currentDevice].name,
                                   @"subscription_preference" : @"#",
                                   @"subscriptionqos_preference": @(1),
@@ -72,11 +77,14 @@
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
             self.manager = [[CLLocationManager alloc] init];
             self.manager.delegate = self;
-            [self.manager startMonitoringSignificantLocationChanges];
+            
+            [self locationLow];
+            [self locationOn];
         } else {
             NSString *message = NSLocalizedString(@"No significant location change monitoring available", @"No significant location change monitoring available");
             [self alert:message];
         }
+        
     } else {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
         NSString *message = [NSString stringWithFormat:@"%@ %d",
@@ -112,13 +120,6 @@
 #ifdef DEBUG
     NSLog(@"applicationWillResignActive");
     [self.connection disconnect];
-#endif
-}
-
-- (void)expirationHandler
-{
-#ifdef DEBUG
-    NSLog(@"ExpirationHandler remaining: %10.3f", [UIApplication sharedApplication].backgroundTimeRemaining);
 #endif
 }
 
@@ -166,10 +167,31 @@
 }
 
 #pragma CLLocationManagerDelegate
+
+#define LOCATION_IGNORE_OLDER_THAN -1.0
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
+#ifdef DEBUG
+    NSLog(@"didUpdateLocations");
+#endif
+
     for (CLLocation *location in locations) {
-        [self publishLocation:location];
+#ifdef DEBUG
+        NSLog(@"location %@", [location description]);
+#endif
+        /** I Don't have a device to test that
+         **
+        if ([CLLocationManager deferredLocationUpdatesAvailable]) {
+            [self.manager allowDeferredLocationUpdatesUntilTraveled:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"]
+                                                            timeout:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"]];
+        }
+         **
+         **/
+        
+        if ([location.timestamp compare:[NSDate dateWithTimeIntervalSinceNow:LOCATION_IGNORE_OLDER_THAN]] != NSOrderedAscending ) {
+            [self publishLocation:location];
+        }
     }
 }
 
@@ -248,26 +270,12 @@
     }
 }
 
-
-- (void)alert:(NSString *)message
-{
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        self.alertView = [[mqttitudeAlertView alloc] initWithMessage:message dismissAfter:1.0];
-    }
-}
-
-- (void)notification:(NSString *)message
-{
-    UILocalNotification *notification = [[UILocalNotification alloc] init];
-    notification.alertBody = message;
-    notification.alertLaunchImage = @"itunesArtwork.png";
-    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-}
+#pragma actions
 
 - (void)switchOff
 {
-    [self.connection disconnect];
-    [self.manager stopMonitoringSignificantLocationChanges];
+    [self connectionOff];
+    [self locationOff];
     [[NSUserDefaults standardUserDefaults] synchronize];
     exit(0);
 }
@@ -286,7 +294,39 @@
 
 - (void)locationOff
 {
+    [self locationLow];
     [self.manager stopMonitoringSignificantLocationChanges];
+}
+
+- (void)locationHigh
+{
+    /**
+     ** A pedestrian strolls @ 3.6km/h or 1m/s or 60m/min
+     ** A fast car or train drives at 200km/h or 3km/min or 50m/s
+     ** A car or Bus in the city moves with 36km/h or 10m/s or 600m/min
+     **
+     **/
+    self.manager.distanceFilter = [[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"];
+    self.manager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.manager.pausesLocationUpdatesAutomatically = YES;
+    
+    [self.manager startUpdatingLocation];
+    self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
+    self.high = YES;
+}
+
+- (void)activityTimer:(NSTimer *)timer
+{
+    NSLog(@"activityTimer");
+    [self sendNow];
+}
+
+- (void)locationLow
+{
+    [self.activityTimer invalidate];
+    [self.manager stopUpdatingLocation];
+    self.high = NO;
 }
 
 - (void)reconnect
@@ -310,6 +350,61 @@
                 willRetainFlag:[[NSUserDefaults standardUserDefaults] boolForKey:@"willretain_preference"]];
 }
 
+#define BACKGROUND_DISCONNECT_AFTER 8.0
+
+- (void)publishLocation:(CLLocation *)location
+{
+    [self.annotations addLocation:location topic:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]];
+    if (!self.high) {
+        Annotation *annotation = [self.annotations myLastAnnotation];
+        NSString *message = [NSString stringWithFormat:@"Published %@ %@", annotation.title, annotation.subtitle];
+        [self notification:message];
+    }
+    NSData *data = [self formatLocationData:location];
+    [self.connection sendData:data
+                        topic:[[NSUserDefaults standardUserDefaults]
+                               stringForKey:@"topic_preference"]
+                          qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
+                       retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+
+    /**
+     *   In background, set timer to disconnect after BACKGROUND_DISCONNECT_AFTER sec. IOS will suspend app after 10 sec.
+     **/
+    
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+        if (self.disconnectTimer) {
+            [self.disconnectTimer invalidate];
+        }
+        self.disconnectTimer = [NSTimer timerWithTimeInterval:BACKGROUND_DISCONNECT_AFTER
+                                                       target:self
+                                                     selector:@selector(disconnectInBackground)
+                                                     userInfo:Nil repeats:FALSE];
+        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+        [runLoop addTimer:self.disconnectTimer
+                  forMode:NSDefaultRunLoopMode];
+    }
+}
+
+#pragma internall helpers
+
+#define DISMISS_AFTER 1.0
+
+- (void)alert:(NSString *)message
+{
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        self.alertView = [[mqttitudeAlertView alloc] initWithMessage:message dismissAfter:DISMISS_AFTER];
+    }
+}
+
+- (void)notification:(NSString *)message
+{
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    notification.alertBody = message;
+    notification.alertLaunchImage = @"itunesArtwork.png";
+    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+}
+
+
 - (NSData *)jsonToData:(NSDictionary *)jsonObject
 {
     NSData *data;
@@ -329,34 +424,6 @@
     return data;
 }
 
-- (void)publishLocation:(CLLocation *)location
-{
-    [self.annotations addLocation:location topic:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]];
-    Annotation *annotation = [self.annotations myLastAnnotation];
-    NSString *message = [NSString stringWithFormat:@"Published %@ %@", annotation.title, annotation.subtitle];
-    [self notification:message];
-    
-    NSData *data = [self formatLocationData:location];
-    [self.connection sendData:data
-                        topic:[[NSUserDefaults standardUserDefaults]
-                               stringForKey:@"topic_preference"]
-                          qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
-                       retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
-    
-    /**
-     *   In background, set timer to disconnect after 8 sec. IOS will suspend app after 10 sec.
-     **/
-    
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-        self.disconnectTimer = [NSTimer timerWithTimeInterval:8.0
-                                                       target:self
-                                                     selector:@selector(disconnectInBackground)
-                                                     userInfo:Nil repeats:FALSE];
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        [runLoop addTimer:self.disconnectTimer
-                  forMode:NSDefaultRunLoopMode];
-    }
-}
 
 - (void)disconnectInBackground
 {

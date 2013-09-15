@@ -13,10 +13,12 @@
 		84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E3217D2D1ED0088DF92 /* Annotations.m */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
 		846BD30117DDEBD5006AF798 /* center.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FD17DDEBD5006AF798 /* center.png */; };
-		846BD30217DDEBD5006AF798 /* exit.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FE17DDEBD5006AF798 /* exit.png */; };
 		846BD30317DDEBD5006AF798 /* friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FF17DDEBD5006AF798 /* friends.png */; };
 		846BD30417DDEBD5006AF798 /* send.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD30017DDEBD5006AF798 /* send.png */; };
-		8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8485A8A617C178AF00D3348A /* AddressBookUI.framework */; };
+		848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036817E47ADC00152C26 /* AddressBook.framework */; };
+		848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036A17E4841500152C26 /* AddressBookUI.framework */; };
+		848A036E17E5B95900152C26 /* move.png in Resources */ = {isa = PBXBuildFile; fileRef = 848A036D17E5B95900152C26 /* move.png */; };
+		848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */; };
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
 		84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19817C7B12C00C47B65 /* Annotation.m */; };
@@ -61,10 +63,14 @@
 		84540E3217D2D1ED0088DF92 /* Annotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotations.m; sourceTree = "<group>"; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		846BD2FD17DDEBD5006AF798 /* center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = center.png; sourceTree = "<group>"; };
-		846BD2FE17DDEBD5006AF798 /* exit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exit.png; sourceTree = "<group>"; };
 		846BD2FF17DDEBD5006AF798 /* friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends.png; sourceTree = "<group>"; };
 		846BD30017DDEBD5006AF798 /* send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = send.png; sourceTree = "<group>"; };
-		8485A8A617C178AF00D3348A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		848A036817E47ADC00152C26 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		848A036A17E4841500152C26 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		848A036C17E4877100152C26 /* MQTTitude.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MQTTitude.entitlements; path = MQTTitude/MQTTitude.entitlements; sourceTree = "<group>"; };
+		848A036D17E5B95900152C26 /* move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = move.png; sourceTree = "<group>"; };
+		848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendAnnotationView.h; sourceTree = "<group>"; };
+		848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeFriendAnnotationView.m; sourceTree = "<group>"; };
 		84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAppDelegate.h; sourceTree = "<group>"; };
 		84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAppDelegate.m; sourceTree = "<group>"; };
 		84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeViewController.h; sourceTree = "<group>"; };
@@ -120,7 +126,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */,
+				848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */,
+				848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */,
 				84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */,
 				84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */,
 				84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */,
@@ -154,13 +161,14 @@
 		84CF99FC17BEED5B00E1333C = {
 			isa = PBXGroup;
 			children = (
+				848A036C17E4877100152C26 /* MQTTitude.entitlements */,
 				84540E3517D33ACA0088DF92 /* Settings.bundle */,
 				84BDE1A917C7B16700C47B65 /* icon_114x114.png */,
 				84BDE1A717C7B15F00C47B65 /* icon_57x57.png */,
 				84BDE1C317C7B46F00C47B65 /* icon_72x72.png */,
 				84BDE1C417C7B46F00C47B65 /* icon_144x144.png */,
 				846BD2FD17DDEBD5006AF798 /* center.png */,
-				846BD2FE17DDEBD5006AF798 /* exit.png */,
+				848A036D17E5B95900152C26 /* move.png */,
 				846BD2FF17DDEBD5006AF798 /* friends.png */,
 				84C50F4D17E06C9C00726FD5 /* connection.png */,
 				846BD30017DDEBD5006AF798 /* send.png */,
@@ -188,7 +196,8 @@
 		84CF9A0717BEED5B00E1333C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8485A8A617C178AF00D3348A /* AddressBookUI.framework */,
+				848A036A17E4841500152C26 /* AddressBookUI.framework */,
+				848A036817E47ADC00152C26 /* AddressBook.framework */,
 				84CF9A5317BEF45700E1333C /* CoreLocation.framework */,
 				84CF9A5117BEF44F00E1333C /* MapKit.framework */,
 				84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */,
@@ -210,6 +219,8 @@
 				84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */,
 				84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */,
 				84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */,
+				848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */,
+				848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */,
 				84C50F4317E0540200726FD5 /* mqttitudeAlertView.h */,
 				84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */,
 				84BDE19717C7B12C00C47B65 /* Annotation.h */,
@@ -315,11 +326,11 @@
 				84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */,
 				8406F23C17D8A78B00C463F5 /* Location.gpx in Resources */,
 				846BD30117DDEBD5006AF798 /* center.png in Resources */,
-				846BD30217DDEBD5006AF798 /* exit.png in Resources */,
 				846BD30317DDEBD5006AF798 /* friends.png in Resources */,
 				846BD30417DDEBD5006AF798 /* send.png in Resources */,
 				84C50F4C17E06B1F00726FD5 /* location.png in Resources */,
 				84C50F4E17E06C9C00726FD5 /* connection.png in Resources */,
+				848A036E17E5B95900152C26 /* move.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +355,7 @@
 				84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */,
 				84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */,
 				84C50F4817E062EC00726FD5 /* mqttitudeIndicatorButton.m in Sources */,
+				848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

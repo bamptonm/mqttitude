@@ -33,7 +33,7 @@ typedef enum {
 @class MQTTEncoder;
 
 @protocol MQTTEncoderDelegate <NSObject>
-- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode;
+- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode error:(NSError *)error;
 @end
 
 

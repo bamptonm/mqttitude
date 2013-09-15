@@ -18,11 +18,6 @@
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) NSMutableArray *fifo;
 
-@property (strong, nonatomic) NSData *lastData;
-@property (strong, nonatomic) NSString *lastTopic;
-@property (nonatomic) NSInteger lastQos;
-@property (nonatomic) BOOL lastRetainFlag;
-
 @property (strong, nonatomic) NSString *lastHost;
 @property (nonatomic) NSInteger lastPort;
 @property (nonatomic) BOOL lastTls;
@@ -40,7 +35,7 @@
 @property (strong, nonatomic, readwrite) NSDate *lastConnected;
 @property (strong, nonatomic, readwrite) NSDate *lastClosed;
 @property (strong, nonatomic, readwrite) NSDate *lastError;
-@property (nonatomic, readwrite) NSInteger lastErrorCode;
+@property (nonatomic, readwrite) NSError *lastErrorCode;
 
 @end
 
@@ -53,6 +48,9 @@
 {
     self = [super init];
     self.state = state_starting;
+    self.lastError = [NSDate dateWithTimeIntervalSince1970:0];
+    self.lastConnected = [NSDate dateWithTimeIntervalSince1970:0];
+    self.lastClosed = [NSDate dateWithTimeIntervalSince1970:0];
     return self;
 }
 
@@ -122,17 +120,27 @@
 
 - (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
 {
-    self.lastData = data;
-    self.lastTopic = topic;
-    self.lastQos = qos;
-    self.lastRetainFlag = retainFlag;
-    
-    [self sendInternal];
-}
-
-- (void)sendDataAsLast
-{
-    [self sendInternal];
+    if (self.state != state_connected) {
+#ifdef DEBUG
+        NSLog(@"into fifo");
+#endif
+        NSDictionary *parameters = @{
+                                     @"DATA": data,
+                                     @"TOPIC": topic,
+                                     @"QOS": [NSString stringWithFormat:@"%d",  qos],
+                                     @"RETAINFLAG": [NSString stringWithFormat:@"%d",  retainFlag]
+                                     };
+        [self.fifo addObject:parameters];
+        [self connectToLast];
+    } else {
+#ifdef DEBUG
+        NSLog(@"Sending: %@", [Connection dataToString:data]);
+#endif
+        [self.session publishData:data
+                          onTopic:topic
+                           retain:retainFlag
+                              qos:qos];
+    }
 }
 
 - (void)disconnect
@@ -167,7 +175,7 @@
 #pragma mark - MQtt Callback methods
 
 
-- (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode info:(NSInteger)info
+- (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode error:(NSError *)error
 {
 #ifdef DEBUG
     NSLog(@"MQTTitude eventCode: %d", eventCode);
@@ -211,7 +219,7 @@
             
             self.state = state_error;
             self.lastError = [NSDate date];
-            self.lastErrorCode = info;
+            self.lastErrorCode = error;
             break;
         }
         default:
@@ -258,33 +266,6 @@
                            usingSSL:self.lastTls];
     } else {
         NSLog(@"MQTTitude not starting, can't connect");
-    }
-}
-
-
-
-- (void)sendInternal
-{    
-    if (self.state != state_connected) {
-#ifdef DEBUG
-        NSLog(@"into fifo");
-#endif
-        NSDictionary *parameters = @{
-                                     @"DATA": self.lastData,
-                                     @"TOPIC": self.lastTopic,
-                                     @"QOS": [NSString stringWithFormat:@"%d",  self.lastQos],
-                                     @"RETAINFLAG": [NSString stringWithFormat:@"%d",  self.lastRetainFlag]
-                                     };
-        [self.fifo addObject:parameters];
-        [self connectToLast];
-     } else {
-#ifdef DEBUG
-        NSLog(@"Sending: %@", [Connection dataToString:self.lastData]);
-#endif
-        [self.session publishData:self.lastData
-                          onTopic:self.lastTopic
-                           retain:self.lastRetainFlag
-                              qos:self.lastQos];
     }
 }
 

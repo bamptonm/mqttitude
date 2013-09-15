@@ -55,7 +55,7 @@
                 self.header = buffer;
                 if (n == -1) {
                     self.status = MQTTDecoderStatusConnectionError;
-                    [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError];
+                    [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError error:self.stream.streamError];
                 }
                 else if (n == 1) {
                     self.length = 0;
@@ -68,7 +68,7 @@
                 NSInteger n = [self.stream read:&digit maxLength:1];
                 if (n == -1) {
                     self.status = MQTTDecoderStatusConnectionError;
-                    [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError];
+                    [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError error:self.stream.streamError];
                     break;
                 }
                 else if (n == 0) {
@@ -94,7 +94,7 @@
                     n = [self.stream read:buffer maxLength:toRead];
                     if (n == -1) {
                         self.status = MQTTDecoderStatusConnectionError;
-                        [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError];
+                        [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError error:self.stream.streamError];
                     }
                     else {
                         [self.dataBuffer appendBytes:buffer length:n];
@@ -128,12 +128,23 @@
             break;
         case NSStreamEventEndEncountered:
             self.status = MQTTDecoderStatusConnectionClosed;
-            [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionClosed];
+            [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionClosed error:nil];
             break;
         case NSStreamEventErrorOccurred:
+        {
             self.status = MQTTDecoderStatusConnectionError;
-            [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError];
+            NSError *error = [self.stream streamError];
+            NSLog(@"Decoder Error: %d %@ %@ %@ %@ %@ %@",
+                  error.code,
+                  error.domain,
+                  error.userInfo,
+                  error.localizedDescription,
+                  error.localizedFailureReason,
+                  error.localizedRecoveryOptions,
+                  error.localizedRecoverySuggestion);
+            [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError error:error];
             break;
+        }
         default:
             NSLog(@"unhandled event code");
             break;
