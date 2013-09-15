@@ -1,5 +1,14 @@
 # Changelog: iOS app
 
+### 2013-09-15 version 3.5
+
+Feature: Move Mode (#125)
+Feature: Show Friends: (#129)
+Feature: More detailed error messages (#128)
+Feature: Unchanged connection parameter settings (#123)
+
+Fixes: #118, #124, #121
+
 ### 2013-09-12 version 3.3
 
 * Auto Disappearing  Notifications in Foreground
