@@ -67,7 +67,6 @@
 		846BD30017DDEBD5006AF798 /* send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = send.png; sourceTree = "<group>"; };
 		848A036817E47ADC00152C26 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		848A036A17E4841500152C26 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		848A036C17E4877100152C26 /* MQTTitude.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MQTTitude.entitlements; path = MQTTitude/MQTTitude.entitlements; sourceTree = "<group>"; };
 		848A036D17E5B95900152C26 /* move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = move.png; sourceTree = "<group>"; };
 		848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendAnnotationView.h; sourceTree = "<group>"; };
 		848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeFriendAnnotationView.m; sourceTree = "<group>"; };
@@ -161,7 +160,6 @@
 		84CF99FC17BEED5B00E1333C = {
 			isa = PBXGroup;
 			children = (
-				848A036C17E4877100152C26 /* MQTTitude.entitlements */,
 				84540E3517D33ACA0088DF92 /* Settings.bundle */,
 				84BDE1A917C7B16700C47B65 /* icon_114x114.png */,
 				84BDE1A717C7B15F00C47B65 /* icon_57x57.png */,
