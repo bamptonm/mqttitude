@@ -137,10 +137,13 @@
     }
     while (length > 0);
     
+    
     // encode message data
     if ([msg data] != NULL) {
         [self.buffer appendData:[msg data]];
     }
+
+    NSLog(@"Buffer(%d)=%@", self.buffer.length, [self.buffer description]);
     
     n = [self.stream write:[self.buffer bytes] maxLength:[self.buffer length]];
     if (n == -1) {
