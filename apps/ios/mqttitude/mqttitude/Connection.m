@@ -200,6 +200,9 @@
         }
         case MQTTSessionEventConnectionClosed:
             self.lastClosed = [NSDate date];
+            /* this informs the caller that the connection is closed 
+             * specifically, the caller can end the background task now */
+            self.state = state_closed;
             self.state = state_starting;
             break;
         case MQTTSessionEventProtocolError:

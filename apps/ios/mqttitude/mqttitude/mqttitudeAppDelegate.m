@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSTimer *disconnectTimer;
 @property (strong, nonatomic) NSTimer *activityTimer;
 @property (strong, nonatomic) mqttitudeAlertView *alertView;
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 
 @end
 
@@ -23,7 +24,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+// Override point for customization after application launch.
 #ifdef DEBUG
     NSLog(@"application didFinishLaunchingWithOptions");
     NSEnumerator *enumerator = [launchOptions keyEnumerator];
@@ -32,6 +33,9 @@
         NSLog(@"%@:%@", key, [[launchOptions objectForKey:key] description]);
     }
 #endif
+    
+    self.backgroundTask = UIBackgroundTaskInvalid;
+    
     NSDictionary *appDefaults = @{
                                   @"mindist_preference" : @(100),
                                   @"mintime_preference" : @(300),
@@ -129,7 +133,12 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 #ifdef DEBUG
     NSLog(@"applicationDidEnterBackground");
-#endif    
+#endif
+    self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^
+                           {
+                               NSLog(@"Backgroundtaskexpirationhandler");
+                               self.backgroundTask = UIBackgroundTaskInvalid;
+                           }];
 }
 
 
@@ -223,6 +232,7 @@
 
 - (void)showState:(NSInteger)state
 {
+    
     id<ConnectionDelegate> cd;
     
     if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
@@ -234,6 +244,19 @@
         cd = (id<ConnectionDelegate>)self.window.rootViewController;
     }
     [cd showState:state];
+
+    /**
+     ** This is a hack to ensure the connection gets gracefully closed at the server
+     **
+     ** If the background task is ended, occasionally the disconnect message is not received well before the server senses the tcp disconnect
+     **/
+    if (state == state_closed) {
+        if (self.backgroundTask) {
+            NSLog(@"endBackGroundTask");
+            [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
+            self.backgroundTask = UIBackgroundTaskInvalid;
+        }
+    }
 }
 
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic

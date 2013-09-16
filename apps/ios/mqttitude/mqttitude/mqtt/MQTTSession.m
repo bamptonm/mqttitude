@@ -165,6 +165,8 @@
 - (void)closeInternal
 {
     NSLog(@"closing");
+    
+    /*
     if (self.encoder) {
         [self.encoder close];
         self.encoder = nil;
@@ -173,6 +175,7 @@
         [self.decoder close];
         self.decoder = nil;
     }
+    */
     if (self.keepAliveTimer) {
         [self.keepAliveTimer invalidate];
         self.keepAliveTimer = nil;
@@ -244,7 +247,7 @@
     MQTTSessionEvent event;
     switch (eventCode) {
         case MQTTDecoderEventConnectionClosed:
-            event = MQTTSessionEventConnectionError;
+            event = MQTTSessionEventConnectionClosed;
             break;
         case MQTTDecoderEventConnectionError:
             event = MQTTSessionEventConnectionError;

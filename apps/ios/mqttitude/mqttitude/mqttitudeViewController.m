@@ -113,15 +113,7 @@
 }
 
 - (IBAction)showAll:(UIBarButtonItem *)sender {
-    MKMapRect rect;
-    CLLocationCoordinate2D coordinate = [self.annotations myLastAnnotation].coordinate;
-    double p = 1200 * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
-    
-    rect.origin = MKMapPointForCoordinate(coordinate);
-    rect.origin.x -= p/2;
-    rect.origin.y -= p/2;
-    rect.size.width = p;
-    rect.size.height = p;
+    MKMapRect rect = [self initialRect];
     
     for (Annotation *annotation in self.annotations.annotationArray)
     {
@@ -153,17 +145,36 @@
     if (self.mapView.showsUserLocation) {
         [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     } else {
-        MKMapRect rect;
-        CLLocationCoordinate2D coordinate = [self.annotations myLastAnnotation].coordinate;
-        double p = 1200 * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
-
-        rect.origin = MKMapPointForCoordinate(coordinate);
-        rect.origin.x -= p/2;
-        rect.origin.y -= p/2;
-        rect.size.width = p;
-        rect.size.height = p;
-        [self.mapView setVisibleMapRect:rect animated:YES];
+        [self.mapView setVisibleMapRect:[self initialRect] animated:YES];
     }
+}
+
+#define INITIAL_RADIUS 600.0
+
+- (MKMapRect)initialRect
+{
+    MKMapRect rect;
+    CLLocationCoordinate2D coordinate;
+    
+    /* start with my own last location published */
+    if ([self.annotations myLastAnnotation]) {
+        coordinate = [self.annotations myLastAnnotation].coordinate;
+        
+    } else {
+        /* if this is not set yet, use location manager */
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+        coordinate = delegate.manager.location.coordinate;
+    }
+    
+    double r = INITIAL_RADIUS * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
+    
+    rect.origin = MKMapPointForCoordinate(coordinate);
+    rect.origin.x -= r;
+    rect.origin.y -= r;
+    rect.size.width = 2*r;
+    rect.size.height = 2*r;
+    
+    return rect;
 }
 
 - (void)annotationsChanged:(Annotations *)annotations

@@ -74,7 +74,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "96"
          endingLineNumber = "96"
-         landmarkName = "-showAll:"
+         landmarkName = "-move:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -95,11 +95,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400753894.169112"
+         timestampString = "401027535.546204"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "51"
-         endingLineNumber = "51"
+         startingLineNumber = "55"
+         endingLineNumber = "55"
          landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -200,7 +200,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "157"
          endingLineNumber = "157"
-         landmarkName = "-annotationsChanged:"
+         landmarkName = "-initialRect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -213,7 +213,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "165"
          endingLineNumber = "165"
-         landmarkName = "-annotationsChanged:"
+         landmarkName = "-initialRect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -380,7 +380,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "189"
          endingLineNumber = "189"
-         landmarkName = "-showState:"
+         landmarkName = "-annotationsChanged:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -491,7 +491,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "161"
          endingLineNumber = "161"
-         landmarkName = "-annotationsChanged:"
+         landmarkName = "-initialRect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -549,12 +549,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "418"
-         endingLineNumber = "418"
-         landmarkName = "-handlePubrel:"
+         startingLineNumber = "420"
+         endingLineNumber = "420"
+         landmarkName = "-handlePubrec:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -562,12 +562,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "420"
-         endingLineNumber = "420"
-         landmarkName = "-handlePubrel:"
+         startingLineNumber = "422"
+         endingLineNumber = "422"
+         landmarkName = "-handlePubrec:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -588,12 +588,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "250"
-         endingLineNumber = "250"
-         landmarkName = "-decoder:handleEvent:"
+         startingLineNumber = "252"
+         endingLineNumber = "252"
+         landmarkName = "-decoder:handleEvent:error:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -619,7 +619,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "166"
          endingLineNumber = "166"
-         landmarkName = "-annotationsChanged:"
+         landmarkName = "-initialRect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -640,11 +640,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "186"
-         endingLineNumber = "186"
+         startingLineNumber = "188"
+         endingLineNumber = "188"
          landmarkName = "-timerHandler:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -653,11 +653,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400753894.169112"
+         timestampString = "401027535.546204"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "56"
-         endingLineNumber = "56"
+         startingLineNumber = "60"
+         endingLineNumber = "60"
          landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -679,12 +679,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400756274.455486"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "393"
-         endingLineNumber = "393"
-         landmarkName = "-jsonToData:"
+         startingLineNumber = "416"
+         endingLineNumber = "416"
+         landmarkName = "-alert:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -783,12 +783,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "453"
-         endingLineNumber = "453"
-         landmarkName = "-send:"
+         startingLineNumber = "455"
+         endingLineNumber = "455"
+         landmarkName = "-handlePubcomp:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -796,12 +796,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "449"
-         endingLineNumber = "449"
-         landmarkName = "-send:"
+         startingLineNumber = "451"
+         endingLineNumber = "451"
+         landmarkName = "-handlePubrel:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -822,11 +822,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400753894.169112"
+         timestampString = "401027535.546204"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "30"
-         endingLineNumber = "30"
+         startingLineNumber = "31"
+         endingLineNumber = "31"
          landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -840,7 +840,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "186"
          endingLineNumber = "186"
-         landmarkName = "-showState:"
+         landmarkName = "-annotationsChanged:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -848,12 +848,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400754251.679469"
+         timestampString = "401029481.956226"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "195"
-         endingLineNumber = "195"
-         landmarkName = "-locationManager:didFailWithError:"
+         startingLineNumber = "204"
+         endingLineNumber = "204"
+         landmarkName = "-locationManager:didUpdateLocations:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -861,11 +861,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400754251.679469"
+         timestampString = "401029481.956226"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "182"
-         endingLineNumber = "182"
+         startingLineNumber = "191"
+         endingLineNumber = "191"
          landmarkName = "-locationManager:didUpdateLocations:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -879,7 +879,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "83"
          endingLineNumber = "83"
-         landmarkName = "-connection:"
+         landmarkName = "-move:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -892,7 +892,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "156"
          endingLineNumber = "156"
-         landmarkName = "-annotationsChanged:"
+         landmarkName = "-initialRect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -926,12 +926,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeAppDelegate.m"
-         timestampString = "400756274.455486"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "401"
-         endingLineNumber = "401"
-         landmarkName = "-disconnectInBackground"
+         startingLineNumber = "424"
+         endingLineNumber = "424"
+         landmarkName = "-notification:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -944,7 +944,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "188"
          endingLineNumber = "188"
-         landmarkName = "-handleEvent:event:info:"
+         landmarkName = "-handleEvent:event:error:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -957,7 +957,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "189"
          endingLineNumber = "189"
-         landmarkName = "-handleEvent:event:info:"
+         landmarkName = "-handleEvent:event:error:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -970,7 +970,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "196"
          endingLineNumber = "196"
-         landmarkName = "-handleEvent:event:info:"
+         landmarkName = "-handleEvent:event:error:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -983,7 +983,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "192"
          endingLineNumber = "192"
-         landmarkName = "-handleEvent:event:info:"
+         landmarkName = "-handleEvent:event:error:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1009,7 +1009,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "176"
          endingLineNumber = "176"
-         landmarkName = "-prepareForSegue:sender:"
+         landmarkName = "-initialRect"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1017,11 +1017,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "198"
-         endingLineNumber = "198"
+         startingLineNumber = "200"
+         endingLineNumber = "200"
          landmarkName = "-timerHandler:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1043,46 +1043,7 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "195"
-         endingLineNumber = "195"
-         landmarkName = "-timerHandler:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "201"
-         endingLineNumber = "201"
-         landmarkName = "-timerHandler:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "196"
-         endingLineNumber = "196"
-         landmarkName = "-timerHandler:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "197"
@@ -1095,12 +1056,51 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqtt/MQTTSession.m"
-         timestampString = "400765344.34537"
+         timestampString = "401030130.905229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "226"
-         endingLineNumber = "226"
-         landmarkName = "-encoder:handleEvent:"
+         startingLineNumber = "203"
+         endingLineNumber = "203"
+         landmarkName = "-timerHandler:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/mqtt/MQTTSession.m"
+         timestampString = "401030130.905229"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "198"
+         endingLineNumber = "198"
+         landmarkName = "-timerHandler:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/mqtt/MQTTSession.m"
+         timestampString = "401030130.905229"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "199"
+         endingLineNumber = "199"
+         landmarkName = "-timerHandler:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/mqtt/MQTTSession.m"
+         timestampString = "401030130.905229"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "228"
+         endingLineNumber = "228"
+         landmarkName = "-encoder:handleEvent:error:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1152,7 +1152,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "297"
          endingLineNumber = "297"
-         landmarkName = "-imageOfPerson:"
+         landmarkName = "-mapView:viewForAnnotation:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1165,7 +1165,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "302"
          endingLineNumber = "302"
-         landmarkName = "-imageOfPerson:"
+         landmarkName = "-mapView:viewForAnnotation:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1191,7 +1191,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "286"
          endingLineNumber = "286"
-         landmarkName = "-imageOfPerson:"
+         landmarkName = "-mapView:viewForAnnotation:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1204,8 +1204,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "313"
          endingLineNumber = "313"
-         landmarkName = "-imageOfPerson:"
-         landmarkType = "5">
+         landmarkName = "@implementation mqttitudeViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1217,8 +1217,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "255"
          endingLineNumber = "255"
-         landmarkName = "-mapView:viewForAnnotation:"
-         landmarkType = "5">
+         landmarkName = "@implementation mqttitudeViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1256,7 +1256,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "249"
          endingLineNumber = "249"
-         landmarkName = "-mapView:viewForAnnotation:"
+         landmarkName = "-showState:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1282,8 +1282,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "257"
          endingLineNumber = "257"
-         landmarkName = "-mapView:viewForAnnotation:"
-         landmarkType = "5">
+         landmarkName = "@implementation mqttitudeViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1295,7 +1295,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "252"
          endingLineNumber = "252"
-         landmarkName = "-mapView:viewForAnnotation:"
+         landmarkName = "-showState:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1309,6 +1309,58 @@
          startingLineNumber = "34"
          endingLineNumber = "34"
          landmarkName = "-setPersonImage:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/mqttitudeAppDelegate.m"
+         timestampString = "401030130.905229"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "264"
+         endingLineNumber = "264"
+         landmarkName = "-handleMessage:onTopic:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/Connection.m"
+         timestampString = "401027535.546204"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "289"
+         endingLineNumber = "289"
+         landmarkName = "+dataToString:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/Connection.m"
+         timestampString = "401024462.700171"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "137"
+         endingLineNumber = "137"
+         landmarkName = "-sendData:topic:qos:retain:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mqttitude/Connection.m"
+         timestampString = "401030527.05029"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "203"
+         endingLineNumber = "203"
+         landmarkName = "-handleEvent:event:error:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

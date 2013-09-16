@@ -18,6 +18,7 @@ enum state {
     state_error,
     state_connected,
     state_closing,
+    state_closed,
     state_exit
 };
 

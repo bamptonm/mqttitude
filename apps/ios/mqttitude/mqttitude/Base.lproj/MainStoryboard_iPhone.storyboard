@@ -78,18 +78,18 @@
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="trailing" secondItem="ffw-DX-wWE" secondAttribute="trailing" type="user" id="6aj-bs-ue3"/>
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="bottom" secondItem="ffw-DX-wWE" secondAttribute="bottom" type="user" id="F5f-0s-7Sd"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" type="user" id="IxT-f9-kro"/>
+                            <constraint firstItem="KyD-D5-srP" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" constant="20" symbolic="YES" type="default" id="OYl-Vg-4WY"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="default" id="PdQ-vV-ZhX"/>
                             <constraint firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" constant="44" type="user" id="bvz-dQ-ulQ"/>
-                            <constraint firstItem="KyD-D5-srP" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" constant="20" symbolic="YES" type="default" id="lPS-Vv-hfI"/>
+                            <constraint firstAttribute="trailing" secondItem="KyD-D5-srP" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="k4C-Y8-NI7"/>
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="leading" secondItem="eED-yn-0ps" secondAttribute="leading" type="default" id="ldS-90-vqe"/>
-                            <constraint firstAttribute="trailing" secondItem="KyD-D5-srP" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="n4z-mf-G9f"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="trailing" secondItem="ADW-aD-LPR" secondAttribute="trailing" type="default" id="zkC-ky-bM7"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MQTTitude" id="OeB-EW-2jx"/>
                     <connections>
                         <outlet property="connectionButton" destination="cxz-ek-1bc" id="7p6-QP-77L"/>
-                        <outlet property="indicatorButton" destination="KyD-D5-srP" id="025-Ht-6Xz"/>
+                        <outlet property="indicatorButton" destination="KyD-D5-srP" id="fbG-a3-JPb"/>
                         <outlet property="locationButton" destination="BCW-Nj-aGy" id="EWV-nb-awK"/>
                         <outlet property="mapView" destination="eED-yn-0ps" id="ySD-3E-pwJ"/>
                         <outlet property="moveButton" destination="ZGI-5D-f3y" id="cZv-sB-oLo"/>
@@ -248,7 +248,7 @@
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLk-V9-E1v">
                                                     <rect key="frame" x="0.0" y="0.0" width="300" height="116"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
