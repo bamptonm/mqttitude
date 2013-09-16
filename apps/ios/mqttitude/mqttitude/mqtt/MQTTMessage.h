@@ -63,9 +63,6 @@ enum {
 + (id)unsubscribeMessageWithMessageId:(UInt16)msgId
                                 topic:(NSString*)topic;
 + (id)publishMessageWithData:(NSData*)payload
-                     onTopic:(NSString*)theTopic
-                     retainFlag:(BOOL)retain;
-+ (id)publishMessageWithData:(NSData*)payload
                      onTopic:(NSString*)topic
                          qos:(UInt8)qosLevel
                        msgId:(UInt16)msgId

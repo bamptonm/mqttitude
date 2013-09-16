@@ -132,27 +132,13 @@
 
 + (id)publishMessageWithData:(NSData*)payload
                      onTopic:(NSString*)topic
-                  retainFlag:(BOOL)retain {
-    NSMutableData* data = [NSMutableData data];
-    [data appendMQTTString:topic];
-    [data appendData:payload];
-    MQTTMessage *msg = [[MQTTMessage alloc] initWithType:MQTTPublish
-                                                     qos:0
-                                              retainFlag:retain
-                                                 dupFlag:false
-                                                    data:data];
-    return msg;
-}
-
-+ (id)publishMessageWithData:(NSData*)payload
-                     onTopic:(NSString*)topic
                          qos:(UInt8)qosLevel
                        msgId:(UInt16)msgId
                   retainFlag:(BOOL)retain
                      dupFlag:(BOOL)dup {
     NSMutableData* data = [NSMutableData data];
     [data appendMQTTString:topic];
-    [data appendUInt16BigEndian:msgId];
+    if (msgId) [data appendUInt16BigEndian:msgId];
     [data appendData:payload];
     MQTTMessage *msg = [[MQTTMessage alloc] initWithType:MQTTPublish
                                                      qos:qosLevel

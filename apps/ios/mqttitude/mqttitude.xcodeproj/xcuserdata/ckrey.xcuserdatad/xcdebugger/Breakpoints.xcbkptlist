@@ -645,8 +645,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "188"
          endingLineNumber = "188"
-         landmarkName = "-timerHandler:"
-         landmarkType = "5">
+         landmarkName = "@implementation MQTTSession"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -788,8 +788,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "455"
          endingLineNumber = "455"
-         landmarkName = "-handlePubcomp:"
-         landmarkType = "5">
+         landmarkName = "@implementation MQTTSession"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
