@@ -11,6 +11,8 @@
 #import "Annotation.h"
 #import "mqttitudeIndicatorButton.h"
 #import "mqttitudeStatusTVC.h"
+#import <AddressBook/AddressBook.h>
+#import "mqttitudeFriendAnnotationView.h"
 
 @interface mqttitudeViewController ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -18,10 +20,9 @@
 @property (strong, nonatomic) UIPopoverController *myPopoverController;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *connectionButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *locationButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *moveButton;
 @property (weak, nonatomic) Annotations *annotations;
-@property (strong, nonatomic) MKCircle *circle;
-@property (strong, nonatomic) MKCircleView *circleView;
-
+@property (nonatomic) ABAddressBookRef ab;
 @end
 
 @implementation mqttitudeViewController
@@ -33,13 +34,21 @@
     /*
      * Initializing all Objects
      */
-     
+    CFErrorRef error;
+    
     [super viewDidLoad];
 
     self.mapView.delegate = self;
     [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     self.locationButton.style = UIBarButtonItemStyleDone;
     self.connectionButton.style = UIBarButtonItemStyleDone;
+    self.moveButton.style = UIBarButtonItemStyleBordered;
+    
+    self.ab = ABAddressBookCreateWithOptions(NULL, &error);
+    ABAddressBookRequestAccessWithCompletion(self.ab, ^(bool granted, CFErrorRef error) {
+        //
+    });
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -49,12 +58,6 @@
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     [self.mapView addAnnotations:self.annotations.annotationArray];
     [self showState:delegate.connection.state];
-
-    self.circle = [MKCircle circleWithCenterCoordinate:[self.annotations myLastAnnotation].coordinate
-                                                radius:500.0];
-    self.circleView = [[MKCircleView alloc] initWithCircle:self.circle];
-    self.circleView.strokeColor = [UIColor blackColor];
-    [self.mapView addOverlay:self];
 }
 
 - (IBAction)action:(UIBarButtonItem *)sender {
@@ -68,12 +71,30 @@
         self.mapView.showsUserLocation = NO;
         [delegate locationOff];
         self.locationButton.style = UIBarButtonItemStyleBordered;
+        [delegate locationLow];
+        self.moveButton.style = UIBarButtonItemStyleBordered;
     } else {
         self.mapView.showsUserLocation = YES;
         [delegate locationOn];
         self.locationButton.style = UIBarButtonItemStyleDone;
     }
 }
+
+- (IBAction)move:(UIBarButtonItem *)sender {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+    
+    if (delegate.high) {
+        [delegate locationLow];
+        self.moveButton.style = UIBarButtonItemStyleBordered;
+    } else {
+        self.mapView.showsUserLocation = YES;
+        [delegate locationOn];
+        self.locationButton.style = UIBarButtonItemStyleDone;
+        [delegate locationHigh];
+        self.moveButton.style = UIBarButtonItemStyleDone;
+    }
+}
+
 - (IBAction)connection:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     switch (delegate.connection.state) {
@@ -92,15 +113,7 @@
 }
 
 - (IBAction)showAll:(UIBarButtonItem *)sender {
-    MKMapRect rect;
-    CLLocationCoordinate2D coordinate = [self.annotations myLastAnnotation].coordinate;
-    double p = 1200 * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
-    
-    rect.origin = MKMapPointForCoordinate(coordinate);
-    rect.origin.x -= p/2;
-    rect.origin.y -= p/2;
-    rect.size.width = p;
-    rect.size.height = p;
+    MKMapRect rect = [self initialRect];
     
     for (Annotation *annotation in self.annotations.annotationArray)
     {
@@ -132,17 +145,36 @@
     if (self.mapView.showsUserLocation) {
         [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     } else {
-        MKMapRect rect;
-        CLLocationCoordinate2D coordinate = [self.annotations myLastAnnotation].coordinate;
-        double p = 1200 * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
-
-        rect.origin = MKMapPointForCoordinate(coordinate);
-        rect.origin.x -= p/2;
-        rect.origin.y -= p/2;
-        rect.size.width = p;
-        rect.size.height = p;
-        [self.mapView setVisibleMapRect:rect animated:YES];
+        [self.mapView setVisibleMapRect:[self initialRect] animated:YES];
     }
+}
+
+#define INITIAL_RADIUS 600.0
+
+- (MKMapRect)initialRect
+{
+    MKMapRect rect;
+    CLLocationCoordinate2D coordinate;
+    
+    /* start with my own last location published */
+    if ([self.annotations myLastAnnotation]) {
+        coordinate = [self.annotations myLastAnnotation].coordinate;
+        
+    } else {
+        /* if this is not set yet, use location manager */
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+        coordinate = delegate.manager.location.coordinate;
+    }
+    
+    double r = INITIAL_RADIUS * MKMapPointsPerMeterAtLatitude(coordinate.latitude);
+    
+    rect.origin = MKMapPointForCoordinate(coordinate);
+    rect.origin.x -= r;
+    rect.origin.y -= r;
+    rect.size.width = 2*r;
+    rect.size.height = 2*r;
+    
+    return rect;
 }
 
 - (void)annotationsChanged:(Annotations *)annotations
@@ -168,12 +200,6 @@
             [self.mapView addAnnotation:a];
         }
     }
-    self.circle = [MKCircle circleWithCenterCoordinate:[self.annotations myLastAnnotation].coordinate
-                                                radius:500.0];
-    self.circleView = [[MKCircleView alloc] initWithCircle:self.circle];
-    self.circleView.strokeColor = [UIColor blackColor];
-    [self.mapView removeOverlay:self];
-    [self.mapView addOverlay:self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -225,30 +251,11 @@
     }
 }
 
-#pragma MKOverlay
-
-- (CLLocationCoordinate2D)coordinate
-{
-    return self.circle.coordinate;
-}
-
-- (MKMapRect)boundingMapRect
-{
-    return self.circle.boundingMapRect;
-}
-
 #pragma MKMapViewDelegate
-
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
-{
-    if (overlay == self) {
-        return self.circleView;
-    }
-    return nil;
-}
 
 #define REUSE_ID_SELF @"MQTTitude_Annotation_self"
 #define REUSE_ID_OTHER @"MQTTitude_Annotation_other"
+#define REUSE_ID_PICTURE @"MQTTitude_Annotation_picture"
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
@@ -268,19 +275,74 @@
                     return pinAnnotationView;
                 }
             } else {
-                MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_OTHER];
-                if (annotationView) {
-                    return annotationView;
+                UIImage *image = [self imageOfPerson:MQTTannotation.topic];
+                if (image) {
+                    MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_PICTURE];
+                    if (annotationView) {
+                        if ([annotationView respondsToSelector:@selector(setPersonImage:)]) {
+                            [annotationView performSelector:@selector(setPersonImage:) withObject:image];
+                        }
+                        [annotationView setNeedsDisplay];
+                        return annotationView;
+                    } else {
+                        mqttitudeFriendAnnotationView *annotationView = [[mqttitudeFriendAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_PICTURE];
+                        annotationView.personImage = image;
+                        annotationView.canShowCallout = YES;
+                        return annotationView;
+                    }
                 } else {
-                    MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_OTHER];
-                    pinAnnotationView.pinColor = MKPinAnnotationColorGreen;
-                    pinAnnotationView.canShowCallout = YES;
-                    return pinAnnotationView;
+                    MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_OTHER];
+                    if (annotationView) {
+                        return annotationView;
+                    } else {
+                        MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_OTHER];
+                        pinAnnotationView.pinColor = MKPinAnnotationColorGreen;
+                        pinAnnotationView.canShowCallout = YES;
+                        return pinAnnotationView;
+                    }
                 }
+                
             }
         }
         return nil;
     }
 }
 
+#define IMAGE_SIZE 40.0
+#define SERVICE_NAME CFSTR("MQTTitude")
+
+- (UIImage *)imageOfPerson:(NSString *)topic
+{
+    UIImage *image;
+        
+    CFArrayRef records = ABAddressBookCopyArrayOfAllPeople(self.ab);
+    
+    for (CFIndex i = 0; i < CFArrayGetCount(records); i++) {
+        ABRecordRef record = CFArrayGetValueAtIndex(records, i);
+        
+        ABMultiValueRef socials = ABRecordCopyValue(record, kABPersonSocialProfileProperty);
+        if (socials) {
+            CFIndex socialsCount = ABMultiValueGetCount(socials);
+            
+            for (CFIndex k = 0 ; k < socialsCount ; k++) {
+                CFDictionaryRef socialValue = ABMultiValueCopyValueAtIndex(socials, k);
+                
+                if(CFStringCompare( CFDictionaryGetValue(socialValue, kABPersonSocialProfileServiceKey), SERVICE_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                    if (CFStringCompare( CFDictionaryGetValue(socialValue, kABPersonSocialProfileUsernameKey), (__bridge CFStringRef)(topic), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                        if (ABPersonHasImageData(record)) {
+                            CFDataRef imageData = ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatThumbnail);
+                            image = [UIImage imageWithData:(__bridge NSData *)(imageData)];
+                        }
+                    }
+                }
+                
+                CFRelease(socialValue);
+            }
+            CFRelease(socials);
+        }
+        CFRelease(record);
+    }
+    //CFRelease(records);
+    return image;
+}
 @end

@@ -37,7 +37,7 @@ typedef enum {
 @protocol MQTTDecoderDelegate <NSObject>
 
 - (void)decoder:(MQTTDecoder *)sender newMessage:(MQTTMessage*)msg;
-- (void)decoder:(MQTTDecoder *)sender handleEvent:(MQTTDecoderEvent)eventCode;
+- (void)decoder:(MQTTDecoder *)sender handleEvent:(MQTTDecoderEvent)eventCode error:(NSError *)error;
 
 @end
 

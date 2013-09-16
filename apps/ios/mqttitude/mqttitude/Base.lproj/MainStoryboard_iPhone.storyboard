@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4510" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
     <dependencies>
+        <deployment defaultVersion="1552" identifier="iOS"/>
         <development version="4600" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
         <!--Mqttitude View Controller - MQTTitude-->
@@ -14,10 +15,16 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ADW-aD-LPR">
+                                <rect key="frame" x="0.0" y="460" width="320" height="44"/>
                                 <items>
                                     <barButtonItem image="location.png" id="BCW-Nj-aGy">
                                         <connections>
                                             <action selector="stop:" destination="HII-kF-avN" id="ROZ-Df-N3s"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem image="move.png" id="ZGI-5D-f3y">
+                                        <connections>
+                                            <action selector="move:" destination="HII-kF-avN" id="QwW-be-nXh"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="iAt-gI-5ll"/>
@@ -44,8 +51,11 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="eED-yn-0ps"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="eED-yn-0ps">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                            </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KyD-D5-srP" customClass="mqttitudeIndicatorButton">
+                                <rect key="frame" x="265" y="20" width="35" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="BcU-UY-YBl"/>
                                     <constraint firstAttribute="height" constant="35" id="cnF-rf-DYv"/>
@@ -68,20 +78,21 @@
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="trailing" secondItem="ffw-DX-wWE" secondAttribute="trailing" type="user" id="6aj-bs-ue3"/>
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="bottom" secondItem="ffw-DX-wWE" secondAttribute="bottom" type="user" id="F5f-0s-7Sd"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" type="user" id="IxT-f9-kro"/>
+                            <constraint firstItem="KyD-D5-srP" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" constant="20" symbolic="YES" type="default" id="OYl-Vg-4WY"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="default" id="PdQ-vV-ZhX"/>
                             <constraint firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" constant="44" type="user" id="bvz-dQ-ulQ"/>
-                            <constraint firstItem="KyD-D5-srP" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" constant="20" symbolic="YES" type="default" id="lPS-Vv-hfI"/>
+                            <constraint firstAttribute="trailing" secondItem="KyD-D5-srP" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="k4C-Y8-NI7"/>
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="leading" secondItem="eED-yn-0ps" secondAttribute="leading" type="default" id="ldS-90-vqe"/>
-                            <constraint firstAttribute="trailing" secondItem="KyD-D5-srP" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="n4z-mf-G9f"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="trailing" secondItem="ADW-aD-LPR" secondAttribute="trailing" type="default" id="zkC-ky-bM7"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MQTTitude" id="OeB-EW-2jx"/>
                     <connections>
                         <outlet property="connectionButton" destination="cxz-ek-1bc" id="7p6-QP-77L"/>
-                        <outlet property="indicatorButton" destination="KyD-D5-srP" id="025-Ht-6Xz"/>
+                        <outlet property="indicatorButton" destination="KyD-D5-srP" id="fbG-a3-JPb"/>
                         <outlet property="locationButton" destination="BCW-Nj-aGy" id="EWV-nb-awK"/>
                         <outlet property="mapView" destination="eED-yn-0ps" id="ySD-3E-pwJ"/>
+                        <outlet property="moveButton" destination="ZGI-5D-f3y" id="cZv-sB-oLo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rnL-Hh-C5D" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -107,6 +118,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="z07-nI-24D">
+                                                    <rect key="frame" x="20" y="7" width="260" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="aJ2-cZ-cB1"/>
                                                         <constraint firstAttribute="width" constant="260" id="mCN-oW-Q93"/>
@@ -134,11 +146,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Connected" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVD-LD-2tf">
+                                                    <rect key="frame" x="20" y="11" width="85" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wu8-hM-azq">
+                                                    <rect key="frame" x="113" y="7" width="169" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="HsZ-pk-M0R"/>
                                                         <constraint firstAttribute="width" constant="169" id="mdj-Uw-2NH"/>
@@ -164,11 +178,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Closed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Izv-mH-5Yz">
+                                                    <rect key="frame" x="20" y="11" width="54" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OMs-Lt-Xta">
+                                                    <rect key="frame" x="82" y="7" width="199" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="UHk-i0-4Ru"/>
                                                         <constraint firstAttribute="width" constant="199" id="sNd-XO-LAZ"/>
@@ -194,11 +210,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Error" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="71v-mx-IPL">
+                                                    <rect key="frame" x="20" y="11" width="38" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4us-cD-yNb">
+                                                    <rect key="frame" x="66" y="8" width="214" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="214" id="GZU-FZ-Gec"/>
                                                         <constraint firstAttribute="height" constant="30" id="Xj7-vT-AHf"/>
@@ -218,36 +236,32 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Errors" id="KLQ-Dr-AAl">
+                            <tableViewSection headerTitle="Error" id="KLQ-Dr-AAl">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="UaR-Ym-PHA">
-                                        <rect key="frame" x="0.0" y="318" width="320" height="46"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="117" id="K7A-54-wOx">
+                                        <rect key="frame" x="0.0" y="318" width="320" height="119"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="1" width="300" height="116"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4oG-An-eBc">
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="211" id="1TB-fh-X6W"/>
-                                                        <constraint firstAttribute="height" constant="30" id="JsY-Iq-vHW"/>
-                                                    </constraints>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLk-V9-E1v">
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="116"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                </textField>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Code" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iy8-E9-5C0">
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="iy8-E9-5C0" firstAttribute="centerY" secondItem="UaR-Ym-PHA" secondAttribute="centerY" type="default" id="14Z-3x-ZR9"/>
-                                            <constraint firstItem="4oG-An-eBc" firstAttribute="leading" secondItem="iy8-E9-5C0" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Q9c-hQ-Cfn"/>
-                                            <constraint firstItem="iy8-E9-5C0" firstAttribute="leading" secondItem="UaR-Ym-PHA" secondAttribute="leading" constant="30" id="Ym2-nn-waI"/>
-                                            <constraint firstItem="4oG-An-eBc" firstAttribute="centerY" secondItem="UaR-Ym-PHA" secondAttribute="centerY" type="default" id="hfz-7t-Zy4"/>
+                                            <constraint firstAttribute="bottom" secondItem="xLk-V9-E1v" secondAttribute="bottom" constant="2" type="default" id="CXk-Vj-ggA"/>
+                                            <constraint firstItem="xLk-V9-E1v" firstAttribute="top" secondItem="K7A-54-wOx" secondAttribute="top" constant="1" type="default" id="JVL-eD-PTP"/>
+                                            <constraint firstAttribute="trailing" secondItem="xLk-V9-E1v" secondAttribute="trailing" constant="10" type="default" id="Ub9-9e-NBS"/>
+                                            <constraint firstItem="xLk-V9-E1v" firstAttribute="leading" secondItem="K7A-54-wOx" secondAttribute="leading" constant="10" type="default" id="rHU-Wy-PYM"/>
                                         </constraints>
                                     </tableViewCell>
                                 </cells>
@@ -263,7 +277,7 @@
                         <outlet property="UIclosed" destination="OMs-Lt-Xta" id="y94-Ee-x5U"/>
                         <outlet property="UIconnected" destination="wu8-hM-azq" id="uS6-pB-5fS"/>
                         <outlet property="UIerror" destination="4us-cD-yNb" id="Crt-xP-IPu"/>
-                        <outlet property="UIerrorCode" destination="4oG-An-eBc" id="D1o-fX-vIY"/>
+                        <outlet property="UIerrorCode" destination="xLk-V9-E1v" id="YIx-vm-TdX"/>
                         <outlet property="UIurl" destination="z07-nI-24D" id="Tqa-T2-lW0"/>
                     </connections>
                 </tableViewController>
@@ -295,40 +309,9 @@
         <image name="connection.png" width="20" height="20"/>
         <image name="friends.png" width="20" height="20"/>
         <image name="location.png" width="20" height="20"/>
+        <image name="move.png" width="20" height="20"/>
         <image name="send.png" width="20" height="20"/>
     </resources>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="mqttitudeIndicatorButton" superclassName="UIButton">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeIndicatorButton.h"/>
-        </class>
-        <class className="mqttitudeStatusTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeStatusTVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="UIclosed" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIconnected" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIerror" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIerrorCode" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIurl" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="action:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="connection:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="showAll:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="showCenter:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="stop:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="connectionButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="indicatorButton" candidateClass="mqttitudeIndicatorButton"/>
-                <relationship kind="outlet" name="locationButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

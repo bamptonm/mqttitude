@@ -7,6 +7,11 @@
 //
 
 #import "mqttitudeStatusTVC.h"
+#import <errno.h>
+#import <CoreFoundation/CFError.h>
+#import <mach/mach_error.h>
+#import <Security/SecureTransport.h>
+
 
 
 @interface mqttitudeStatusTVC ()
@@ -14,7 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIclosed;
 @property (weak, nonatomic) IBOutlet UITextField *UIconnected;
 @property (weak, nonatomic) IBOutlet UITextField *UIerror;
-@property (weak, nonatomic) IBOutlet UITextField *UIerrorCode;
+@property (weak, nonatomic) IBOutlet UITextView *UIerrorCode;
 
 @end
 
@@ -24,51 +29,23 @@
 {
     [super viewWillAppear:animated];
     self.UIurl.text = self.connection.url;
-    self.UIconnected.text = [NSDateFormatter localizedStringFromDate:self.connection.lastConnected
-                                                        dateStyle:NSDateFormatterShortStyle
-                                                        timeStyle:NSDateFormatterMediumStyle];
-    self.UIclosed.text = [NSDateFormatter localizedStringFromDate:self.connection.lastClosed
-                                                        dateStyle:NSDateFormatterShortStyle
-                                                        timeStyle:NSDateFormatterMediumStyle];
-    self.UIerror.text = [NSDateFormatter localizedStringFromDate:self.connection.lastError
-                                                        dateStyle:NSDateFormatterShortStyle
-                                                        timeStyle:NSDateFormatterMediumStyle];
+    self.UIconnected.text = ([self.connection.lastConnected compare:self.connection.lastClosed] == NSOrderedDescending) ? [NSDateFormatter localizedStringFromDate:self.connection.lastConnected
+                                                                                                                                                         dateStyle:NSDateFormatterShortStyle
+                                                                                                                                                         timeStyle:NSDateFormatterMediumStyle] : @"";
+    self.UIclosed.text = ([self.connection.lastClosed compare:self.connection.lastConnected] == NSOrderedDescending) ? [NSDateFormatter localizedStringFromDate:self.connection.lastClosed
+                                                                                                                                                      dateStyle:NSDateFormatterShortStyle
+                                                                                                                                                      timeStyle:NSDateFormatterMediumStyle] : @"";
+    self.UIerror.text = ([self.connection.lastError compare:self.connection.lastConnected] == NSOrderedDescending) ?[NSDateFormatter localizedStringFromDate:self.connection.lastError
+                                                                                                                                                    dateStyle:NSDateFormatterShortStyle
+                                                                                                                                                    timeStyle:NSDateFormatterMediumStyle] : @"";
     
-    switch (self.connection.lastErrorCode) {
-        case -4:
-            self.UIerrorCode.text = @"can't encode";
-            break;
-        case -3:
-            self.UIerrorCode.text = @"can't decode";
-            break;
-        case -2:
-            self.UIerrorCode.text = @"msg length != 2";
-            break;
-        case -1:
-            self.UIerrorCode.text = @"no CONNACK received";
-            break;
-        case 0:
-            self.UIerrorCode.text = @"ok";
-            break;
-        case 1:
-            self.UIerrorCode.text = @"unacceptable protocol version";
-            break;
-        case 2:
-            self.UIerrorCode.text = @"identifier rejected";
-            break;
-        case 3:
-            self.UIerrorCode.text = @"server unavailable";
-            break;
-        case 4:
-            self.UIerrorCode.text = @"bad user name or password";
-            break;
-        case 5:
-            self.UIerrorCode.text = @"not authorized";
-            break;
-        default:
-            self.UIerrorCode.text = @"reserved for future use";
-            break;
-    }
+    self.UIerrorCode.text = ([self.connection.lastError compare:self.connection.lastConnected] == NSOrderedDescending) ? [NSString stringWithFormat:@"%@ %d %@",
+                                                                                                                          self.connection.lastErrorCode.domain,
+                                                                                                                          self.connection.lastErrorCode.code,
+                                                                                                                          self.connection.lastErrorCode.localizedDescription ?
+                                                                                                                          self.connection.lastErrorCode.localizedDescription : @""] : @"";
+    
+    
 }
 
 @end

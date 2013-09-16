@@ -16,6 +16,30 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
+			<string>Minimum Distance (m)</string>
+			<key>Key</key>
+			<string>mindist_preference</string>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+			<key>DefaultValue</key>
+			<string>100</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Minimum Time (s)</string>
+			<key>Key</key>
+			<string>mintime_preference</string>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+			<key>DefaultValue</key>
+			<string>300</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
 			<string>Client ID</string>
 			<key>Key</key>
 			<string>clientid_preference</string>
@@ -280,7 +304,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>www.mosquitto.org</string>
+			<string>www.mqttitude.org</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>
