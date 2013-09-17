@@ -10,5 +10,6 @@
 
 @interface mqttitudeFriendAnnotationView : MKAnnotationView
 @property (strong, nonatomic) UIImage *personImage;
+@property (strong, nonatomic) UIColor *circleColor;
 
 @end

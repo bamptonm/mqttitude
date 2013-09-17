@@ -154,7 +154,9 @@
 - (void)close
 {
     if (self.status == MQTTSessionStatusConnected) {
-        NSLog(@"disconnecting");
+#ifdef DEBUG
+        NSLog(@"MQTTSession disconnecting");
+#endif
         self.status = MQTTSessionStatusDisconnecting;
         [self send:[MQTTMessage disconnectMessage]];
     } else {
@@ -164,7 +166,9 @@
 
 - (void)closeInternal
 {
-    NSLog(@"closing");
+#ifdef DEBUG
+    NSLog(@"MQTTSession closeInternal");
+#endif 
     
     /*
     if (self.encoder) {
@@ -186,11 +190,10 @@
 }
 
 
-- (void)timerHandler:(NSTimer *)timer
+- (void)keepAlive:(NSTimer *)timer
 {
-    
 #ifdef DEBUG
-    NSLog(@"%@ Ping @%.0f", self.clientId, [[NSDate date] timeIntervalSince1970]);
+    NSLog(@"MQTTSession keepAlive %@ @%.0f", self.clientId, [[NSDate date] timeIntervalSince1970]);
 #endif
     if ([self.encoder status] == MQTTEncoderStatusReady) {
         MQTTMessage *msg = [MQTTMessage pingreqMessage];
@@ -227,7 +230,9 @@
                     }
                     break;
                 case MQTTSessionStatusDisconnecting:
-                    NSLog(@"disconnect sent");
+#ifdef DEBUG
+                    NSLog(@"MQTTSession disconnect sent");
+#endif
                     [self closeInternal];
                     break;
                 case MQTTSessionStatusClosed:
@@ -276,7 +281,7 @@
                             self.status = MQTTSessionStatusConnected;
                             self.keepAliveTimer = [NSTimer timerWithTimeInterval:self.keepAliveInterval
                                                                           target:self
-                                                                        selector:@selector(timerHandler:)
+                                                                        selector:@selector(keepAlive:)
                                                                         userInfo:nil
                                                                          repeats:YES];
                             [self.runLoop addTimer:self.keepAliveTimer forMode:self.runLoopMode];

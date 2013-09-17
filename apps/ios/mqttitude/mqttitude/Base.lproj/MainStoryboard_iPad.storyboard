@@ -19,7 +19,7 @@
                                 <items>
                                     <barButtonItem image="location.png" id="MgA-Nt-u2G">
                                         <connections>
-                                            <action selector="stop:" destination="fbj-fn-YPj" id="Hm1-8D-4no"/>
+                                            <action selector="location:" destination="fbj-fn-YPj" id="jJI-f8-sqv"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem image="move.png" id="7ss-2Q-ooX">

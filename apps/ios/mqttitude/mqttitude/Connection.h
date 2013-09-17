@@ -18,8 +18,7 @@ enum state {
     state_error,
     state_connected,
     state_closing,
-    state_closed,
-    state_exit
+    state_closed
 };
 
 - (void)showState:(NSInteger)state;
@@ -36,17 +35,13 @@ enum state {
 @property (nonatomic, readonly) NSDate *lastError;
 @property (nonatomic, readonly) NSError *lastErrorCode;
 
-
-- (NSString *)url;
-
-- (void)connectToLast;
 - (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls keepalive:(NSInteger)keepalive auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will willQos:(NSInteger)willQos willRetainFlag:(BOOL)willRetainFlag;
 - (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
 - (void)subscribe:(NSString *)topic qos:(NSInteger)qos;
 - (void)unsubscribe:(NSString *)topic;
 - (void)disconnect;
-- (void)stop;
 
+- (NSString *)url;
 + (NSString *)dataToString:(NSData *)data;
 
 @end

@@ -138,7 +138,9 @@
             break;
         }
         default:
-            NSLog(@"unhandled event code");
+#ifdef DEBUG
+            NSLog(@"MQTTDecoder unhandled event code 0x%02xv", eventCode);
+#endif
             break;
     }
 }

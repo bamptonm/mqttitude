@@ -40,49 +40,114 @@
 @end
 
 #define RECONNECT_TIMER 1.0
-#define RECONNECT_TIMER_MAX 300.0
+#define RECONNECT_TIMER_MAX 512.0
+
+/*
+ * Connection represents the MQTT connection in the MQTTitude context - state Matrix wip
+ *
+ * Current State        Event           Action              Next State
+ * ---------------------------------------------------------------------------
+ *
+ * Starting             connectTo:                          Connecting
+ *                      sendData:       store & connect     Connecting
+ *                      subscribe:
+ *                      unsubscribe:
+ *                      disconnect:
+ *                      Connected
+ *                      Received
+ *                      Closed
+ *                      Error
+ *                      Timer
+ *                      <auto>
+ *
+ * Connecting           connectTo:
+ *                      sendData:       store
+ *                      subscribe:
+ *                      unsubscribe:
+ *                      disconnect:
+ *                      Connected       -                   Connected
+ *                      Received
+ *                      Closed          -                   Closed
+ *                      Error           -                   Error
+ *                      Timer
+ *                      <auto>
+ *
+ * Connected            connectTo:
+ *                      sendData:       send
+ *                      subscribe:
+ *                      unsubscribe:
+ *                      disconnect:     unsub & disc        Closing
+ *                      Connected
+ *                      Received
+ *                      Closed
+ *                      Error                               Error
+ *                      Timer
+ *                      <auto>
+ *
+ * Closing              connectTo:                          Connecting
+ *                      sendData:       store & connect     Connecting
+ *                      subscribe:
+ *                      unsubscribe:
+ *                      disconnect:
+ *                      Connected
+ *                      Received
+ *                      Closed          -                   Closed
+ *                      Error
+ *                      Timer
+ *                      <auto>
+ *
+ * Closed               connectTo:
+ *                      sendData:
+ *                      subscribe:
+ *                      unsubscribe:
+ *                      disconnect:
+ *                      Connected
+ *                      Received
+ *                      Closed
+ *                      Error
+ *                      Timer
+ *                      <auto>          -                   Starting
+ *
+ * Error                connectTo:
+ *                      sendData:
+ *                      subscribe:
+ *                      unsubscribe:
+ *                      disconnect:
+ *                      Connected
+ *                      Received
+ *                      Closed
+ *                      Error
+ *                      Timer           reconnect           Connecting
+ *                      <auto>
+ *
+ * ---------------------------------------------------------------------------
+ *
+ * Connection implements a fifo queue to store messages if the connection is not in Connected state
+ *
+ * - if sendData is called and status is not connected, data is stored in fifo queue and a connect attempt to the last connection is made
+ *
+ * Connection automatically reconnects after error using an increasing reconnect timer of 1, 2, 4, ..., 512 seconds
+ *
+ * Connection records the timestamps of the last successful connect, the last close, the last error and the last error code
+ *
+ * Connection provides a class method dataToString (missing in IOS)
+ *
+ */
 
 @implementation Connection
 
 - (id)init
 {
+#ifdef DEBUG
+    NSLog(@"Connection init");
+#endif
+
     self = [super init];
     self.state = state_starting;
     self.lastError = [NSDate dateWithTimeIntervalSince1970:0];
     self.lastConnected = [NSDate dateWithTimeIntervalSince1970:0];
     self.lastClosed = [NSDate dateWithTimeIntervalSince1970:0];
     return self;
-}
-
-- (void)setState:(NSInteger)state
-{
-    _state = state;
-#ifdef DEBUG
-    NSLog(@"Connection state:%d", self.state);
-#endif
-    [self.delegate showState:self.state];
-}
-
-- (NSArray *)fifo
-{
-    if (!_fifo)
-        _fifo = [[NSMutableArray alloc] init];
-    return _fifo;
-}
-
-
-- (void)reconnect
-{
-#ifdef DEBUG
-    NSLog(@"reconnect");
-#endif
-    self.reconnectTimer = nil;
-    if (self.reconnectTime < RECONNECT_TIMER_MAX) {
-        self.reconnectTime *= 2;
-    }
-    self.state = state_starting;
-    
-    [self connectToInternal];
 }
 
 /*
@@ -94,6 +159,21 @@
 
 - (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls keepalive:(NSInteger)keepalive auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will willQos:(NSInteger)willQos willRetainFlag:(BOOL)willRetainFlag
 {
+#ifdef DEBUG
+    NSLog(@"Connection connectTo: %@:%@@%@:%d %@ (%d) / %@ %@ q%d r%d",
+          auth ? user : @"",
+          auth ? pass : @"",
+          host,
+          port,
+          tls ? @"TLS" : @"PLAIN",
+          keepalive,
+          willTopic,
+          [Connection dataToString:will],
+          willQos,
+          willRetainFlag
+          );
+#endif
+
     self.lastHost = host;
     self.lastPort = port;
     self.lastTls = tls;
@@ -111,18 +191,15 @@
     [self connectToInternal];
 }
 
-- (void)connectToLast
-{
-    self.reconnectTime = RECONNECT_TIMER;
-    
-    [self connectToInternal];
-}
-
 - (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
 {
+#ifdef DEBUG
+    NSLog(@"Connection sendData:%@ %@ q%d r%d", topic, [Connection dataToString:data], qos, retainFlag);
+#endif
+
     if (self.state != state_connected) {
 #ifdef DEBUG
-        NSLog(@"into fifo");
+        NSLog(@"Connection intoFifo");
 #endif
         NSDictionary *parameters = @{
                                      @"DATA": data,
@@ -134,7 +211,7 @@
         [self connectToLast];
     } else {
 #ifdef DEBUG
-        NSLog(@"Sending: %@", [Connection dataToString:data]);
+        NSLog(@"Connection send");
 #endif
         [self.session publishData:data
                           onTopic:topic
@@ -145,6 +222,10 @@
 
 - (void)disconnect
 {
+#ifdef DEBUG
+    NSLog(@"Connection disconnect:");
+#endif
+
     if (self.state == state_connected) {
         self.state = state_closing;
         [self.session unsubscribeTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]];
@@ -152,33 +233,40 @@
     } else {
         self.state = state_starting;
         NSLog(@"MQTTitude not connected, can't close");
-        
     }
-}
-
-- (void)stop
-{
-    [self disconnect];
-    self.state = state_exit;
 }
 
 - (void)subscribe:(NSString *)topic qos:(NSInteger)qos
 {
+#ifdef DEBUG
+    NSLog(@"Connection subscribe:%@ (%d)", topic, qos);
+#endif
+
     [self.session subscribeToTopic:topic atLevel:qos];
 }
 
 - (void)unsubscribe:(NSString *)topic
 {
+#ifdef DEBUG
+    NSLog(@"Connection unsubscribe:%@", topic);
+#endif
+
     [self.session unsubscribeTopic:topic];
 }
 
 #pragma mark - MQtt Callback methods
 
-
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode error:(NSError *)error
 {
 #ifdef DEBUG
-    NSLog(@"MQTTitude eventCode: %d", eventCode);
+    const NSDictionary *events = @{
+                                   @(MQTTSessionEventConnected): @"connected",
+                                   @(MQTTSessionEventConnectionRefused): @"connection refused",
+                                   @(MQTTSessionEventConnectionClosed): @"connection closed",
+                                   @(MQTTSessionEventConnectionError): @"connection error",
+                                   @(MQTTSessionEventProtocolError): @"protocoll error"
+                                   };
+    NSLog(@"Connection MQTT eventCode: %@ (%d) %@", events[@(eventCode)], eventCode, error);
 #endif
     [self.reconnectTimer invalidate];
     switch (eventCode) {
@@ -210,7 +298,7 @@
         case MQTTSessionEventConnectionError:
         {
 #ifdef DEBUG
-            NSLog(@"reconnect after: %f", self.reconnectTime);
+            NSLog(@"Connection setTimer %f", self.reconnectTime);
 #endif
             self.reconnectTimer = [NSTimer timerWithTimeInterval:self.reconnectTime
                                                           target:self
@@ -226,8 +314,6 @@
             break;
         }
         default:
-            NSLog(@"MQTTitude unknown eventCode: %d", eventCode);
-            self.state = state_exit;
             break;
     }
 }
@@ -242,10 +328,12 @@
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic
 {
 #ifdef DEBUG
-    NSLog(@"Received %@ %@", topic, [Connection dataToString:data]);
+    NSLog(@"Connection received %@ %@", topic, [Connection dataToString:data]);
 #endif
     [self.delegate handleMessage:data onTopic:topic];
 }
+
+#pragma internal helpers
 
 - (void)connectToInternal
 {
@@ -291,6 +379,58 @@
         message = [message stringByAppendingFormat:@"%c", c];
     }
     return message;
+}
+
+- (void)setState:(NSInteger)state
+{
+    _state = state;
+#ifdef DEBUG
+    const NSDictionary *states = @{
+                                   @(state_starting): @"starting",
+                                   @(state_connecting): @"connecting",
+                                   @(state_error): @"error",
+                                   @(state_connected): @"connected",
+                                   @(state_closing): @"closing",
+                                   @(state_closed): @"closed"
+                                   };
+    
+    NSLog(@"Connection state %@ (%d)", states[@(self.state)], self.state);
+#endif
+    [self.delegate showState:self.state];
+}
+
+- (NSArray *)fifo
+{
+    if (!_fifo)
+        _fifo = [[NSMutableArray alloc] init];
+    return _fifo;
+}
+
+
+- (void)reconnect
+{
+#ifdef DEBUG
+    NSLog(@"Connection reconnect");
+#endif
+    
+    self.reconnectTimer = nil;
+    if (self.reconnectTime < RECONNECT_TIMER_MAX) {
+        self.reconnectTime *= 2;
+    }
+    self.state = state_starting;
+    
+    [self connectToInternal];
+}
+
+- (void)connectToLast
+{
+#ifdef DEBUG
+    NSLog(@"Connection connectToLast");
+#endif
+    
+    self.reconnectTime = RECONNECT_TIMER;
+    
+    [self connectToInternal];
 }
 
 

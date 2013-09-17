@@ -18,9 +18,10 @@
 
 @interface Annotations : NSObject <AnnotationDelegate>
 @property (strong, nonatomic) NSString *myTopic;
-@property (strong, nonatomic) NSMutableArray *annotationArray;
 @property (strong, nonatomic) id<AnnotationsDelegate> delegate;
+
 - (void)addLocation:(CLLocation *)location topic:(NSString *)topic;
+- (NSArray *)annotationArray;
 - (NSArray *)othersAnnotations;
 - (NSInteger)countOthersAnnotations;
 - (Annotation *)myLastAnnotation;
