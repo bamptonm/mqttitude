@@ -134,14 +134,6 @@
         {
             self.status = MQTTDecoderStatusConnectionError;
             NSError *error = [self.stream streamError];
-            NSLog(@"Decoder Error: %d %@ %@ %@ %@ %@ %@",
-                  error.code,
-                  error.domain,
-                  error.userInfo,
-                  error.localizedDescription,
-                  error.localizedFailureReason,
-                  error.localizedRecoveryOptions,
-                  error.localizedRecoverySuggestion);
             [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError error:error];
             break;
         }

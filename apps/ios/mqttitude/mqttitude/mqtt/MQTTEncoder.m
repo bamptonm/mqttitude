@@ -83,14 +83,6 @@
             if (self.status != MQTTEncoderStatusError) {
                 self.status = MQTTEncoderStatusError;
                 NSError *error = [self.stream streamError];
-                NSLog(@"Encoder Error: %d %@ %@ %@ %@ %@ %@",
-                      error.code,
-                      error.domain,
-                      error.userInfo,
-                      error.localizedDescription,
-                      error.localizedFailureReason,
-                      error.localizedRecoveryOptions,
-                      error.localizedRecoverySuggestion);
                 [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred error:error];
             }
             break;

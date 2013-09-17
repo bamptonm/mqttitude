@@ -21,8 +21,12 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *connectionButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *locationButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *moveButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *centerButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *allButton;
 @property (weak, nonatomic) Annotations *annotations;
 @property (nonatomic) ABAddressBookRef ab;
+
+@property (nonatomic) BOOL centered;
 @end
 
 @implementation mqttitudeViewController
@@ -31,18 +35,14 @@
 
 - (void)viewDidLoad
 {
-    /*
-     * Initializing all Objects
-     */
     CFErrorRef error;
     
     [super viewDidLoad];
-
+    
+    self.centered = TRUE;
+    
     self.mapView.delegate = self;
-    [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
-    self.locationButton.style = UIBarButtonItemStyleDone;
-    self.connectionButton.style = UIBarButtonItemStyleDone;
-    self.moveButton.style = UIBarButtonItemStyleBordered;
+    self.mapView.showsUserLocation = YES;
     
     self.ab = ABAddressBookCreateWithOptions(NULL, &error);
     ABAddressBookRequestAccessWithCompletion(self.ab, ^(bool granted, CFErrorRef error) {
@@ -57,7 +57,27 @@
     
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     [self.mapView addAnnotations:self.annotations.annotationArray];
+    
     [self showState:delegate.connection.state];
+    
+    if (self.centered) {
+        [self showCenter:Nil];
+
+    } else {
+        [self showAll:Nil];
+    }
+
+    if (self.mapView.showsUserLocation) {
+        self.locationButton.style = UIBarButtonItemStyleDone;
+    } else {
+        self.locationButton.style = UIBarButtonItemStyleBordered;
+    }
+    
+    if (delegate.high) {
+        self.moveButton.style = UIBarButtonItemStyleDone;
+    } else {
+        self.moveButton.style = UIBarButtonItemStyleBordered;
+    }
 }
 
 - (IBAction)action:(UIBarButtonItem *)sender {
@@ -140,6 +160,9 @@
     rect.size.height *= 1.2;
     
     [self.mapView setVisibleMapRect:rect animated:YES];
+    self.centered = FALSE;
+    self.centerButton.style = UIBarButtonItemStyleBordered;
+    self.allButton.style = UIBarButtonItemStyleDone;
 }
 - (IBAction)showCenter:(UIBarButtonItem *)sender {
     if (self.mapView.showsUserLocation) {
@@ -147,6 +170,9 @@
     } else {
         [self.mapView setVisibleMapRect:[self initialRect] animated:YES];
     }
+    self.centered = TRUE;
+    self.centerButton.style = UIBarButtonItemStyleDone;
+    self.allButton.style = UIBarButtonItemStyleBordered;
 }
 
 #define INITIAL_RADIUS 600.0
@@ -310,6 +336,7 @@
 
 #define IMAGE_SIZE 40.0
 #define SERVICE_NAME CFSTR("MQTTitude")
+#define RELATION_NAME CFSTR("MQTTitude")
 
 - (UIImage *)imageOfPerson:(NSString *)topic
 {
@@ -335,11 +362,30 @@
                         }
                     }
                 }
-                
                 CFRelease(socialValue);
             }
             CFRelease(socials);
         }
+        
+        ABMultiValueRef relations = ABRecordCopyValue(record, kABPersonRelatedNamesProperty);
+        if (relations) {
+            CFIndex relationsCount = ABMultiValueGetCount(relations);
+            
+            for (CFIndex k = 0 ; k < relationsCount ; k++) {
+                CFStringRef label = ABMultiValueCopyLabelAtIndex(relations, k);
+                CFStringRef value = ABMultiValueCopyValueAtIndex(relations, k);
+                if(CFStringCompare(label, RELATION_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                    if(CFStringCompare(value, (__bridge CFStringRef)(topic), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                        if (ABPersonHasImageData(record)) {
+                            CFDataRef imageData = ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatThumbnail);
+                            image = [UIImage imageWithData:(__bridge NSData *)(imageData)];
+                        }
+                    }
+                }
+            }
+            CFRelease(relations);
+        }
+        
         CFRelease(record);
     }
     //CFRelease(records);

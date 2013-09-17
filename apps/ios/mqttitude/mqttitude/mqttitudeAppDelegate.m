@@ -57,6 +57,7 @@
                                  @"willtopic_preference": @"loc",
                                  @"willretain_preference":@(NO),
                                  @"willqos_preference": @(1),
+                                  @"high_preference": @(NO)
                                 };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -82,8 +83,10 @@
             self.manager = [[CLLocationManager alloc] init];
             self.manager.delegate = self;
             
-            [self locationLow];
             [self locationOn];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"high_preference"]) {
+                [self locationHigh];
+            }
         } else {
             NSString *message = NSLocalizedString(@"No significant location change monitoring available", @"No significant location change monitoring available");
             [self alert:message];
@@ -165,6 +168,7 @@
 #ifdef DEBUG
     NSLog(@"applicationWillTerminate");
 #endif
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification {
@@ -297,6 +301,8 @@
 
 - (void)switchOff
 {
+    NSLog(@"switchOff");
+
     [self connectionOff];
     [self locationOff];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -304,25 +310,34 @@
 }
 - (void)sendNow
 {
+    NSLog(@"sendNow");
+
     [self publishLocation:[self.manager location]];
 }
 - (void)connectionOff
 {
+    NSLog(@"connectionOff");
     [self.connection disconnect];
 }
 - (void)locationOn
 {
+    NSLog(@"locationOn");
+
     [self.manager startMonitoringSignificantLocationChanges];
 }
 
 - (void)locationOff
 {
+    NSLog(@"locationOff");
+
     [self locationLow];
     [self.manager stopMonitoringSignificantLocationChanges];
 }
 
 - (void)locationHigh
 {
+    NSLog(@"locationHigh");
+
     /**
      ** A pedestrian strolls @ 3.6km/h or 1m/s or 60m/min
      ** A fast car or train drives at 200km/h or 3km/min or 50m/s
@@ -337,6 +352,7 @@
     self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
     self.high = YES;
+    [[NSUserDefaults standardUserDefaults] setObject:@(self.high) forKey:@"high_preference"];
 }
 
 - (void)activityTimer:(NSTimer *)timer
@@ -346,14 +362,18 @@
 }
 
 - (void)locationLow
-{
+{    NSLog(@"locationLow");
+
     [self.activityTimer invalidate];
     [self.manager stopUpdatingLocation];
     self.high = NO;
+    [[NSUserDefaults standardUserDefaults] setObject:@(self.high) forKey:@"high_preference"];
 }
 
 - (void)reconnect
 {
+    NSLog(@"reconnect");
+
     [self.connection disconnect];
     
     self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
