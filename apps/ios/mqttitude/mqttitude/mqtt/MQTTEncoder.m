@@ -83,19 +83,13 @@
             if (self.status != MQTTEncoderStatusError) {
                 self.status = MQTTEncoderStatusError;
                 NSError *error = [self.stream streamError];
-                NSLog(@"Encoder Error: %d %@ %@ %@ %@ %@ %@",
-                      error.code,
-                      error.domain,
-                      error.userInfo,
-                      error.localizedDescription,
-                      error.localizedFailureReason,
-                      error.localizedRecoveryOptions,
-                      error.localizedRecoverySuggestion);
                 [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred error:error];
             }
             break;
         default:
-            NSLog(@"Oops, event code not handled: 0x%02x", eventCode);
+#ifdef DEBUG
+            NSLog(@"MQTTEncoder unhandled event code 0x%02xv", eventCode);
+#endif
             break;
     }
 }
@@ -105,7 +99,9 @@
     NSInteger n, length;
     
     if (self.status != MQTTEncoderStatusReady) {
-        NSLog(@"Encoder not ready");
+#ifdef DEBUG
+        NSLog(@"MQTTEncoder not status ready %d", self.status);
+#endif
         return;
     }
     
@@ -143,7 +139,9 @@
         [self.buffer appendData:[msg data]];
     }
 
-    NSLog(@"Buffer(%d)=%@", self.buffer.length, [self.buffer description]);
+#ifdef DEBUG
+    NSLog(@"MQTTEncoder buffer to write (%d)=%@", self.buffer.length, [self.buffer description]);
+#endif
     
     n = [self.stream write:[self.buffer bytes] maxLength:[self.buffer length]];
     if (n == -1) {

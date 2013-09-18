@@ -11,9 +11,8 @@
 @implementation mqttitudeFriendAnnotationView
 
 #define IMAGE_SIZE 40.0
-#define STROKE_WIDTH 2.0
-#define IMAGE_ALPHA 0.66
-#define OLD_TIME -12*60*60
+#define STROKE_WIDTH 3.0
+#define IMAGE_ALPHA 0.75
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -42,20 +41,11 @@
     UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:rect];
     
     [circle addClip];
-    
-    NSDate *timestamp;
-    
-    if ([self.annotation respondsToSelector:@selector(timeStamp)]) {
-        timestamp = [self.annotation performSelector:@selector(timeStamp)];
-    }
+
     [self.personImage drawAtPoint:rect.origin blendMode:kCGBlendModeNormal alpha:IMAGE_ALPHA];
     
-    if (timestamp) {
-        if ([timestamp compare:[NSDate dateWithTimeIntervalSinceNow:OLD_TIME]] == NSOrderedAscending) {
-            [[UIColor redColor] setStroke];
-        } else {
-            [[UIColor greenColor] setStroke];
-        }
+    if (self.circleColor) {
+        [self.circleColor setStroke];
     } else {
         [[UIColor blackColor] setStroke];
     }

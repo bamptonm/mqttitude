@@ -10,24 +10,29 @@
 #import "Annotation.h"
 
 @interface Annotations ()
-
-
+@property (strong, nonatomic) NSMutableArray *array;
 @end
 
 @implementation Annotations
 
-- (NSMutableArray *)annotationArray
+- (NSMutableArray *)array
 {
-    if (!_annotationArray) {
-        _annotationArray = [[NSMutableArray alloc] init];
+    if (!_array) {
+        _array = [[NSMutableArray alloc] init];
     }
-    return _annotationArray;
+    return _array;
 }
+
+- (NSArray *)annotationArray
+{
+    return self.array;
+}
+
 
 - (NSInteger)countOthersAnnotations
 {
     NSInteger i = 0;
-    for (Annotation *annotation in self.annotationArray) {
+    for (Annotation *annotation in self.array) {
         if (![annotation.topic isEqualToString:self.myTopic]) {
             i++;
         }
@@ -38,7 +43,7 @@
 - (NSArray *)othersAnnotations
 {
     NSMutableArray *othersArray = [[NSMutableArray alloc] init];
-    for (Annotation *annotation in self.annotationArray) {
+    for (Annotation *annotation in self.array) {
         if (![annotation.topic isEqualToString:self.myTopic]) {
             [othersArray addObject:annotation];
         }
@@ -50,7 +55,7 @@
 {
     Annotation *lastAnnotation;
     
-    for (Annotation *annotation in self.annotationArray) {
+    for (Annotation *annotation in self.array) {
         if ([annotation.topic isEqualToString:self.myTopic]) {
             if (lastAnnotation) {
                 if ([lastAnnotation.timeStamp compare:annotation.timeStamp] == NSOrderedAscending) {
@@ -69,7 +74,7 @@
 {
     Annotation *oldestAnnotation;
     
-    for (Annotation *annotation in self.annotationArray) {
+    for (Annotation *annotation in self.array) {
         if ([annotation.topic isEqualToString:self.myTopic]) {
             if (oldestAnnotation) {
                 if ([oldestAnnotation.timeStamp compare:annotation.timeStamp] == NSOrderedDescending) {
@@ -96,36 +101,30 @@
     
     // if other's location, delete previous
     if (![annotation.topic isEqualToString:self.myTopic]) {
-        for (Annotation *theAnnotation in self.annotationArray) {
+        for (Annotation *theAnnotation in self.array) {
             if ([theAnnotation.topic isEqualToString:annotation.topic]) {
-                [self.annotationArray removeObject:theAnnotation];
+                [self.array removeObject:theAnnotation];
                 break;
             }
         }
     }
     
     // add the new annotation to the map, for reference
-    [self.annotationArray addObject:annotation];
+    [self.array addObject:annotation];
     
     // count own and other's annotation
     NSInteger own = 0;
-    NSInteger others = 0;
-    for (Annotation *theAnnotation in self.annotationArray) {
+    for (Annotation *theAnnotation in self.array) {
         if ([theAnnotation.topic isEqualToString:self.myTopic]) {
             own++;
-        } else {
-            others++;
         }
     }
     
     // limit the total number of own annotations
     if (own > MAX_ANNOTATIONS) {
-        [self.annotationArray removeObject:[self myOldestAnnotation]];
+        [self.array removeObject:[self myOldestAnnotation]];
     }
         
-    // show the user how many others are on the map
-    [UIApplication sharedApplication].applicationIconBadgeNumber = others;
-
     [self.delegate annotationsChanged:self];
 }
 

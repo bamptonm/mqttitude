@@ -37,21 +37,30 @@
 - (void)setCoordinate:(CLLocationCoordinate2D)coordinate
 {
     _coordinate = coordinate;
+    
+    /*
+     * We could get the Reverse GeoCode here automatically, but this would cost mobile data. If necessary, call getReverseGeoCode directly for actually shown locations
+     *
+    [self getReversGeoCode];
+     *
+     */
 }
 
 - (void)getReverseGeoCode
 {
-    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:self.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0 timestamp:0];
-    [geocoder reverseGeocodeLocation:location completionHandler:
-     ^(NSArray *placemarks, NSError *error) {
-         if ([placemarks count] > 0) {
-             self.placemark = placemarks[0];
-             [self.delegate changed:self];
-         } else {
-             self.placemark = nil;
-         }
-     }];
+    if (!self.placemark) {
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        CLLocation *location = [[CLLocation alloc] initWithCoordinate:self.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0 timestamp:0];
+        [geocoder reverseGeocodeLocation:location completionHandler:
+         ^(NSArray *placemarks, NSError *error) {
+             if ([placemarks count] > 0) {
+                 self.placemark = placemarks[0];
+                 [self.delegate changed:self];
+             } else {
+                 self.placemark = nil;
+             }
+         }];
+    }
 }
 
 @end

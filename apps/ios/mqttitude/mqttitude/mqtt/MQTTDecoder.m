@@ -134,19 +134,13 @@
         {
             self.status = MQTTDecoderStatusConnectionError;
             NSError *error = [self.stream streamError];
-            NSLog(@"Decoder Error: %d %@ %@ %@ %@ %@ %@",
-                  error.code,
-                  error.domain,
-                  error.userInfo,
-                  error.localizedDescription,
-                  error.localizedFailureReason,
-                  error.localizedRecoveryOptions,
-                  error.localizedRecoverySuggestion);
             [self.delegate decoder:self handleEvent:MQTTDecoderEventConnectionError error:error];
             break;
         }
         default:
-            NSLog(@"unhandled event code");
+#ifdef DEBUG
+            NSLog(@"MQTTDecoder unhandled event code 0x%02xv", eventCode);
+#endif
             break;
     }
 }

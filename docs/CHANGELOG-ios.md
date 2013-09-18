@@ -1,5 +1,11 @@
 # Changelog: iOS app
 
+### 2013-09-17 version 3.9
+
+* Auto Restart after Soft Reboot see #84
+* Support MQTTitude Relationship and MQTTitude Social Service to retrieve friends images
+* Center/All indicator Buttons
+
 ### 2013-09-15 version 3.5
 
 Feature: Move Mode (#125)

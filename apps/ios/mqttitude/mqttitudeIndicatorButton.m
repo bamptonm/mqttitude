@@ -8,6 +8,7 @@
 
 #import "mqttitudeIndicatorButton.h"
 
+#define LINE_WIDTH 4.0
 @implementation mqttitudeIndicatorButton
 
 - (id)initWithFrame:(CGRect)frame
@@ -29,7 +30,7 @@
     UIRectFill(self.bounds);
     
     [[UIColor blackColor] setStroke];
-    circle.lineWidth = 5.0;
+    circle.lineWidth = LINE_WIDTH;
     [circle stroke];
 }
 

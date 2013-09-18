@@ -26,11 +26,11 @@
 {
 // Override point for customization after application launch.
 #ifdef DEBUG
-    NSLog(@"application didFinishLaunchingWithOptions");
+    NSLog(@"App didFinishLaunchingWithOptions");
     NSEnumerator *enumerator = [launchOptions keyEnumerator];
     NSString *key;
     while ((key = [enumerator nextObject])) {
-        NSLog(@"%@:%@", key, [[launchOptions objectForKey:key] description]);
+        NSLog(@"App options %@:%@", key, [[launchOptions objectForKey:key] description]);
     }
 #endif
     
@@ -57,6 +57,7 @@
                                  @"willtopic_preference": @"loc",
                                  @"willretain_preference":@(NO),
                                  @"willqos_preference": @(1),
+                                  @"high_preference": @(NO)
                                 };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -82,8 +83,10 @@
             self.manager = [[CLLocationManager alloc] init];
             self.manager.delegate = self;
             
-            [self locationLow];
             [self locationOn];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"high_preference"]) {
+                [self locationHigh];
+            }
         } else {
             NSString *message = NSLocalizedString(@"No significant location change monitoring available", @"No significant location change monitoring available");
             [self alert:message];
@@ -122,7 +125,7 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 #ifdef DEBUG
-    NSLog(@"applicationWillResignActive");
+    NSLog(@"App applicationWillResignActive");
     [self.connection disconnect];
 #endif
 }
@@ -132,7 +135,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 #ifdef DEBUG
-    NSLog(@"applicationDidEnterBackground");
+    NSLog(@"App applicationDidEnterBackground");
 #endif
     self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^
                            {
@@ -146,7 +149,7 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 #ifdef DEBUG
-    NSLog(@"applicationWillEnterForeground");
+    NSLog(@"App applicationWillEnterForeground");
 #endif
     [self annotationsChanged:self.annotations];
 }
@@ -155,7 +158,7 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 #ifdef DEBUG
-    NSLog(@"applicationDidBecomeActive");
+    NSLog(@"App applicationDidBecomeActive");
 #endif
 }
 
@@ -163,13 +166,14 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 #ifdef DEBUG
-    NSLog(@"applicationWillTerminate");
+    NSLog(@"App applicationWillTerminate");
 #endif
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification {
 #ifdef DEBUG
-    NSLog(@"didReceiveLocalNotification");
+    NSLog(@"App didReceiveLocalNotification");
 #endif
 
     [self alert:notification.alertBody];
@@ -182,12 +186,12 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
 #ifdef DEBUG
-    NSLog(@"didUpdateLocations");
+    NSLog(@"App didUpdateLocations");
 #endif
 
     for (CLLocation *location in locations) {
 #ifdef DEBUG
-        NSLog(@"location %@", [location description]);
+        NSLog(@"App location %@", [location description]);
 #endif
         /** I Don't have a device to test that
          **
@@ -206,7 +210,10 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSString *message = [NSString stringWithFormat:@"locationMangager failed with Error %@", [error description]];
+#ifdef DEBUG
+    NSLog(@"App didFailWithError %@", error);
+#endif
+    NSString *message = [NSString stringWithFormat:@"App didFailWithError %@", error];
     [self alert:message];
 }
 
@@ -215,6 +222,10 @@
 
 - (void)annotationsChanged:(NSArray *)annotations
 {
+#ifdef DEBUG
+    NSLog(@"App annotationsChanged");
+#endif
+
     id<AnnotationsDelegate> ad;
     
     if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
@@ -232,7 +243,19 @@
 
 - (void)showState:(NSInteger)state
 {
+#ifdef DEBUG
+    const NSDictionary *states = @{
+                                   @(state_starting): @"starting",
+                                   @(state_connecting): @"connecting",
+                                   @(state_error): @"error",
+                                   @(state_connected): @"connected",
+                                   @(state_closing): @"closing",
+                                   @(state_closed): @"closed"
+                                   };
     
+    NSLog(@"App showState %@ (%d)", states[@(state)], state);
+#endif
+
     id<ConnectionDelegate> cd;
     
     if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
@@ -250,9 +273,12 @@
      **
      ** If the background task is ended, occasionally the disconnect message is not received well before the server senses the tcp disconnect
      **/
+    
     if (state == state_closed) {
         if (self.backgroundTask) {
-            NSLog(@"endBackGroundTask");
+#ifdef DEBUG
+            NSLog(@"App endBackGroundTask");
+#endif
             [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
             self.backgroundTask = UIBackgroundTaskInvalid;
         }
@@ -261,7 +287,12 @@
 
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic
 {
+#ifdef DEBUG
+    NSLog(@"App handleMessage %@ %@)", topic, [Connection dataToString:data]);
+#endif
+
     NSString *message = [NSString stringWithFormat:@"%@: %@", topic, [Connection dataToString:data]];
+    
     if ([topic isEqualToString:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]]) {
         // received own data
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"listento"]]) {
@@ -270,10 +301,16 @@
         if ([message isEqualToString:@"publish"]) {
             [self publishLocation:self.manager.location];
         } else {
+#ifdef DEBUG
+            NSLog(@"App unknown command %@)", message);
+#endif
             NSString *message = NSLocalizedString(@"MQTTitude received an unknown command", @"MQTTitude received an unknown command");
             [self alert:message];
         }
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"message"]]) {
+#ifdef DEBUG
+        NSLog(@"App received message %@)", message);
+#endif
         [self notification:message];
     } else {
         // received other data
@@ -288,7 +325,20 @@
                                                              verticalAccuracy:[dictionary[@"vac"] floatValue]
                                                                     timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] floatValue]]];
                 [self.annotations addLocation:location topic:topic];
+
+                // show the user how many others are on the map
+                [UIApplication sharedApplication].applicationIconBadgeNumber = [self.annotations countOthersAnnotations];
+            } else {
+#ifdef DEBUG
+                NSLog(@"App received unknown record type %@)", dictionary[@"_type"]);
+#endif
+                // data other than json _type location is silently ignored
             }
+        } else {
+#ifdef DEBUG
+            NSLog(@"App received illegal json %@)", error);
+#endif
+            // data other than json _type location is silently ignored
         }
     }
 }
@@ -297,6 +347,10 @@
 
 - (void)switchOff
 {
+#ifdef DEBUG
+    NSLog(@"App switchOff");
+#endif
+
     [self connectionOff];
     [self locationOff];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -304,25 +358,45 @@
 }
 - (void)sendNow
 {
+#ifdef DEBUG
+    NSLog(@"App sendNow");
+#endif
+
     [self publishLocation:[self.manager location]];
 }
 - (void)connectionOff
 {
+#ifdef DEBUG
+    NSLog(@"App connectionOff");
+#endif
+    
     [self.connection disconnect];
 }
 - (void)locationOn
 {
+#ifdef DEBUG
+    NSLog(@"App locationOn");
+#endif
+
     [self.manager startMonitoringSignificantLocationChanges];
 }
 
 - (void)locationOff
 {
+#ifdef DEBUG
+    NSLog(@"App locationOff");
+#endif
+
     [self locationLow];
     [self.manager stopMonitoringSignificantLocationChanges];
 }
 
 - (void)locationHigh
 {
+#ifdef DEBUG
+    NSLog(@"App locationHigh");
+#endif
+
     /**
      ** A pedestrian strolls @ 3.6km/h or 1m/s or 60m/min
      ** A fast car or train drives at 200km/h or 3km/min or 50m/s
@@ -337,23 +411,35 @@
     self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
     self.high = YES;
+    [[NSUserDefaults standardUserDefaults] setObject:@(self.high) forKey:@"high_preference"];
 }
 
 - (void)activityTimer:(NSTimer *)timer
 {
-    NSLog(@"activityTimer");
+#ifdef DEBUG
+    NSLog(@"App activityTimer");
+#endif
     [self sendNow];
 }
 
 - (void)locationLow
 {
+#ifdef DEBUG
+    NSLog(@"App locationLow");
+#endif
+
     [self.activityTimer invalidate];
     [self.manager stopUpdatingLocation];
     self.high = NO;
+    [[NSUserDefaults standardUserDefaults] setObject:@(self.high) forKey:@"high_preference"];
 }
 
 - (void)reconnect
 {
+#ifdef DEBUG
+    NSLog(@"App reconnect");
+#endif
+
     [self.connection disconnect];
     
     self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
@@ -408,12 +494,16 @@
     }
 }
 
-#pragma internall helpers
+#pragma internal helpers
 
 #define DISMISS_AFTER 1.0
 
 - (void)alert:(NSString *)message
 {
+#ifdef DEBUG
+    NSLog(@"App alert %@", message);
+#endif
+
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
         self.alertView = [[mqttitudeAlertView alloc] initWithMessage:message dismissAfter:DISMISS_AFTER];
     }
@@ -421,6 +511,10 @@
 
 - (void)notification:(NSString *)message
 {
+#ifdef DEBUG
+    NSLog(@"App notification %@", message);
+#endif
+
     UILocalNotification *notification = [[UILocalNotification alloc] init];
     notification.alertBody = message;
     notification.alertLaunchImage = @"itunesArtwork.png";
@@ -431,7 +525,6 @@
 - (NSData *)jsonToData:(NSDictionary *)jsonObject
 {
     NSData *data;
-    
     
     if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
         NSError *error;
@@ -450,10 +543,13 @@
 
 - (void)disconnectInBackground
 {
+#ifdef DEBUG
+    NSLog(@"App disconnectInBackground");
+#endif
+
     self.disconnectTimer = nil;
     [self.connection disconnect];
 }
-
 
 - (NSData *)formatLocationData:(CLLocation *)location
 {
