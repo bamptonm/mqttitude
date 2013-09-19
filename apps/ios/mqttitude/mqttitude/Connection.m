@@ -43,7 +43,7 @@
 #define RECONNECT_TIMER_MAX 512.0
 
 /*
- * Connection represents the MQTT connection in the MQTTitude context - state Matrix wip
+ * Connection represents the MQTT connection in the MQTTitude context - state Matrix w.i.p
  *
  * Current State        Event           Action              Next State
  * ---------------------------------------------------------------------------

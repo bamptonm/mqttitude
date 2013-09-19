@@ -9,14 +9,12 @@
 #import "mqttitudeViewController.h"
 #import "mqttitudeAppDelegate.h"
 #import "Annotation.h"
-#import "mqttitudeIndicatorButton.h"
 #import "mqttitudeStatusTVC.h"
 #import <AddressBook/AddressBook.h>
 #import "mqttitudeFriendAnnotationView.h"
 
 @interface mqttitudeViewController ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet mqttitudeIndicatorButton *indicatorButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *connectionButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *locationButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *moveButton;
@@ -50,10 +48,13 @@
 
 }
 
+#define COLOR_ON [UIColor greenColor]
+#define COLOR_OFF [UIColor redColor]
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     [self.mapView addAnnotations:self.annotations.annotationArray];
     
@@ -67,15 +68,15 @@
     }
     
     if (self.mapView.showsUserLocation) {
-        self.locationButton.style = UIBarButtonItemStyleDone;
+        self.locationButton.tintColor = COLOR_ON;
     } else {
-        self.locationButton.style = UIBarButtonItemStyleBordered;
+        self.locationButton.tintColor = COLOR_OFF;
     }
     
     if (delegate.high) {
-        self.moveButton.style = UIBarButtonItemStyleDone;
+        self.moveButton.tintColor = COLOR_ON;
     } else {
-        self.moveButton.style = UIBarButtonItemStyleBordered;
+        self.moveButton.tintColor = COLOR_OFF;
     }
 }
 
@@ -87,13 +88,13 @@
     if (self.mapView.showsUserLocation) {
         self.mapView.showsUserLocation = NO;
         [delegate locationOff];
-        self.locationButton.style = UIBarButtonItemStyleBordered;
+        self.locationButton.tintColor = COLOR_OFF;
         [delegate locationLow];
-        self.moveButton.style = UIBarButtonItemStyleBordered;
+        self.moveButton.tintColor = COLOR_OFF;
     } else {
         self.mapView.showsUserLocation = YES;
         [delegate locationOn];
-        self.locationButton.style = UIBarButtonItemStyleDone;
+        self.locationButton.tintColor = COLOR_ON;
     }
 }
 
@@ -107,13 +108,13 @@
     
     if (delegate.high) {
         [delegate locationLow];
-        self.moveButton.style = UIBarButtonItemStyleBordered;
+        self.moveButton.tintColor = COLOR_OFF;
     } else {
         self.mapView.showsUserLocation = YES;
         [delegate locationOn];
-        self.locationButton.style = UIBarButtonItemStyleDone;
+        self.locationButton.tintColor = COLOR_ON;
         [delegate locationHigh];
-        self.moveButton.style = UIBarButtonItemStyleDone;
+        self.moveButton.tintColor = COLOR_ON;
     }
 }
 
@@ -132,6 +133,24 @@
             break;
     }
 }
+
+- (IBAction)connectionAction:(UIStoryboardSegue *)segue
+{
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+    switch (delegate.connection.state) {
+        case state_connected:
+            [delegate connectionOff];
+            break;
+        case state_error:
+        case state_starting:
+        case state_connecting:
+        case state_closing:
+        default:
+            [delegate reconnect];
+            break;
+    }
+}
+
 
 - (IBAction)showAll:(UIBarButtonItem *)sender {
     MKMapRect rect = [self initialRect];
@@ -162,9 +181,10 @@
     
     [self.mapView setVisibleMapRect:rect animated:YES];
     self.centered = FALSE;
-    self.centerButton.style = UIBarButtonItemStyleBordered;
-    self.allButton.style = UIBarButtonItemStyleDone;
+    self.centerButton.tintColor = COLOR_OFF;
+    self.allButton.tintColor = COLOR_ON;
 }
+
 - (IBAction)showCenter:(UIBarButtonItem *)sender {
     if (self.mapView.showsUserLocation) {
         [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
@@ -172,8 +192,8 @@
         [self.mapView setVisibleMapRect:[self initialRect] animated:YES];
     }
     self.centered = TRUE;
-    self.centerButton.style = UIBarButtonItemStyleDone;
-    self.allButton.style = UIBarButtonItemStyleBordered;
+    self.centerButton.tintColor = COLOR_ON;
+    self.allButton.tintColor = COLOR_OFF;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -249,39 +269,21 @@
 
 - (void)showState:(NSInteger)state
 {
-    UIColor *color;
-    
-    switch (state) {
-        case state_connected:
-            color = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:1.0];
-            break;
-        case state_error:
-            color = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-            break;
-        case state_connecting:
-        case state_closing:
-            color = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:1.0];
-            break;
-        case state_starting:
-        default:
-            color = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:1.0];
-            break;
-    }
-        
-    self.indicatorButton.color  = color;
-    [self.indicatorButton setNeedsDisplay];
-    
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     switch (delegate.connection.state) {
         case state_connected:
-            self.connectionButton.style = UIBarButtonItemStyleDone;
+            self.connectionButton.tintColor = [UIColor greenColor];
             break;
         case state_error:
-        case state_starting:
+            self.connectionButton.tintColor = [UIColor redColor];
+            break;
         case state_connecting:
         case state_closing:
+            self.connectionButton.tintColor = [UIColor yellowColor];
+            break;
+        case state_starting:
         default:
-            self.connectionButton.style = UIBarButtonItemStyleBordered;
+            self.connectionButton.tintColor = [UIColor blueColor];
             break;
     }
 }
@@ -430,4 +432,6 @@
     //CFRelease(records);
     return image;
 }
+
+
 @end
