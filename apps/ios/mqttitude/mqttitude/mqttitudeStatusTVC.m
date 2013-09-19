@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIconnected;
 @property (weak, nonatomic) IBOutlet UITextField *UIerror;
 @property (weak, nonatomic) IBOutlet UITextView *UIerrorCode;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *connectionButton;
 
 @end
 
@@ -28,7 +29,26 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    switch (self.connection.state) {
+        case state_connected:
+            self.connectionButton.tintColor = [UIColor greenColor];
+            break;
+        case state_error:
+            self.connectionButton.tintColor = [UIColor redColor];
+            break;
+        case state_connecting:
+        case state_closing:
+            self.connectionButton.tintColor = [UIColor yellowColor];
+            break;
+        case state_starting:
+        default:
+            self.connectionButton.tintColor = [UIColor blueColor];
+            break;
+    }
+    
     self.UIurl.text = self.connection.url;
+    
     self.UIconnected.text = ([self.connection.lastConnected compare:self.connection.lastClosed] == NSOrderedDescending) ? [NSDateFormatter localizedStringFromDate:self.connection.lastConnected
                                                                                                                                                          dateStyle:NSDateFormatterShortStyle
                                                                                                                                                          timeStyle:NSDateFormatterMediumStyle] : @"";

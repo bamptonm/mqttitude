@@ -17,36 +17,43 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ADW-aD-LPR">
                                 <rect key="frame" x="0.0" y="460" width="320" height="44"/>
                                 <items>
-                                    <barButtonItem image="location.png" id="BCW-Nj-aGy">
+                                    <barButtonItem image="location.png" style="plain" id="BCW-Nj-aGy">
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="location:" destination="HII-kF-avN" id="bfx-yV-UHP"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem image="move.png" id="ZGI-5D-f3y">
+                                    <barButtonItem image="move.png" style="plain" id="ZGI-5D-f3y">
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="move:" destination="HII-kF-avN" id="QwW-be-nXh"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="iAt-gI-5ll"/>
-                                    <barButtonItem image="center.png" id="8yY-FE-dno">
+                                    <barButtonItem image="center.png" style="plain" id="8yY-FE-dno">
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="showCenter:" destination="HII-kF-avN" id="VaW-hG-zZz"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem image="send.png" id="qW5-G0-fsd">
+                                    <barButtonItem image="send.png" style="plain" id="qW5-G0-fsd">
+                                        <color key="tintColor" red="0.059433083980000002" green="0.2648856342" blue="0.4038336575" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="action:" destination="HII-kF-avN" id="ukg-CB-JB6"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem image="friends.png" id="cHH-1Y-Pca">
+                                    <barButtonItem image="friends.png" style="plain" id="cHH-1Y-Pca">
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="showAll:" destination="HII-kF-avN" id="dia-TY-i71"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="At2-n2-Ea3"/>
-                                    <barButtonItem image="connection.png" id="cxz-ek-1bc">
+                                    <barButtonItem image="connection.png" style="plain" id="cxz-ek-1bc">
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="connection:" destination="HII-kF-avN" id="Kdr-7F-KNs"/>
+                                            <segue destination="KLm-gU-upL" kind="push" id="Yfl-h7-TWI"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -54,24 +61,6 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="eED-yn-0ps">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KyD-D5-srP" customClass="mqttitudeIndicatorButton">
-                                <rect key="frame" x="265" y="20" width="35" height="36"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="35" id="BcU-UY-YBl"/>
-                                    <constraint firstAttribute="height" constant="35" id="cnF-rf-DYv"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleColor" red="0.19607843137254902" green="0.30980392156862746" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="KLm-gU-upL" kind="push" id="mHs-aG-aSY"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -79,9 +68,7 @@
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="bottom" secondItem="ffw-DX-wWE" secondAttribute="bottom" type="user" id="F5f-0s-7Sd"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" type="user" id="IxT-f9-kro"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="default" id="PdQ-vV-ZhX"/>
-                            <constraint firstAttribute="trailing" secondItem="KyD-D5-srP" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Tal-mx-h4e"/>
                             <constraint firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" constant="44" type="user" id="bvz-dQ-ulQ"/>
-                            <constraint firstItem="KyD-D5-srP" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" constant="20" symbolic="YES" type="default" id="lJZ-fx-XV0"/>
                             <constraint firstItem="ADW-aD-LPR" firstAttribute="leading" secondItem="eED-yn-0ps" secondAttribute="leading" type="default" id="ldS-90-vqe"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="trailing" secondItem="ADW-aD-LPR" secondAttribute="trailing" type="default" id="zkC-ky-bM7"/>
                         </constraints>
@@ -91,7 +78,6 @@
                         <outlet property="allButton" destination="cHH-1Y-Pca" id="3M4-jd-vMT"/>
                         <outlet property="centerButton" destination="8yY-FE-dno" id="Zxm-16-5r2"/>
                         <outlet property="connectionButton" destination="cxz-ek-1bc" id="7p6-QP-77L"/>
-                        <outlet property="indicatorButton" destination="KyD-D5-srP" id="fbG-a3-JPb"/>
                         <outlet property="locationButton" destination="BCW-Nj-aGy" id="EWV-nb-awK"/>
                         <outlet property="mapView" destination="eED-yn-0ps" id="ySD-3E-pwJ"/>
                         <outlet property="moveButton" destination="ZGI-5D-f3y" id="cZv-sB-oLo"/>
@@ -272,16 +258,24 @@
                             <outlet property="delegate" destination="KLm-gU-upL" id="Quv-Bw-eyh"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="MQTT Connection Status" id="WFe-YW-aca"/>
+                    <navigationItem key="navigationItem" title="MQTT Connection Status" id="WFe-YW-aca">
+                        <barButtonItem key="rightBarButtonItem" image="connection.png" id="kl8-fH-Mjn">
+                            <connections>
+                                <segue destination="GeY-Q1-1Hf" kind="unwind" unwindAction="connectionAction:" id="X0B-JY-5id"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="UIclosed" destination="OMs-Lt-Xta" id="y94-Ee-x5U"/>
                         <outlet property="UIconnected" destination="wu8-hM-azq" id="uS6-pB-5fS"/>
                         <outlet property="UIerror" destination="4us-cD-yNb" id="Crt-xP-IPu"/>
                         <outlet property="UIerrorCode" destination="xLk-V9-E1v" id="YIx-vm-TdX"/>
                         <outlet property="UIurl" destination="z07-nI-24D" id="Tqa-T2-lW0"/>
+                        <outlet property="connectionButton" destination="kl8-fH-Mjn" id="a7T-Bu-rJb"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etq-xj-Qx0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="GeY-Q1-1Hf" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1578" y="-1070"/>
         </scene>

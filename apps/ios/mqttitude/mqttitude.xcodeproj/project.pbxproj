@@ -37,7 +37,6 @@
 		84BDE1C617C7B46F00C47B65 /* icon_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1C417C7B46F00C47B65 /* icon_144x144.png */; };
 		84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */; };
 		84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */; };
-		84C50F4817E062EC00726FD5 /* mqttitudeIndicatorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4717E062EC00726FD5 /* mqttitudeIndicatorButton.m */; };
 		84C50F4C17E06B1F00726FD5 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C50F4B17E06B1F00726FD5 /* location.png */; };
 		84C50F4E17E06C9C00726FD5 /* connection.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C50F4D17E06C9C00726FD5 /* connection.png */; };
 		84CF9A0917BEED5B00E1333C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0817BEED5B00E1333C /* UIKit.framework */; };
@@ -98,8 +97,6 @@
 		84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeStatusTVC.m; sourceTree = "<group>"; };
 		84C50F4317E0540200726FD5 /* mqttitudeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAlertView.h; sourceTree = "<group>"; };
 		84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAlertView.m; sourceTree = "<group>"; };
-		84C50F4617E062EC00726FD5 /* mqttitudeIndicatorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeIndicatorButton.h; sourceTree = SOURCE_ROOT; };
-		84C50F4717E062EC00726FD5 /* mqttitudeIndicatorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeIndicatorButton.m; sourceTree = SOURCE_ROOT; };
 		84C50F4B17E06B1F00726FD5 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
 		84C50F4D17E06C9C00726FD5 /* connection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connection.png; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -227,8 +224,6 @@
 				848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */,
 				84C50F4017E04B7D00726FD5 /* mqttitudeStatusTVC.h */,
 				84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */,
-				84C50F4617E062EC00726FD5 /* mqttitudeIndicatorButton.h */,
-				84C50F4717E062EC00726FD5 /* mqttitudeIndicatorButton.m */,
 				84F93C0517C029580060E809 /* Localizable.strings */,
 				84CF9A0F17BEED5B00E1333C /* Supporting Files */,
 			);
@@ -352,7 +347,6 @@
 				84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */,
 				84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */,
 				84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */,
-				84C50F4817E062EC00726FD5 /* mqttitudeIndicatorButton.m in Sources */,
 				848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
