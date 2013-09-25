@@ -29,6 +29,7 @@ Thoughts on possible future enhancements.
   * Needs 'standardized' topic names (maybe with Twitter id in topic?)
 * Queue updates on device (with `tst` etc) to be PUBlished upon available connection
 * Corner-pegging [#94](https://github.com/binarybucks/mqttitude/issues/94)
+* Maybe add remote-control for enabling "move-mode" on iOS (https://github.com/binarybucks/mqttitude/issues/139)
 
 ## Very-long term, a.k.a. "Neat ideas"
 
