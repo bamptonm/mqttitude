@@ -87,6 +87,13 @@ Configuration is done via the system settings app.
 	* AMBER=ERROR OCCURED, WAITING FOR RECONNECT, app will automatically try to reconnect to the server
 	* RED=ERROR, no connection to the server possible or transient errror condition
 
+### Move mode
+
+The standard tracking mode  reports significant location changes only (>500m and at most once every 5 minutes). This is defined by Apple and is optimal with respect to battery usage.
+
+A user now switch to Move Mode by tapping the little wooden locomotive. In Move Mode location changes are reported in user specified intervals every x meters or every y seconds. The payoff is higher battery usage as high as in navigation or tracker app. So it is recommend to use Move Mode while charging or during moves only.
+
+
 ### Background Mode
 
 The Application supports background-mode
