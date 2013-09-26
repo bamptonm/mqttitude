@@ -1,6 +1,8 @@
 
 Work in Progress!
 
+![Screenshot](screenshot.jpg)
+
 These things work:
 
 * Load friends from users.json
