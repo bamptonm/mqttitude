@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Quick Start Guide Example</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="vendor/leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="vendor/leaflet.ie.css" /><![endif]-->
+</head>
+<body>
+	<script src="vendor/jquery-1.10.2.min.js"></script>
+	<script src="vendor/leaflet.js"></script>
+	<script src="vendor/md5-min.js"></script>
+	<script src="vendor/mqttws31.js"></script>
+	<script src="config.js"></script>
+	<script src="userdata.js"></script>
+	<script src="mapfuncs.js"></script>
+	<script src="mqttfuncs.js"></script>
+	</script>
+	<script>
+		$(document).ready(function() {
+			load_map();
+			mqtt_connect();
+			getuserlist();
+			$('#msg').val('hello');
+		});
+	</script>
+	<div id="map" style="width: 600px; height: 400px"></div>
+	<input type="text" name="msg" id="msg" value="" size="80" /><br/>
+	<input type="text" name="mqttstatus" id="mqttstatus" value="" size="80" />
+</body>
+</html>
