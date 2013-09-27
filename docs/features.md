@@ -103,6 +103,6 @@ The Application supports background-mode
 		* `publish`: app publishes current location immediately to the server
 		* ...
 	* published locations of other devices and displays the last location published per device on it's map
-* app shows an application badge indicating the number of other device's loctions on it's map
+* app shows an application badge indicating the number of received location updates since the app went into background mode
 * app shows notifications (in notification center) when publishing the user's location
 * 
