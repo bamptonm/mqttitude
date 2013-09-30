@@ -10,14 +10,14 @@ function mqtt_connect()
 	client.onMessageArrived = function (message) {
 		topic = message.destinationName;
 		payload = message.payloadString;
-		$('#mqttstatus').val(topic + " " + payload);
+		$('#msg').val(topic + " " + payload);
 
 		try {
 			var d = $.parseJSON(payload);
 			var date = new Date(d.tst * 1000); //convert epoch time to readible local datetime
 			console.log(topic + " " + d.lat + ", " + d.lon);
 		} catch (err) {
-			$('#mqttstatus').val("JSON parse error " + err);
+			$('#msg').val("JSON parse error " + err);
 			return;
 		}
 
