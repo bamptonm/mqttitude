@@ -13,6 +13,10 @@ function mqtt_connect()
 		try {
 			payload = message.payloadString;
 			var d = $.parseJSON(payload);
+
+			if (d._type != 'location') {
+				return;
+			}
 			var date = new Date(d.tst * 1000); //convert epoch time to readible local datetime
 			$('#msg').val(topic + " " + payload);
 			console.log(topic + " " + d.lat + ", " + d.lon);
