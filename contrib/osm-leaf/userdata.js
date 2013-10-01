@@ -52,9 +52,18 @@ function friend_add(lat, lon, topic)
 	// TODO: text could have reverse-geo on it ...
 
 	user = getUser(topic);
-	m = L.marker([lat, lon], {icon: user.icon}).addTo(map);
+	m = L.marker([lat, lon], {
+		icon: user.icon
+		}).addTo(map);
+
 	text = user.name + "<br/>" + m.getLatLng().lat + ", " + m.getLatLng().lng;
 	m.bindPopup(text);
+
+	/* Bind a mouseover to the marker */
+	m.on('mouseover', function(evt) {
+		evt.target.openPopup();
+	});
+
 
 	// Bind marker to user
 	user.marker = m;

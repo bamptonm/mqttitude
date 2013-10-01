@@ -27,6 +27,13 @@ These things work:
 }
 ```
 
+## TODO
+
+* add name, location, (reverse geo) to marker
+* <del>can mouse-hover over marker show popup instead of having to click?</del> Done
+* keep map positioned where it is w/o re-scale (easier see of moving markers)
+* add activity counter right of map to show new friends' PUBs
+
 
 ## Credits
 
