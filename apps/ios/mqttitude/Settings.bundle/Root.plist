@@ -65,16 +65,6 @@
 			<string>host</string>
 		</dict>
 		<dict>
-			<key>DefaultValue</key>
-			<false/>
-			<key>Key</key>
-			<string>auth_preference</string>
-			<key>Title</key>
-			<string>Authorization</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
@@ -82,7 +72,7 @@
 			<key>Key</key>
 			<string>user_preference</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>userid</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -94,7 +84,7 @@
 			<key>IsSecure</key>
 			<true/>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>password</string>
 		</dict>
 		<dict>
 			<key>Type</key>
