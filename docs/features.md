@@ -106,3 +106,50 @@ The Application supports background-mode
 * app shows an application badge indicating the number of received location updates since the app went into background mode
 * app shows notifications (in notification center) when publishing the user's location
 * 
+
+### UI buttons
+
+1. First Button is User Tracking Mode: Follow with Heading, follow view north, show all friends, don't follow
+2. Second Button is Map Mode: Map, Satellite, Hybrid
+3. Third Button: Pin to publish manually (purple color), automatic publishes are red pins
+4. Forth Button: Publish mode: manually (empty circle), normal (filled circle), move mode (car)
+5. Fifth Button: Connection on/off (reconnect) and colored indicator for connection status
+
+Activity Indicator on right side of map in the middle of the screen. Indicates
+queued or sent messages not acknowledged yet by server. If not visible, all
+publishes are sent and acknowledged.
+
+Status: shows URL and last error (invalid user or password, etc)
+Might show topic, subscription, ... in future
+
+### Friends
+
+Friends: shows self and all Friends published by the server, their picture or MQTTitude default icon, and their last location.
+Tapping on the entry switches back to map centered on friend's last location.
+
+Tapping on the disclosure indicator (little right-arrow) lists all received locations of the friend.
+App keeps track of last 100 automatic own locations and 3 locations of others. Tapping on location entry centers the map on the selected location.
+
+If the location was set manually, a disclosure indicator allows changing the remark of the location (e.g. parked my car here!, started my run here!). Manual locations can only be deleted manually.
+
+Deleting locations or all locations of a friend is done by left-swipe on the entry.
+
+Q. As regards the friends list: when is reverse geo-coding done?
+
+Reverse geo-coding is done
+
+* when you click on a pin on the map
+* for the latest location if you go to the friends list
+
+No geo-coding is done automatically in the background
+
+### Friendly faces
+
+If your iOS addressbook has an entry for, say, Jane Jolie, and Jane has an image associated with her addressbook entry, MQTTitude will show Jane's image on the map and on the Friends list, as soon as a location update for Jane is seen by the app.
+
+In order to associate an MQTT topic with our friend (Jane, in this case), edit your addressbook entry on iOS for Jane and do either of the following:
+
+* Create a new service (like 'Twitter') called `MQTTitude` (case insensitive), and add your friend's topic name to that (e.g. `mqttitude/jane/loc`)
+* Create a new relashionship (like 'Spouse') called `MQTTitude` (case insensitive), and add your friend's topic name to that (e.g. `mqttitude/jane/loc`)
+
+The addressbook API might need a while to be refreshed, but you may be able to speed that up by swiping the Friends list downward until the activity indicator appears, then let go).
