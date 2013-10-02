@@ -33,6 +33,7 @@ These things work:
 * <del>can mouse-hover over marker show popup instead of having to click?</del> Done
 * keep map positioned where it is w/o re-scale (easier see of moving markers)
 * add activity counter right of map to show new friends' PUBs
+* maybe show list of friends on right of map, with faces & location (like iOS app)?
 
 
 ## Credits
