@@ -26,3 +26,4 @@ apps/ios/mqttitude/mqttitude.xcodeproj/project.xcworkspace/xcuserdata/ckrey.xcus
 *.pem
 *.p12
 *.key
+*.pyc
