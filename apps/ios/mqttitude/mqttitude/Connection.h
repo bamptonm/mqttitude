@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MQTTSession.h"
+#import "Publication+Create.h"
 
 
 @protocol ConnectionDelegate <NSObject>
@@ -23,6 +24,8 @@ enum state {
 
 - (void)showState:(NSInteger)state;
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic;
+- (void)messageDelivered:(NSInteger)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data;
+- (void)fifoChanged:(NSManagedObjectContext *)context;
 
 @end
 
@@ -30,13 +33,23 @@ enum state {
 
 @property (weak, nonatomic) id<ConnectionDelegate> delegate;
 @property (nonatomic, readonly) NSInteger state;
-@property (nonatomic, readonly) NSDate *lastConnected;
-@property (nonatomic, readonly) NSDate *lastClosed;
-@property (nonatomic, readonly) NSDate *lastError;
 @property (nonatomic, readonly) NSError *lastErrorCode;
 
-- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls keepalive:(NSInteger)keepalive auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will willQos:(NSInteger)willQos willRetainFlag:(BOOL)willRetainFlag;
-- (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
+- (void)connectTo:(NSString *)host
+             port:(NSInteger)port
+              tls:(BOOL)tls
+        keepalive:(NSInteger)keepalive
+             clean:(BOOL)clean
+             auth:(BOOL)auth
+             user:(NSString *)user
+             pass:(NSString *)pass
+        willTopic:(NSString *)willTopic
+             will:(NSData *)will
+          willQos:(NSInteger)willQos
+   willRetainFlag:(BOOL)willRetainFlag
+     withClientId:(NSString *)clientId;
+
+- (NSInteger)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
 - (void)subscribe:(NSString *)topic qos:(NSInteger)qos;
 - (void)unsubscribe:(NSString *)topic;
 - (void)disconnect;

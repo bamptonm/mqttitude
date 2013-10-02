@@ -9,19 +9,51 @@
 /* Begin PBXBuildFile section */
 		8406F23C17D8A78B00C463F5 /* Location.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 8406F23B17D8A78B00C463F5 /* Location.gpx */; };
 		8414726A17C9E5F900F76EAB /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8414726917C9E5F900F76EAB /* Connection.m */; };
-		84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84502C3217D870CF00874489 /* MainStoryboard_iPad.storyboard */; };
-		84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */ = {isa = PBXBuildFile; fileRef = 84540E3217D2D1ED0088DF92 /* Annotations.m */; };
+		8440548317F4D8F700455E26 /* MQTTitude.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8440548117F4D8F700455E26 /* MQTTitude.xcdatamodeld */; };
+		8440548A17F4EBC000455E26 /* Publication+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 8440548917F4EBC000455E26 /* Publication+Create.m */; };
+		8440549317F4ED4000455E26 /* Publication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8440549217F4ED4000455E26 /* Publication.m */; };
+		8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8440549417F4EFF300455E26 /* CoreData.framework */; };
+		844054A917F5D21400455E26 /* FriendsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054A717F5D21400455E26 /* FriendsOn@2x.png */; };
+		844054AD17F5D2B000455E26 /* FriendsOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054AB17F5D2B000455E26 /* FriendsOn.png */; };
+		844054B017F5DCD900455E26 /* Pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054AE17F5DCD900455E26 /* Pin@2x.png */; };
+		844054B117F5DCD900455E26 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054AF17F5DCD900455E26 /* Pin.png */; };
+		844054B417F5E0F400455E26 /* SatelliteOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054B217F5E0F400455E26 /* SatelliteOff@2x.png */; };
+		844054B517F5E0F400455E26 /* SatelliteOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054B317F5E0F400455E26 /* SatelliteOff.png */; };
+		844054BA17F5E2AF00455E26 /* HybridOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054B617F5E2AF00455E26 /* HybridOn.png */; };
+		844054BB17F5E2AF00455E26 /* HybridOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054B717F5E2AF00455E26 /* HybridOn@2x.png */; };
+		844054BC17F5E2AF00455E26 /* SatelliteOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054B817F5E2AF00455E26 /* SatelliteOn.png */; };
+		844054BD17F5E2AF00455E26 /* SatelliteOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 844054B917F5E2AF00455E26 /* SatelliteOn@2x.png */; };
+		844783B217FAC4C400A58E49 /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 844783B117FAC4C400A58E49 /* Friend.m */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
-		846BD30117DDEBD5006AF798 /* center.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FD17DDEBD5006AF798 /* center.png */; };
-		846BD30317DDEBD5006AF798 /* friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD2FF17DDEBD5006AF798 /* friends.png */; };
-		846BD30417DDEBD5006AF798 /* send.png in Resources */ = {isa = PBXBuildFile; fileRef = 846BD30017DDEBD5006AF798 /* send.png */; };
+		846597AE17F6071B00BEA7A8 /* LocationOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597AA17F6071B00BEA7A8 /* LocationOn.png */; };
+		846597AF17F6071B00BEA7A8 /* LocationOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597AB17F6071B00BEA7A8 /* LocationOn@2x.png */; };
+		846597B017F6071B00BEA7A8 /* LocationOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597AC17F6071B00BEA7A8 /* LocationOff.png */; };
+		846597B117F6071B00BEA7A8 /* LocationOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597AD17F6071B00BEA7A8 /* LocationOff@2x.png */; };
+		846597B317F6095C00BEA7A8 /* Move@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597B217F6095C00BEA7A8 /* Move@2x.png */; };
+		846597B517F6096900BEA7A8 /* Move.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597B417F6096900BEA7A8 /* Move.png */; };
+		846597BC17F6507900BEA7A8 /* UserTrackingFollowWithHeading.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597B617F6507900BEA7A8 /* UserTrackingFollowWithHeading.png */; };
+		846597BD17F6507900BEA7A8 /* UserTrackingFollowWithHeading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597B717F6507900BEA7A8 /* UserTrackingFollowWithHeading@2x.png */; };
+		846597BE17F6507900BEA7A8 /* UserTrackingFollow.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597B817F6507900BEA7A8 /* UserTrackingFollow.png */; };
+		846597BF17F6507900BEA7A8 /* UserTrackingFollow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597B917F6507900BEA7A8 /* UserTrackingFollow@2x.png */; };
+		846597C017F6507900BEA7A8 /* UserTrackingNone.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597BA17F6507900BEA7A8 /* UserTrackingNone.png */; };
+		846597C117F6507900BEA7A8 /* UserTrackingNone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846597BB17F6507900BEA7A8 /* UserTrackingNone@2x.png */; };
+		846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */; };
+		846597CE17F78E2E00BEA7A8 /* Friend+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597CD17F78E2E00BEA7A8 /* Friend+Create.m */; };
+		846597D117F78E4900BEA7A8 /* Location+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D017F78E4900BEA7A8 /* Location+Create.m */; };
+		846597D417F78E7100BEA7A8 /* mqttitudeFriendTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D317F78E7100BEA7A8 /* mqttitudeFriendTVC.m */; };
+		846597D717F78E8600BEA7A8 /* mqttitudeLocationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D617F78E8600BEA7A8 /* mqttitudeLocationTVC.m */; };
+		846597DA17F78F3D00BEA7A8 /* mqttitudeCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D917F78F3D00BEA7A8 /* mqttitudeCoreData.m */; };
+		846597E617F7A14D00BEA7A8 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597E517F7A14D00BEA7A8 /* Location.m */; };
 		848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036817E47ADC00152C26 /* AddressBook.framework */; };
 		848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036A17E4841500152C26 /* AddressBookUI.framework */; };
-		848A036E17E5B95900152C26 /* move.png in Resources */ = {isa = PBXBuildFile; fileRef = 848A036D17E5B95900152C26 /* move.png */; };
 		848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */; };
+		84B7B91117FB11AD0014049E /* mqttitudeEditLocationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */; };
+		84B7B91317FB97B00014049E /* icon_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 84B7B91217FB97B00014049E /* icon_120x120.png */; };
+		84B7B91717FB984E0014049E /* icon_80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 84B7B91417FB984E0014049E /* icon_80x80.png */; };
+		84B7B91817FB984E0014049E /* icon_58x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 84B7B91517FB984E0014049E /* icon_58x58.png */; };
+		84B7B91917FB984E0014049E /* icon_29x29.png in Resources */ = {isa = PBXBuildFile; fileRef = 84B7B91617FB984E0014049E /* icon_29x29.png */; };
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
-		84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19817C7B12C00C47B65 /* Annotation.m */; };
 		84BDE1A817C7B15F00C47B65 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1A717C7B15F00C47B65 /* icon_57x57.png */; };
 		84BDE1AA17C7B16800C47B65 /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1A917C7B16700C47B65 /* icon_114x114.png */; };
 		84BDE1B617C7B1D600C47B65 /* MQTTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE1AD17C7B1D600C47B65 /* MQTTDecoder.m */; };
@@ -37,7 +69,6 @@
 		84BDE1C617C7B46F00C47B65 /* icon_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1C417C7B46F00C47B65 /* icon_144x144.png */; };
 		84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */; };
 		84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */; };
-		84C50F4C17E06B1F00726FD5 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C50F4B17E06B1F00726FD5 /* location.png */; };
 		84C50F4E17E06C9C00726FD5 /* connection.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C50F4D17E06C9C00726FD5 /* connection.png */; };
 		84CF9A0917BEED5B00E1333C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0817BEED5B00E1333C /* UIKit.framework */; };
 		84CF9A0B17BEED5B00E1333C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0A17BEED5B00E1333C /* Foundation.framework */; };
@@ -57,24 +88,66 @@
 		8406F23B17D8A78B00C463F5 /* Location.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Location.gpx; sourceTree = "<group>"; };
 		8414726817C9E5F900F76EAB /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		8414726917C9E5F900F76EAB /* Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connection.m; sourceTree = "<group>"; };
-		84502C3717D870F000874489 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		84540E3117D2D1ED0088DF92 /* Annotations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotations.h; sourceTree = "<group>"; };
-		84540E3217D2D1ED0088DF92 /* Annotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotations.m; sourceTree = "<group>"; };
+		8440548217F4D8F700455E26 /* MQTTitude.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MQTTitude.xcdatamodel; sourceTree = "<group>"; };
+		8440548817F4EBC000455E26 /* Publication+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Publication+Create.h"; path = "../Publication+Create.h"; sourceTree = "<group>"; };
+		8440548917F4EBC000455E26 /* Publication+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Publication+Create.m"; path = "../Publication+Create.m"; sourceTree = "<group>"; };
+		8440549117F4ED4000455E26 /* Publication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Publication.h; sourceTree = "<group>"; };
+		8440549217F4ED4000455E26 /* Publication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Publication.m; sourceTree = "<group>"; };
+		8440549417F4EFF300455E26 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		844054A717F5D21400455E26 /* FriendsOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FriendsOn@2x.png"; sourceTree = "<group>"; };
+		844054AB17F5D2B000455E26 /* FriendsOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FriendsOn.png; sourceTree = "<group>"; };
+		844054AE17F5DCD900455E26 /* Pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pin@2x.png"; sourceTree = "<group>"; };
+		844054AF17F5DCD900455E26 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
+		844054B217F5E0F400455E26 /* SatelliteOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SatelliteOff@2x.png"; sourceTree = "<group>"; };
+		844054B317F5E0F400455E26 /* SatelliteOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SatelliteOff.png; sourceTree = "<group>"; };
+		844054B617F5E2AF00455E26 /* HybridOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HybridOn.png; sourceTree = "<group>"; };
+		844054B717F5E2AF00455E26 /* HybridOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HybridOn@2x.png"; sourceTree = "<group>"; };
+		844054B817F5E2AF00455E26 /* SatelliteOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SatelliteOn.png; sourceTree = "<group>"; };
+		844054B917F5E2AF00455E26 /* SatelliteOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SatelliteOn@2x.png"; sourceTree = "<group>"; };
+		844783B017FAC4C400A58E49 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
+		844783B117FAC4C400A58E49 /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		846BD2FD17DDEBD5006AF798 /* center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = center.png; sourceTree = "<group>"; };
-		846BD2FF17DDEBD5006AF798 /* friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends.png; sourceTree = "<group>"; };
-		846BD30017DDEBD5006AF798 /* send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = send.png; sourceTree = "<group>"; };
+		846597AA17F6071B00BEA7A8 /* LocationOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LocationOn.png; sourceTree = "<group>"; };
+		846597AB17F6071B00BEA7A8 /* LocationOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LocationOn@2x.png"; sourceTree = "<group>"; };
+		846597AC17F6071B00BEA7A8 /* LocationOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LocationOff.png; sourceTree = "<group>"; };
+		846597AD17F6071B00BEA7A8 /* LocationOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LocationOff@2x.png"; sourceTree = "<group>"; };
+		846597B217F6095C00BEA7A8 /* Move@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Move@2x.png"; sourceTree = "<group>"; };
+		846597B417F6096900BEA7A8 /* Move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Move.png; sourceTree = "<group>"; };
+		846597B617F6507900BEA7A8 /* UserTrackingFollowWithHeading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UserTrackingFollowWithHeading.png; sourceTree = "<group>"; };
+		846597B717F6507900BEA7A8 /* UserTrackingFollowWithHeading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UserTrackingFollowWithHeading@2x.png"; sourceTree = "<group>"; };
+		846597B817F6507900BEA7A8 /* UserTrackingFollow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UserTrackingFollow.png; sourceTree = "<group>"; };
+		846597B917F6507900BEA7A8 /* UserTrackingFollow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UserTrackingFollow@2x.png"; sourceTree = "<group>"; };
+		846597BA17F6507900BEA7A8 /* UserTrackingNone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UserTrackingNone.png; sourceTree = "<group>"; };
+		846597BB17F6507900BEA7A8 /* UserTrackingNone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UserTrackingNone@2x.png"; sourceTree = "<group>"; };
+		846597C217F6631100BEA7A8 /* MQTTitude.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MQTTitude.entitlements; path = MQTTitude/MQTTitude.entitlements; sourceTree = "<group>"; };
+		846597C917F78DD900BEA7A8 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
+		846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
+		846597CC17F78E2E00BEA7A8 /* Friend+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Friend+Create.h"; sourceTree = "<group>"; };
+		846597CD17F78E2E00BEA7A8 /* Friend+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Friend+Create.m"; sourceTree = "<group>"; };
+		846597CF17F78E4900BEA7A8 /* Location+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Location+Create.h"; sourceTree = "<group>"; };
+		846597D017F78E4900BEA7A8 /* Location+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Location+Create.m"; sourceTree = "<group>"; };
+		846597D217F78E7100BEA7A8 /* mqttitudeFriendTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendTVC.h; sourceTree = "<group>"; };
+		846597D317F78E7100BEA7A8 /* mqttitudeFriendTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeFriendTVC.m; sourceTree = "<group>"; };
+		846597D517F78E8600BEA7A8 /* mqttitudeLocationTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeLocationTVC.h; sourceTree = "<group>"; };
+		846597D617F78E8600BEA7A8 /* mqttitudeLocationTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeLocationTVC.m; sourceTree = "<group>"; };
+		846597D817F78F3D00BEA7A8 /* mqttitudeCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeCoreData.h; sourceTree = "<group>"; };
+		846597D917F78F3D00BEA7A8 /* mqttitudeCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeCoreData.m; sourceTree = "<group>"; };
+		846597E417F7A14D00BEA7A8 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		846597E517F7A14D00BEA7A8 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		848A036817E47ADC00152C26 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		848A036A17E4841500152C26 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		848A036D17E5B95900152C26 /* move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = move.png; sourceTree = "<group>"; };
 		848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendAnnotationView.h; sourceTree = "<group>"; };
 		848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeFriendAnnotationView.m; sourceTree = "<group>"; };
+		84B7B90F17FB11AD0014049E /* mqttitudeEditLocationTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeEditLocationTVC.h; sourceTree = "<group>"; };
+		84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeEditLocationTVC.m; sourceTree = "<group>"; };
+		84B7B91217FB97B00014049E /* icon_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_120x120.png; sourceTree = "<group>"; };
+		84B7B91417FB984E0014049E /* icon_80x80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_80x80.png; sourceTree = "<group>"; };
+		84B7B91517FB984E0014049E /* icon_58x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_58x58.png; sourceTree = "<group>"; };
+		84B7B91617FB984E0014049E /* icon_29x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_29x29.png; sourceTree = "<group>"; };
 		84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAppDelegate.h; sourceTree = "<group>"; };
 		84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAppDelegate.m; sourceTree = "<group>"; };
 		84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeViewController.h; sourceTree = "<group>"; };
 		84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeViewController.m; sourceTree = "<group>"; };
-		84BDE19717C7B12C00C47B65 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
-		84BDE19817C7B12C00C47B65 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 		84BDE1A717C7B15F00C47B65 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
 		84BDE1A917C7B16700C47B65 /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x114.png; sourceTree = "<group>"; };
 		84BDE1AC17C7B1D600C47B65 /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
@@ -97,7 +170,6 @@
 		84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeStatusTVC.m; sourceTree = "<group>"; };
 		84C50F4317E0540200726FD5 /* mqttitudeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAlertView.h; sourceTree = "<group>"; };
 		84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAlertView.m; sourceTree = "<group>"; };
-		84C50F4B17E06B1F00726FD5 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
 		84C50F4D17E06C9C00726FD5 /* connection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connection.png; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CF9A0817BEED5B00E1333C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -122,6 +194,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */,
 				848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */,
 				848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */,
 				84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */,
@@ -136,6 +209,70 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		844783AE17FAC44C00A58E49 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				844783B017FAC4C400A58E49 /* Friend.h */,
+				844783B117FAC4C400A58E49 /* Friend.m */,
+				8440548117F4D8F700455E26 /* MQTTitude.xcdatamodeld */,
+				846597CC17F78E2E00BEA7A8 /* Friend+Create.h */,
+				846597CD17F78E2E00BEA7A8 /* Friend+Create.m */,
+				846597E417F7A14D00BEA7A8 /* Location.h */,
+				846597E517F7A14D00BEA7A8 /* Location.m */,
+				846597CF17F78E4900BEA7A8 /* Location+Create.h */,
+				846597D017F78E4900BEA7A8 /* Location+Create.m */,
+				8440549117F4ED4000455E26 /* Publication.h */,
+				8440549217F4ED4000455E26 /* Publication.m */,
+				8440548817F4EBC000455E26 /* Publication+Create.h */,
+				8440548917F4EBC000455E26 /* Publication+Create.m */,
+			);
+			name = CoreData;
+			path = mqttitude;
+			sourceTree = "<group>";
+		};
+		844783AF17FAC46100A58E49 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				84BDE1A917C7B16700C47B65 /* icon_114x114.png */,
+				84BDE1A717C7B15F00C47B65 /* icon_57x57.png */,
+				84B7B91417FB984E0014049E /* icon_80x80.png */,
+				84B7B91517FB984E0014049E /* icon_58x58.png */,
+				84B7B91617FB984E0014049E /* icon_29x29.png */,
+				84BDE1C317C7B46F00C47B65 /* icon_72x72.png */,
+				84B7B91217FB97B00014049E /* icon_120x120.png */,
+				84BDE1C417C7B46F00C47B65 /* icon_144x144.png */,
+				84C50F4D17E06C9C00726FD5 /* connection.png */,
+				846597B217F6095C00BEA7A8 /* Move@2x.png */,
+				846597B417F6096900BEA7A8 /* Move.png */,
+				846597B617F6507900BEA7A8 /* UserTrackingFollowWithHeading.png */,
+				846597B717F6507900BEA7A8 /* UserTrackingFollowWithHeading@2x.png */,
+				846597B817F6507900BEA7A8 /* UserTrackingFollow.png */,
+				846597B917F6507900BEA7A8 /* UserTrackingFollow@2x.png */,
+				846597BA17F6507900BEA7A8 /* UserTrackingNone.png */,
+				846597BB17F6507900BEA7A8 /* UserTrackingNone@2x.png */,
+				846597AA17F6071B00BEA7A8 /* LocationOn.png */,
+				846597AB17F6071B00BEA7A8 /* LocationOn@2x.png */,
+				846597AC17F6071B00BEA7A8 /* LocationOff.png */,
+				846597AD17F6071B00BEA7A8 /* LocationOff@2x.png */,
+				844054AE17F5DCD900455E26 /* Pin@2x.png */,
+				844054AF17F5DCD900455E26 /* Pin.png */,
+				844054B617F5E2AF00455E26 /* HybridOn.png */,
+				844054B717F5E2AF00455E26 /* HybridOn@2x.png */,
+				844054B817F5E2AF00455E26 /* SatelliteOn.png */,
+				844054B917F5E2AF00455E26 /* SatelliteOn@2x.png */,
+				844054B217F5E0F400455E26 /* SatelliteOff@2x.png */,
+				844054B317F5E0F400455E26 /* SatelliteOff.png */,
+				844054A717F5D21400455E26 /* FriendsOn@2x.png */,
+				844054AB17F5D2B000455E26 /* FriendsOn.png */,
+				84BDE1BB17C7B3B800C47B65 /* iTunesArtwork */,
+				84BDE1BC17C7B3B800C47B65 /* iTunesArtwork.png */,
+				84BDE1BD17C7B3B800C47B65 /* iTunesArtwork@2x */,
+				84BDE1BE17C7B3B800C47B65 /* iTunesArtwork@2x.png */,
+				8406F23B17D8A78B00C463F5 /* Location.gpx */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		84BDE1AB17C7B1D600C47B65 /* mqtt */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,22 +294,10 @@
 		84CF99FC17BEED5B00E1333C = {
 			isa = PBXGroup;
 			children = (
+				844783AE17FAC44C00A58E49 /* CoreData */,
+				846597C217F6631100BEA7A8 /* MQTTitude.entitlements */,
 				84540E3517D33ACA0088DF92 /* Settings.bundle */,
-				84BDE1A917C7B16700C47B65 /* icon_114x114.png */,
-				84BDE1A717C7B15F00C47B65 /* icon_57x57.png */,
-				84BDE1C317C7B46F00C47B65 /* icon_72x72.png */,
-				84BDE1C417C7B46F00C47B65 /* icon_144x144.png */,
-				846BD2FD17DDEBD5006AF798 /* center.png */,
-				848A036D17E5B95900152C26 /* move.png */,
-				846BD2FF17DDEBD5006AF798 /* friends.png */,
-				84C50F4D17E06C9C00726FD5 /* connection.png */,
-				846BD30017DDEBD5006AF798 /* send.png */,
-				84C50F4B17E06B1F00726FD5 /* location.png */,
-				84BDE1BB17C7B3B800C47B65 /* iTunesArtwork */,
-				84BDE1BC17C7B3B800C47B65 /* iTunesArtwork.png */,
-				84BDE1BD17C7B3B800C47B65 /* iTunesArtwork@2x */,
-				84BDE1BE17C7B3B800C47B65 /* iTunesArtwork@2x.png */,
-				8406F23B17D8A78B00C463F5 /* Location.gpx */,
+				844783AF17FAC46100A58E49 /* Assets */,
 				84BDE1AB17C7B1D600C47B65 /* mqtt */,
 				84CF9A0E17BEED5B00E1333C /* mqttitude */,
 				84CF9A0717BEED5B00E1333C /* Frameworks */,
@@ -191,6 +316,7 @@
 		84CF9A0717BEED5B00E1333C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8440549417F4EFF300455E26 /* CoreData.framework */,
 				848A036A17E4841500152C26 /* AddressBookUI.framework */,
 				848A036817E47ADC00152C26 /* AddressBook.framework */,
 				84CF9A5317BEF45700E1333C /* CoreLocation.framework */,
@@ -206,16 +332,21 @@
 		84CF9A0E17BEED5B00E1333C /* mqttitude */ = {
 			isa = PBXGroup;
 			children = (
-				84502C3217D870CF00874489 /* MainStoryboard_iPad.storyboard */,
 				84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */,
+				846597D217F78E7100BEA7A8 /* mqttitudeFriendTVC.h */,
+				846597D317F78E7100BEA7A8 /* mqttitudeFriendTVC.m */,
+				846597D517F78E8600BEA7A8 /* mqttitudeLocationTVC.h */,
+				846597D617F78E8600BEA7A8 /* mqttitudeLocationTVC.m */,
+				84B7B90F17FB11AD0014049E /* mqttitudeEditLocationTVC.h */,
+				84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */,
+				846597C917F78DD900BEA7A8 /* CoreDataTableViewController.h */,
+				846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */,
 				84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */,
 				84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */,
 				8414726817C9E5F900F76EAB /* Connection.h */,
 				8414726917C9E5F900F76EAB /* Connection.m */,
-				84BDE19717C7B12C00C47B65 /* Annotation.h */,
-				84BDE19817C7B12C00C47B65 /* Annotation.m */,
-				84540E3117D2D1ED0088DF92 /* Annotations.h */,
-				84540E3217D2D1ED0088DF92 /* Annotations.m */,
+				846597D817F78F3D00BEA7A8 /* mqttitudeCoreData.h */,
+				846597D917F78F3D00BEA7A8 /* mqttitudeCoreData.m */,
 				84C50F4317E0540200726FD5 /* mqttitudeAlertView.h */,
 				84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */,
 				84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */,
@@ -275,6 +406,11 @@
 				TargetAttributes = {
 					84CF9A0417BEED5B00E1333C = {
 						DevelopmentTeam = C652JFWU23;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -302,28 +438,48 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				846597BE17F6507900BEA7A8 /* UserTrackingFollow.png in Resources */,
+				84B7B91717FB984E0014049E /* icon_80x80.png in Resources */,
 				84CF9A1B17BEED5B00E1333C /* Default.png in Resources */,
 				84CF9A1D17BEED5B00E1333C /* Default@2x.png in Resources */,
+				844054B517F5E0F400455E26 /* SatelliteOff.png in Resources */,
 				84CF9A1F17BEED5B00E1333C /* Default-568h@2x.png in Resources */,
+				846597B317F6095C00BEA7A8 /* Move@2x.png in Resources */,
+				846597AF17F6071B00BEA7A8 /* LocationOn@2x.png in Resources */,
 				84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */,
+				846597BC17F6507900BEA7A8 /* UserTrackingFollowWithHeading.png in Resources */,
+				844054BB17F5E2AF00455E26 /* HybridOn@2x.png in Resources */,
+				84B7B91817FB984E0014049E /* icon_58x58.png in Resources */,
+				844054B117F5DCD900455E26 /* Pin.png in Resources */,
+				846597AE17F6071B00BEA7A8 /* LocationOn.png in Resources */,
+				844054BC17F5E2AF00455E26 /* SatelliteOn.png in Resources */,
+				846597B517F6096900BEA7A8 /* Move.png in Resources */,
+				844054A917F5D21400455E26 /* FriendsOn@2x.png in Resources */,
 				84F93C0717C029580060E809 /* Localizable.strings in Resources */,
 				84BDE1A817C7B15F00C47B65 /* icon_57x57.png in Resources */,
+				84B7B91317FB97B00014049E /* icon_120x120.png in Resources */,
 				84BDE1AA17C7B16800C47B65 /* icon_114x114.png in Resources */,
+				84B7B91917FB984E0014049E /* icon_29x29.png in Resources */,
 				84BDE1BF17C7B3B800C47B65 /* iTunesArtwork in Resources */,
+				846597B017F6071B00BEA7A8 /* LocationOff.png in Resources */,
 				84BDE1C017C7B3B800C47B65 /* iTunesArtwork.png in Resources */,
+				846597B117F6071B00BEA7A8 /* LocationOff@2x.png in Resources */,
+				844054BA17F5E2AF00455E26 /* HybridOn.png in Resources */,
+				846597C017F6507900BEA7A8 /* UserTrackingNone.png in Resources */,
+				846597BD17F6507900BEA7A8 /* UserTrackingFollowWithHeading@2x.png in Resources */,
+				844054AD17F5D2B000455E26 /* FriendsOn.png in Resources */,
+				844054B417F5E0F400455E26 /* SatelliteOff@2x.png in Resources */,
 				84BDE1C117C7B3B800C47B65 /* iTunesArtwork@2x in Resources */,
 				84BDE1C217C7B3B800C47B65 /* iTunesArtwork@2x.png in Resources */,
 				84BDE1C517C7B46F00C47B65 /* icon_72x72.png in Resources */,
 				84BDE1C617C7B46F00C47B65 /* icon_144x144.png in Resources */,
 				84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */,
-				84502C3017D870CF00874489 /* MainStoryboard_iPad.storyboard in Resources */,
+				846597C117F6507900BEA7A8 /* UserTrackingNone@2x.png in Resources */,
+				846597BF17F6507900BEA7A8 /* UserTrackingFollow@2x.png in Resources */,
+				844054BD17F5E2AF00455E26 /* SatelliteOn@2x.png in Resources */,
+				844054B017F5DCD900455E26 /* Pin@2x.png in Resources */,
 				8406F23C17D8A78B00C463F5 /* Location.gpx in Resources */,
-				846BD30117DDEBD5006AF798 /* center.png in Resources */,
-				846BD30317DDEBD5006AF798 /* friends.png in Resources */,
-				846BD30417DDEBD5006AF798 /* send.png in Resources */,
-				84C50F4C17E06B1F00726FD5 /* location.png in Resources */,
 				84C50F4E17E06C9C00726FD5 /* connection.png in Resources */,
-				848A036E17E5B95900152C26 /* move.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,17 +490,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				846597D717F78E8600BEA7A8 /* mqttitudeLocationTVC.m in Sources */,
+				8440548A17F4EBC000455E26 /* Publication+Create.m in Sources */,
+				84B7B91117FB11AD0014049E /* mqttitudeEditLocationTVC.m in Sources */,
 				84CF9A1517BEED5B00E1333C /* main.m in Sources */,
 				84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */,
 				84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */,
-				84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */,
 				84BDE1B617C7B1D600C47B65 /* MQTTDecoder.m in Sources */,
 				84BDE1B717C7B1D600C47B65 /* MQTTEncoder.m in Sources */,
 				84BDE1B817C7B1D600C47B65 /* MQTTMessage.m in Sources */,
 				84BDE1B917C7B1D600C47B65 /* MQTTSession.m in Sources */,
+				844783B217FAC4C400A58E49 /* Friend.m in Sources */,
+				846597E617F7A14D00BEA7A8 /* Location.m in Sources */,
+				846597CE17F78E2E00BEA7A8 /* Friend+Create.m in Sources */,
 				84BDE1BA17C7B1D600C47B65 /* MQttTxFlow.m in Sources */,
+				846597D117F78E4900BEA7A8 /* Location+Create.m in Sources */,
+				846597D417F78E7100BEA7A8 /* mqttitudeFriendTVC.m in Sources */,
+				8440549317F4ED4000455E26 /* Publication.m in Sources */,
+				8440548317F4D8F700455E26 /* MQTTitude.xcdatamodeld in Sources */,
 				8414726A17C9E5F900F76EAB /* Connection.m in Sources */,
-				84540E3317D2D1EE0088DF92 /* Annotations.m in Sources */,
+				846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */,
+				846597DA17F78F3D00BEA7A8 /* mqttitudeCoreData.m in Sources */,
 				84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */,
 				84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */,
 				848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */,
@@ -354,14 +520,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		84502C3217D870CF00874489 /* MainStoryboard_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				84502C3717D870F000874489 /* Base */,
-			);
-			name = MainStoryboard_iPad.storyboard;
-			sourceTree = "<group>";
-		};
 		84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -444,15 +602,16 @@
 		84CF9A2C17BEED5B00E1333C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PROVISIONING_PROFILE = "31A59A4A-125D-41EC-878E-E438B0F3C342";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -460,15 +619,16 @@
 		84CF9A2D17BEED5B00E1333C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PROVISIONING_PROFILE = "31A59A4A-125D-41EC-878E-E438B0F3C342";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -495,6 +655,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		8440548117F4D8F700455E26 /* MQTTitude.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				8440548217F4D8F700455E26 /* MQTTitude.xcdatamodel */,
+			);
+			currentVersion = 8440548217F4D8F700455E26 /* MQTTitude.xcdatamodel */;
+			path = MQTTitude.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 84CF99FD17BEED5B00E1333C /* Project object */;
 }

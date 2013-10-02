@@ -8,15 +8,25 @@
 
 #import "mqttitudeAppDelegate.h"
 #import "mqttitudeAlertView.h"
+#import "mqttitudeCoreData.h"
+#import "Friend+Create.h"
+#import "Location+Create.h"
 
 @interface mqttitudeAppDelegate()
-@property (strong, nonatomic) Annotations *annotations;
 @property (strong, nonatomic) NSTimer *disconnectTimer;
 @property (strong, nonatomic) NSTimer *activityTimer;
 @property (strong, nonatomic) mqttitudeAlertView *alertView;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+@property (strong, nonatomic) mqttitudeCoreData *coreData;
 
 @end
+
+#define LOCATION_IGNORE_OLDER_THAN -1.0
+#define BACKGROUND_DISCONNECT_AFTER 8.0
+#define DISMISS_AFTER 1.0
+
+#define MAX_OWN_LOCATIONS 100
+#define MAX_OTHER_LOCATIONS 3
 
 @implementation mqttitudeAppDelegate
 
@@ -37,56 +47,48 @@
     self.backgroundTask = UIBackgroundTaskInvalid;
     
     NSDictionary *appDefaults = @{
-                                  @"mindist_preference" : @(100),
-                                  @"mintime_preference" : @(300),
+                                  @"mindist_preference" : @(200),
+                                  @"mintime_preference" : @(180),
                                   @"clientid_preference" : [UIDevice currentDevice].name,
-                                  @"subscription_preference" : @"#",
+                                  @"subscription_preference" : @"mqttitude/+/loc/+",
                                   @"subscriptionqos_preference": @(1),
-                                  @"topic_preference" : @"loc",
+                                  @"topic_preference" : @"",
                                  @"retain_preference": @(TRUE),
                                  @"qos_preference": @(1),
                                  @"host_preference" : @"host",
-                                 @"port_preference" : @(1883),
-                                 @"tls_preference": @(NO),
-                                 @"auth_preference": @(NO),
+                                 @"port_preference" : @(8883),
+                                 @"tls_preference": @(YES),
+                                 @"auth_preference": @(YES),
                                  @"user_preference": @"user",
                                  @"auth_preference": @"pass",
                                  @"keepalive_preference" : @(60),
-                                 @"clean_preference" : @(YES),
+                                 @"clean_preference" : @(NO),
                                  @"will_preference": @"lwt",
-                                 @"willtopic_preference": @"loc",
+                                 @"willtopic_preference": @"",
                                  @"willretain_preference":@(NO),
                                  @"willqos_preference": @(1),
-                                  @"high_preference": @(NO)
+                                  @"monitoring_preference": @(1)
                                 };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    self.annotations = [[Annotations alloc] init];
-    self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
-    self.annotations.delegate = self;
-
-    id delegate;
-    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
-        if ([nc.topViewController respondsToSelector:@selector(etAnnotations:)]) {
-            delegate = nc.topViewController;
-        }
-    } else if ([self.window.rootViewController respondsToSelector:@selector(etAnnotations:)]) {
-        delegate = self.window.rootViewController;
+    self.coreData = [[mqttitudeCoreData alloc] init];
+    [self.coreData useDocument];
+    
+    while (![mqttitudeCoreData theManagedObjectContext]) {
+#ifdef DEBUG
+        NSLog(@"APP Waiting for document to open");
+#endif
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     }
-    [delegate performSelector:@selector(setAnnotations:) withObject:self.annotations];
-
     
     if ([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
             self.manager = [[CLLocationManager alloc] init];
             self.manager.delegate = self;
             
-            [self locationOn];
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"high_preference"]) {
-                [self locationHigh];
-            }
+            self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
+             
         } else {
             NSString *message = NSLocalizedString(@"No significant location change monitoring available", @"No significant location change monitoring available");
             [self alert:message];
@@ -103,19 +105,9 @@
     self.connection = [[Connection alloc] init];
     self.connection.delegate = self;
     
-    [self.connection connectTo:[[NSUserDefaults standardUserDefaults] stringForKey:@"host_preference"]
-                          port:[[NSUserDefaults standardUserDefaults] integerForKey:@"port_preference"]
-                           tls:[[NSUserDefaults standardUserDefaults] boolForKey:@"tls_preference"]
-                     keepalive:[[NSUserDefaults standardUserDefaults] integerForKey:@"keepalive_preference"]
-                          auth:[[NSUserDefaults standardUserDefaults] boolForKey:@"auth_preference"]
-                          user:[[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"]
-                          pass:[[NSUserDefaults standardUserDefaults] stringForKey:@"pass_preference"]
-                     willTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"willtopic_preference"]
-                          will:[self jsonToData:@{
-                                @"tst": [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]],
-                                @"_type": @"lwt"}]
-                       willQos:[[NSUserDefaults standardUserDefaults] integerForKey:@"willqos_preference"]
-                willRetainFlag:[[NSUserDefaults standardUserDefaults] boolForKey:@"willretain_preference"]];
+    [self connect];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
     
     return YES;
 }
@@ -126,8 +118,8 @@
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 #ifdef DEBUG
     NSLog(@"App applicationWillResignActive");
-    [self.connection disconnect];
 #endif
+    [self.connection disconnect];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -137,10 +129,21 @@
 #ifdef DEBUG
     NSLog(@"App applicationDidEnterBackground");
 #endif
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^
                            {
-                               NSLog(@"Backgroundtaskexpirationhandler");
-                               self.backgroundTask = UIBackgroundTaskInvalid;
+#ifdef DEBUG
+                               NSLog(@"BackgroundTaskExpirationHandler");
+#endif
+
+                               /*
+                                * we might end up here if the connection could not be closed within the given
+                                * background time
+                                */ 
+                               if (self.backgroundTask) {
+                                   [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
+                                   self.backgroundTask = UIBackgroundTaskInvalid;
+                               }
                            }];
 }
 
@@ -151,7 +154,6 @@
 #ifdef DEBUG
     NSLog(@"App applicationWillEnterForeground");
 #endif
-    [self annotationsChanged:self.annotations];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -181,7 +183,6 @@
 
 #pragma CLLocationManagerDelegate
 
-#define LOCATION_IGNORE_OLDER_THAN -1.0
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
@@ -203,7 +204,7 @@
          **/
         
         if ([location.timestamp compare:[NSDate dateWithTimeIntervalSinceNow:LOCATION_IGNORE_OLDER_THAN]] != NSOrderedAscending ) {
-            [self publishLocation:location];
+            [self publishLocation:location automatic:YES];
         }
     }
 }
@@ -215,28 +216,6 @@
 #endif
     NSString *message = [NSString stringWithFormat:@"App didFailWithError %@", error];
     [self alert:message];
-}
-
-
-#pragma AnnotationsDelegate
-
-- (void)annotationsChanged:(NSArray *)annotations
-{
-#ifdef DEBUG
-    NSLog(@"App annotationsChanged");
-#endif
-
-    id<AnnotationsDelegate> ad;
-    
-    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
-        if ([nc.topViewController respondsToSelector:@selector(annotationsChanged:)]) {
-            ad = (id<AnnotationsDelegate>)nc.topViewController;
-        }
-    } else if ([self.window.rootViewController respondsToSelector:@selector(annotationsChanged:)]) {
-        ad = (id<AnnotationsDelegate>)self.window.rootViewController;
-    }
-    [ad annotationsChanged:self.annotations];
 }
 
 #pragma ConnectionDelegate
@@ -293,13 +272,19 @@
 
     NSString *message = [NSString stringWithFormat:@"%@: %@", topic, [Connection dataToString:data]];
     
-    if ([topic isEqualToString:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]]) {
+    if ([[topic stringByDeletingLastPathComponent] isEqualToString:[self theGeneralTopic]]) {
         // received own data
-    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"listento"]]) {
+    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"listento"]]) {
         // received command
         NSString *message = [Connection dataToString:data];
-        if ([message isEqualToString:@"publish"]) {
-            [self publishLocation:self.manager.location];
+        if ([message isEqualToString:@"publishNow"]) {
+            [self publishLocation:self.manager.location automatic:YES];
+        } else if ([message isEqualToString:@"publishNever"]) {
+            self.monitoring = 0;
+        } else if ([message isEqualToString:@"publishNormal"]) {
+            self.monitoring = 1;
+        } else if ([message isEqualToString:@"publishMoveMode"]) {
+            self.monitoring = 2;
         } else {
 #ifdef DEBUG
             NSLog(@"App unknown command %@)", message);
@@ -307,13 +292,15 @@
             NSString *message = NSLocalizedString(@"MQTTitude received an unknown command", @"MQTTitude received an unknown command");
             [self alert:message];
         }
-    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"], @"message"]]) {
+    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"message"]]) {
 #ifdef DEBUG
         NSLog(@"App received message %@)", message);
 #endif
         [self notification:message];
     } else {
         // received other data
+        NSString *deviceName = topic;
+        deviceName = [deviceName stringByDeletingLastPathComponent];
         NSError *error;
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (dictionary) {
@@ -324,10 +311,17 @@
                                                            horizontalAccuracy:[dictionary[@"acc"] floatValue]
                                                              verticalAccuracy:[dictionary[@"vac"] floatValue]
                                                                     timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] floatValue]]];
-                [self.annotations addLocation:location topic:topic];
-
-                // show the user how many others are on the map
-                [UIApplication sharedApplication].applicationIconBadgeNumber = [self.annotations countOthersAnnotations];
+                Location *newLocation = [Location locationWithTopic:deviceName
+                                                          timestamp:location.timestamp
+                                                         coordinate:location.coordinate
+                                                           accuracy:location.horizontalAccuracy
+                                                          automatic:TRUE
+                                             inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+                [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
+                [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
+            } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
+                Friend *friend = [Friend friendWithTopic:deviceName inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+                friend.device = dictionary[@"deviceToken"];
             } else {
 #ifdef DEBUG
                 NSLog(@"App received unknown record type %@)", dictionary[@"_type"]);
@@ -343,6 +337,34 @@
     }
 }
 
+- (void)messageDelivered:(NSInteger)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data
+{
+#ifdef DEBUG
+    NSLog(@"App messageDelivered %ld", (long)msgID);
+#endif
+    NSString *message = [NSString stringWithFormat:@"Location delivered id=%ld", (long)msgID];
+    [self notification:message];
+}
+
+- (void)fifoChanged:(NSManagedObjectContext *)context
+{
+    NSInteger count = [Publication countPublications:context];
+#ifdef DEBUG
+    NSLog(@"App fifoChanged %ld", (long)count);
+#endif
+    id receiver;
+    
+    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
+        if ([nc.topViewController respondsToSelector:@selector(fifoChanged:)]) {
+            receiver = nc.topViewController;
+        }
+    } else if ([self.window.rootViewController respondsToSelector:@selector(fifoChanged:)]) {
+        receiver = self.window.rootViewController;
+    }
+    [receiver performSelector:@selector(fifoChanged:) withObject:@(count)];
+}
+
 #pragma actions
 
 - (void)switchOff
@@ -352,7 +374,7 @@
 #endif
 
     [self connectionOff];
-    [self locationOff];
+    self.monitoring = 0;
     [[NSUserDefaults standardUserDefaults] synchronize];
     exit(0);
 }
@@ -362,7 +384,7 @@
     NSLog(@"App sendNow");
 #endif
 
-    [self publishLocation:[self.manager location]];
+    [self publishLocation:[self.manager location] automatic:FALSE];
 }
 - (void)connectionOff
 {
@@ -372,46 +394,39 @@
     
     [self.connection disconnect];
 }
-- (void)locationOn
+
+- (void)setMonitoring:(NSInteger)monitoring
 {
 #ifdef DEBUG
-    NSLog(@"App locationOn");
+    NSLog(@"App monitoring=%ld", (long)monitoring);
 #endif
 
-    [self.manager startMonitoringSignificantLocationChanges];
-}
+    _monitoring = monitoring;
+    [[NSUserDefaults standardUserDefaults] setObject:@(monitoring) forKey:@"monitoring_preference"];
 
-- (void)locationOff
-{
-#ifdef DEBUG
-    NSLog(@"App locationOff");
-#endif
-
-    [self locationLow];
-    [self.manager stopMonitoringSignificantLocationChanges];
-}
-
-- (void)locationHigh
-{
-#ifdef DEBUG
-    NSLog(@"App locationHigh");
-#endif
-
-    /**
-     ** A pedestrian strolls @ 3.6km/h or 1m/s or 60m/min
-     ** A fast car or train drives at 200km/h or 3km/min or 50m/s
-     ** A car or Bus in the city moves with 36km/h or 10m/s or 600m/min
-     **
-     **/
-    self.manager.distanceFilter = [[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"];
-    self.manager.desiredAccuracy = kCLLocationAccuracyBest;
-    self.manager.pausesLocationUpdatesAutomatically = YES;
-    
-    [self.manager startUpdatingLocation];
-    self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
-    self.high = YES;
-    [[NSUserDefaults standardUserDefaults] setObject:@(self.high) forKey:@"high_preference"];
+    switch (monitoring) {
+        case 2:
+            self.manager.distanceFilter = [[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"];
+            self.manager.desiredAccuracy = kCLLocationAccuracyBest;
+            self.manager.pausesLocationUpdatesAutomatically = YES;
+            
+            [self.manager startUpdatingLocation];
+            self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
+            [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
+            [self.manager stopMonitoringSignificantLocationChanges];
+            break;
+        case 1:
+            [self.activityTimer invalidate];
+            [self.manager stopUpdatingLocation];
+            [self.manager startMonitoringSignificantLocationChanges];
+            break;
+        case 0:
+        default:
+            [self.activityTimer invalidate];
+            [self.manager stopUpdatingLocation];
+            [self.manager stopMonitoringSignificantLocationChanges];
+            break;
+    }
 }
 
 - (void)activityTimer:(NSTimer *)timer
@@ -419,19 +434,7 @@
 #ifdef DEBUG
     NSLog(@"App activityTimer");
 #endif
-    [self sendNow];
-}
-
-- (void)locationLow
-{
-#ifdef DEBUG
-    NSLog(@"App locationLow");
-#endif
-
-    [self.activityTimer invalidate];
-    [self.manager stopUpdatingLocation];
-    self.high = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@(self.high) forKey:@"high_preference"];
+    [self publishLocation:[self.manager location] automatic:TRUE];
 }
 
 - (void)reconnect
@@ -441,41 +444,34 @@
 #endif
 
     [self.connection disconnect];
-    
-    self.annotations.myTopic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
-
-    [self.connection connectTo:[[NSUserDefaults standardUserDefaults] stringForKey:@"host_preference"]
-                          port:[[NSUserDefaults standardUserDefaults] integerForKey:@"port_preference"]
-                           tls:[[NSUserDefaults standardUserDefaults] boolForKey:@"tls_preference"]
-                     keepalive:[[NSUserDefaults standardUserDefaults] integerForKey:@"keepalive_preference"]
-                          auth:[[NSUserDefaults standardUserDefaults] boolForKey:@"auth_preference"]
-                          user:[[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"]
-                          pass:[[NSUserDefaults standardUserDefaults] stringForKey:@"pass_preference"]
-                     willTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"willtopic_preference"]
-                          will:[self jsonToData:@{
-                                @"tst": [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]],
-                                @"_type": @"lwt"}]
-                       willQos:[[NSUserDefaults standardUserDefaults] integerForKey:@"willqos_preference"]
-                willRetainFlag:[[NSUserDefaults standardUserDefaults] boolForKey:@"willretain_preference"]];
+    [self connect];
 }
 
-#define BACKGROUND_DISCONNECT_AFTER 8.0
-
-- (void)publishLocation:(CLLocation *)location
+- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic
 {
-    [self.annotations addLocation:location topic:[[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"]];
-    if (!self.high) {
-        Annotation *annotation = [self.annotations myLastAnnotation];
-        NSString *message = [NSString stringWithFormat:@"Published %@ %@", annotation.title, annotation.subtitle];
-        [self notification:message];
-    }
-    NSData *data = [self formatLocationData:location];
-    [self.connection sendData:data
-                        topic:[[NSUserDefaults standardUserDefaults]
-                               stringForKey:@"topic_preference"]
-                          qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
-                       retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+    Location *newLocation = [Location locationWithTopic:[self theGeneralTopic]
+                                              timestamp:[NSDate date]
+                                             coordinate:location.coordinate
+                                               accuracy:location.horizontalAccuracy
+                                              automatic:automatic
+                                 inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
 
+    NSData *data = [self encodeLocationData:location];
+    
+    NSInteger msgID = [self.connection sendData:data
+                                          topic:automatic ? [self theAutomaticTopic] : [self theManualTopic]
+                                            qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
+                                         retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+    
+    if (msgID <= 0) {
+        NSString *message = [NSString stringWithFormat:@"Location %@",
+                             (msgID == -1) ? @"queued" : @"sent"];
+        [self notification:message];
+
+    }
+    
+    [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OWN_LOCATIONS];
+    
     /**
      *   In background, set timer to disconnect after BACKGROUND_DISCONNECT_AFTER sec. IOS will suspend app after 10 sec.
      **/
@@ -494,9 +490,23 @@
     }
 }
 
-#pragma internal helpers
+- (void)limitLocationsWith:(Friend *)friend toMaximum:(NSInteger)max
+{
+    NSArray *allLocations = [Location allLocationsWithFriend:friend inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+#ifdef DEBUG
+    NSLog(@"App count Locations %d", [allLocations count]);
+#endif
+    
+    for (NSInteger i = [allLocations count]; i > max; i--) {
+            Location *location = allLocations[i - 1];
+#ifdef DEBUG
+        NSLog(@"App deleteLocation %@", location);
+#endif
+        [[mqttitudeCoreData theManagedObjectContext] deleteObject:location];
+    }
+}
 
-#define DISMISS_AFTER 1.0
+#pragma internal helpers
 
 - (void)alert:(NSString *)message
 {
@@ -521,6 +531,34 @@
     [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 }
 
+- (void)connect
+{
+    [self.connection connectTo:[[NSUserDefaults standardUserDefaults] stringForKey:@"host_preference"]
+                          port:[[NSUserDefaults standardUserDefaults] integerForKey:@"port_preference"]
+                           tls:[[NSUserDefaults standardUserDefaults] boolForKey:@"tls_preference"]
+                     keepalive:[[NSUserDefaults standardUserDefaults] integerForKey:@"keepalive_preference"]
+                         clean:[[NSUserDefaults standardUserDefaults] integerForKey:@"clean_preference"]
+                          auth:[[NSUserDefaults standardUserDefaults] boolForKey:@"auth_preference"]
+                          user:[[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"]
+                          pass:[[NSUserDefaults standardUserDefaults] stringForKey:@"pass_preference"]
+                     willTopic:[self theWillTopic]
+                          will:[self jsonToData:@{
+                                                  @"tst": [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]],
+                                                  @"_type": @"lwt"}]
+                       willQos:[[NSUserDefaults standardUserDefaults] integerForKey:@"willqos_preference"]
+                willRetainFlag:[[NSUserDefaults standardUserDefaults] boolForKey:@"willretain_preference"]
+                  withClientId:[self theClientId]];
+}
+
+- (void)disconnectInBackground
+{
+#ifdef DEBUG
+    NSLog(@"App disconnectInBackground");
+#endif
+    
+    self.disconnectTimer = nil;
+    [self.connection disconnect];
+}
 
 - (NSData *)jsonToData:(NSDictionary *)jsonObject
 {
@@ -541,29 +579,106 @@
 }
 
 
-- (void)disconnectInBackground
-{
-#ifdef DEBUG
-    NSLog(@"App disconnectInBackground");
-#endif
-
-    self.disconnectTimer = nil;
-    [self.connection disconnect];
-}
-
-- (NSData *)formatLocationData:(CLLocation *)location
+- (NSData *)encodeLocationData:(CLLocation *)location
 {
     NSDictionary *jsonObject = @{
                                  @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
                                  @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
                                  @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
                                  @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
-                                 @"alt": [NSString stringWithFormat:@"%f", location.altitude],
-                                 @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
-                                 @"vel": [NSString stringWithFormat:@"%f", location.speed],
-                                 @"dir": [NSString stringWithFormat:@"%f", location.course],
                                  @"_type": [NSString stringWithFormat:@"%@", @"location"]
                                  };
     return [self jsonToData:jsonObject];
 }
+
+#pragma Remote Notifications
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+#ifdef DEBUG
+    NSLog(@"App didFailToRegisterForRemoteNotificationsWithError %@", error);
+#endif
+
+}
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+#ifdef DEBUG
+    NSLog(@"App didReceiveRemoteNotification %@", userInfo);
+#endif
+    [self publishLocation:[self.manager location] automatic:TRUE];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+#ifdef DEBUG
+    NSLog(@"App didReceiveRemoteNotification fetchCompletionHandler %@", userInfo);
+#endif
+    [self publishLocation:[self.manager location] automatic:TRUE];
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+#ifdef DEBUG
+    NSLog(@"App didRegisterForRemoteNotificationsWithDeviceToken %@", deviceToken);
+#endif
+    
+    NSDictionary *jsonObject = @{
+                                 @"tst": [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]],
+                                 @"dev": [NSString stringWithFormat:@"%@", [deviceToken description]],
+                                 @"_type": [NSString stringWithFormat:@"%@", @"deviceToken"]
+                                 };
+
+    [self.connection sendData:[self jsonToData:jsonObject]
+                        topic:[NSString stringWithFormat:@"%@/deviceToken", self.theGeneralTopic]
+                          qos:1
+                       retain:YES];
+}
+
+#pragma construct topic names
+
+- (NSString *)theAutomaticTopic
+{
+    return [[self theGeneralTopic] stringByAppendingString:@"/a"];
+}
+
+- (NSString *)theManualTopic
+{
+    return [[self theGeneralTopic] stringByAppendingString:@"/m"];
+}
+- (NSString *)theGeneralTopic
+{
+    NSString *topic;
+    topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
+    
+    if (!topic || [topic isEqualToString:@""]) {
+        topic = [NSString stringWithFormat:@"mqttitude/%@/loc", [self theClientId]];
+    }
+    return topic;
+}
+
+- (NSString *)theWillTopic
+{
+    NSString *topic;
+    topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"willtopic_preference"];
+    
+    if (!topic || [topic isEqualToString:@""]) {
+        topic = [self theAutomaticTopic];
+    }
+    
+    return topic;
+}
+
+- (NSString *)theClientId
+{
+    NSString *clientId;
+    clientId = [[NSUserDefaults standardUserDefaults] stringForKey:@"clientid_preference"];
+    
+    if (!clientId || [clientId isEqualToString:@""]) {
+        clientId = [UIDevice currentDevice].name;
+    }
+    
+    return clientId;
+}
+
 @end

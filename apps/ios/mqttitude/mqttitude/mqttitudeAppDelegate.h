@@ -8,25 +8,25 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import <MapKit/MapKit.h>
 #import "Connection.h"
-#import "Annotations.h"
 
-@interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate, AnnotationsDelegate>
+@interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) CLLocationManager *manager;
-@property (nonatomic) BOOL high;
+@property (nonatomic) NSInteger monitoring;
 @property (strong, nonatomic) Connection *connection;
 
 - (void)switchOff;
 - (void)sendNow;
 - (void)reconnect;
 - (void)connectionOff;
-- (void)locationOn;
-- (void)locationOff;
-- (void)locationHigh;
-- (void)locationLow;
+
+- (NSString *)theAutomaticTopic;
+- (NSString *)theManualTopic;
+- (NSString *)theGeneralTopic;
+- (NSString *)theWillTopic;
+- (NSString *)theClientId;
 
 
 @end

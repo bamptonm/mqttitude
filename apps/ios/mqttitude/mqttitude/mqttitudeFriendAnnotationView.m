@@ -31,9 +31,9 @@
 
 - (void)setPersonImage:(UIImage *)image
 {
-        _personImage = [UIImage imageWithCGImage:image.CGImage
-                                               scale:(MAX(image.size.width, image.size.height) / IMAGE_SIZE)
-                                         orientation:UIImageOrientationUp];
+    _personImage = [UIImage imageWithCGImage:image.CGImage
+                                       scale:(MAX(image.size.width, image.size.height) / IMAGE_SIZE)
+                                 orientation:UIImageOrientationUp];
 }
 
 - (void)drawRect:(CGRect)rect

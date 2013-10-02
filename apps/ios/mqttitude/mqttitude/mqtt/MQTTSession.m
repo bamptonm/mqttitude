@@ -130,7 +130,7 @@
                                                       topic:theTopic]];
 }
 
-- (void)publishData:(NSData*)data
+- (UInt16)publishData:(NSData*)data
             onTopic:(NSString*)topic
              retain:(BOOL)retainFlag
                 qos:(NSInteger)qos
@@ -149,6 +149,8 @@
         [self.txFlows setObject:flow forKey:[NSNumber numberWithUnsignedInt:msgId]];
     }
     [self send:msg];
+    
+    return qos ? msgId : 0;
 }
 
 - (void)close
@@ -411,6 +413,7 @@
     }
 
     [self.txFlows removeObjectForKey:msgId];
+    [self.delegate messageDelivered:self msgID:[msgId unsignedIntValue]];
 }
 
 - (void)handlePubrec:(MQTTMessage*)msg
@@ -473,6 +476,7 @@
     }
 
     [self.txFlows removeObjectForKey:msgId];
+    [self.delegate messageDelivered:self msgID:[msgId unsignedIntValue]];
 }
 
 - (void)error:(MQTTSessionEvent)eventCode error:(NSError *)error {

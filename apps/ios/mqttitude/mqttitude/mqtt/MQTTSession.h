@@ -40,6 +40,7 @@ typedef enum {
 
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode error:(NSError *)error;
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic;
+- (void)messageDelivered:(MQTTSession *)session msgID:(UInt16)msgID;
 
 @end
 
@@ -62,7 +63,7 @@ typedef enum {
 - (void)connectToHost:(NSString*)host port:(UInt32)port usingSSL:(BOOL)usingSSL;
 - (void)subscribeToTopic:(NSString*)topic atLevel:(UInt8)qosLevel;
 - (void)unsubscribeTopic:(NSString*)theTopic;
-- (void)publishData:(NSData*)data onTopic:(NSString*)topic retain:(BOOL)retainFlag qos:(NSInteger)qos;
+- (UInt16)publishData:(NSData*)data onTopic:(NSString*)topic retain:(BOOL)retainFlag qos:(NSInteger)qos;
 - (void)close;
 
 @end

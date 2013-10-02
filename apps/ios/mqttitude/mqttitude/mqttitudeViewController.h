@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <CoreData/CoreData.h>
 #import <MapKit/MapKit.h>
 #import "MQTTSession.h"
 #import "Connection.h"
-#import "Annotations.h"
 
-@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, AnnotationsDelegate>
+@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "Connection.h"
+#import "Publication+Create.h"
+#import "mqttitudeCoreData.h"
 
 @interface Connection()
 
@@ -14,10 +16,12 @@
 
 @property (strong, nonatomic) NSTimer *reconnectTimer;
 @property (nonatomic) float reconnectTime;
+@property (nonatomic) BOOL reconnectFlag;
 
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) NSMutableArray *fifo;
 
+@property (strong, nonatomic) NSString *lastClientId;
 @property (strong, nonatomic) NSString *lastHost;
 @property (nonatomic) NSInteger lastPort;
 @property (nonatomic) BOOL lastTls;
@@ -32,15 +36,12 @@
 @property (nonatomic) NSInteger lastKeepalive;
 @property (nonatomic) NSInteger lastWillQos;
 
-@property (strong, nonatomic, readwrite) NSDate *lastConnected;
-@property (strong, nonatomic, readwrite) NSDate *lastClosed;
-@property (strong, nonatomic, readwrite) NSDate *lastError;
 @property (nonatomic, readwrite) NSError *lastErrorCode;
 
 @end
 
 #define RECONNECT_TIMER 1.0
-#define RECONNECT_TIMER_MAX 512.0
+#define RECONNECT_TIMER_MAX 64.0
 
 /*
  * Connection represents the MQTT connection in the MQTTitude context - state Matrix w.i.p
@@ -76,7 +77,7 @@
  *                      sendData:       send
  *                      subscribe:
  *                      unsubscribe:
- *                      disconnect:     unsub & disc        Closing
+ *                      disconnect:     disc                Closing
  *                      Connected
  *                      Received
  *                      Closed
@@ -126,7 +127,7 @@
  *
  * - if sendData is called and status is not connected, data is stored in fifo queue and a connect attempt to the last connection is made
  *
- * Connection automatically reconnects after error using an increasing reconnect timer of 1, 2, 4, ..., 512 seconds
+ * Connection automatically reconnects after error using an increasing reconnect timer of 1, 2, 4, ..., 64 seconds
  *
  * Connection records the timestamps of the last successful connect, the last close, the last error and the last error code
  *
@@ -144,9 +145,6 @@
 
     self = [super init];
     self.state = state_starting;
-    self.lastError = [NSDate dateWithTimeIntervalSince1970:0];
-    self.lastConnected = [NSDate dateWithTimeIntervalSince1970:0];
-    self.lastClosed = [NSDate dateWithTimeIntervalSince1970:0];
     return self;
 }
 
@@ -154,23 +152,34 @@
  * externally visible methods
  */
 
-#define OTHERS @"#"
-#define MQTT_KEEPALIVE 60
-
-- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls keepalive:(NSInteger)keepalive auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will willQos:(NSInteger)willQos willRetainFlag:(BOOL)willRetainFlag
+- (void)connectTo:(NSString *)host
+             port:(NSInteger)port
+              tls:(BOOL)tls
+        keepalive:(NSInteger)keepalive
+            clean:(BOOL)clean
+             auth:(BOOL)auth
+             user:(NSString *)user
+             pass:(NSString *)pass
+        willTopic:(NSString *)willTopic
+             will:(NSData *)will
+          willQos:(NSInteger)willQos
+   willRetainFlag:(BOOL)willRetainFlag
+     withClientId:(NSString *)clientId
 {
 #ifdef DEBUG
-    NSLog(@"Connection connectTo: %@:%@@%@:%d %@ (%d) / %@ %@ q%d r%d",
+    NSLog(@"Connection connectTo: %@:%@@%@:%d %@ (%d) c%d / %@ %@ q%d r%d as %@",
           auth ? user : @"",
           auth ? pass : @"",
           host,
           port,
           tls ? @"TLS" : @"PLAIN",
           keepalive,
+          clean,
           willTopic,
           [Connection dataToString:will],
           willQos,
-          willRetainFlag
+          willRetainFlag,
+          clientId
           );
 #endif
 
@@ -178,6 +187,7 @@
     self.lastPort = port;
     self.lastTls = tls;
     self.lastKeepalive = keepalive;
+    self.lastClean = clean;
     self.lastAuth = auth;
     self.lastUser = user;
     self.lastPass = pass;
@@ -185,13 +195,15 @@
     self.lastWill = will;
     self.lastWillQos = willQos;
     self.lastWillRetainFlag = willRetainFlag;
+    self.lastClientId = clientId;
     
     self.reconnectTime = RECONNECT_TIMER;
+    self.reconnectFlag = FALSE;
     
     [self connectToInternal];
 }
 
-- (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
+- (NSInteger)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
 {
 #ifdef DEBUG
     NSLog(@"Connection sendData:%@ %@ q%d r%d", topic, [Connection dataToString:data], qos, retainFlag);
@@ -201,22 +213,29 @@
 #ifdef DEBUG
         NSLog(@"Connection intoFifo");
 #endif
-        NSDictionary *parameters = @{
-                                     @"DATA": data,
-                                     @"TOPIC": topic,
-                                     @"QOS": [NSString stringWithFormat:@"%d",  qos],
-                                     @"RETAINFLAG": [NSString stringWithFormat:@"%d",  retainFlag]
-                                     };
-        [self.fifo addObject:parameters];
+        [Publication publicationWithTimestamp:[NSDate date]
+                                        msgID:@(-1)
+                                        topic:topic
+                                         data:data qos:@(qos)
+                                   retainFlag:@(retainFlag)
+                       inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+        [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
         [self connectToLast];
+        return -1;
     } else {
 #ifdef DEBUG
         NSLog(@"Connection send");
 #endif
-        [self.session publishData:data
-                          onTopic:topic
-                           retain:retainFlag
-                              qos:qos];
+        UInt16 msgID = [self.session publishData:data
+                                         onTopic:topic
+                                          retain:retainFlag
+                                             qos:qos];
+        
+        if (msgID) {
+            [Publication publicationWithTimestamp:[NSDate date] msgID:@(msgID) topic:topic data:data qos:@(qos) retainFlag:@(retainFlag) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+            [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
+        }
+        return msgID;
     }
 }
 
@@ -228,7 +247,6 @@
 
     if (self.state == state_connected) {
         self.state = state_closing;
-        [self.session unsubscribeTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]];
         [self.session close];
     } else {
         self.state = state_starting;
@@ -272,23 +290,27 @@
     switch (eventCode) {
         case MQTTSessionEventConnected:
         {
-            self.lastConnected = [NSDate date];
             self.state = state_connected;
-            [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
-                                   atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
-            while ([self.fifo count]) {
+            if (self.lastClean || !self.reconnectFlag) {
+                [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
+                [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
+                                       atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
+            }
+            self.reconnectFlag = TRUE;
+            
+            Publication *publication;
+            while ((publication = [Publication publicationWithmsgID:@(-1) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]])) {
                 /*
                  * if there are some queued send messages, send them
                  */
-                NSDictionary *parameters = self.fifo[0];
-                [self.fifo removeObjectAtIndex:0];
-                [self sendData:parameters[@"DATA"] topic:parameters[@"TOPIC"] qos:[parameters[@"QOS"] intValue] retain:[parameters[@"RETAINFLAG"] boolValue]];
+                [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
+                [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];
+                [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
             }
             break;
         }
         case MQTTSessionEventConnectionClosed:
-            self.lastClosed = [NSDate date];
-            /* this informs the caller that the connection is closed 
+            /* this informs the caller that the connection is closed
              * specifically, the caller can end the background task now */
             self.state = state_closed;
             self.state = state_starting;
@@ -309,13 +331,22 @@
                       forMode:NSDefaultRunLoopMode];
             
             self.state = state_error;
-            self.lastError = [NSDate date];
             self.lastErrorCode = error;
             break;
         }
         default:
             break;
     }
+}
+
+- (void)messageDelivered:(MQTTSession *)session msgID:(UInt16)msgID
+{
+    Publication *publication = [Publication publicationWithmsgID:@(msgID) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    if (publication) {
+        [self.delegate messageDelivered:msgID timestamp:publication.timestamp topic:publication.topic data:publication.data];
+        [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];
+    }
+    [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
 }
 
 /*
@@ -339,8 +370,8 @@
 {
     if (self.state == state_starting) {
         self.state = state_connecting;
-        
-        self.session = [[MQTTSession alloc] initWithClientId:[[NSUserDefaults standardUserDefaults] stringForKey:@"clientid_preference"]
+                
+        self.session = [[MQTTSession alloc] initWithClientId:self.lastClientId
                                                     userName:self.lastAuth ? self.lastUser : @""
                                                     password:self.lastAuth ? self.lastPass : @""
                                                    keepAlive:self.lastKeepalive
@@ -414,12 +445,15 @@
 #endif
     
     self.reconnectTimer = nil;
+    self.state = state_starting;
+
     if (self.reconnectTime < RECONNECT_TIMER_MAX) {
         self.reconnectTime *= 2;
+
     }
-    self.state = state_starting;
     
     [self connectToInternal];
+
 }
 
 - (void)connectToLast
@@ -432,7 +466,5 @@
     
     [self connectToInternal];
 }
-
-
 
 @end
