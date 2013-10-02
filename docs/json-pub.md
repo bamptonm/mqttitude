@@ -26,3 +26,16 @@ the elements.
 * <del>`vac`,  "xxxx" for vertical accuracy in meters - negative value indicates no valid altitude information</del>
 * <del>`dir` is direction</del>
 * <del>`vel` is velocity</del>
+
+## LWT
+
+A _Last Will and Testament_ is optionally posted by the MQTT broker when it no longer has contact with the app. This typically looks like this:
+
+```json
+{
+    "_type":"lwt",
+    "tst":"1380738247"
+}
+```
+
+The timestamp is the Unix epoch time at which the app first connected (i.e. *not* the time at which the LWT was published).
