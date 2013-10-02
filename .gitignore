@@ -22,3 +22,11 @@ apps/ios/mqttitude/mqttitude.xcodeproj/xcuserdata/ckrey.xcuserdatad/xcdebugger/B
 apps/ios/mqttitude/mqttitude.xcodeproj/project.xcworkspace/xcuserdata/ckrey.xcuserdatad/UserInterfaceState.xcuserstate
 
 *.xcuserstate
+<<<<<<< HEAD
+=======
+
+*.pem
+*.p12
+*.key
+*.pyc
+>>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5

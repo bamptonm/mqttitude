@@ -1,5 +1,19 @@
 # Changelog: iOS app
 
+<<<<<<< HEAD
+=======
+### 2013-10-02 version 4.0
+
+* New predefined settings
+* Friends table view
+* Locations table view
+* Manual publications edit
+* IOS7 design
+* Queued publications persistent
+* Persistent location history
+* APNS Apple Notification Service ready
+
+>>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5
 ### 2013-09-17 version 3.9
 
 * Auto Restart after Soft Reboot see #84
