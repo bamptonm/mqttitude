@@ -13,3 +13,4 @@ $apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $devi
 fwrite($apns, $apnsMessage);
 fclose($apns);
 ?>
+

@@ -81,7 +81,6 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Status" id="Efb-89-JWb">
-                            <color key="tintColor" red="0.0" green="0.4963788777" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="KLm-gU-upL" kind="push" identifier="setConnection:" id="Jqg-Bz-2EO"/>
                             </connections>
