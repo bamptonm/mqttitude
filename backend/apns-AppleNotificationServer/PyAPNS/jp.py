@@ -6,19 +6,27 @@ import ssl
 # just drop `apns.py' into the current directory
 from apns import APNs, Payload
 
-devicetoken = '769df01c e391d91b 1fc6bbb7 c16b533f d8ae80f1 1f453628 bbcb57b0 1aa9c31f'
-key_file = 'keyfile.pem'
-cert_file = 'cert.pem'
+devicetoken = '9d9ed2f7 60780c69 1a4727e6 d428cbe7 7fd84bad 9ab16206 5afd8f4c f12feab3'
+#
+# development environment
+#
+#sandbox = True
+#key_file = 'dev-keyfile.pem'
+#cert_file = 'dev-cert.pem'
+
+#
+# development environment
+#
+sandbox = False
+key_file = 'prod-keyfile.pem'
+cert_file = 'prod-cert.pem'
 
 payload = Payload(alert='Hello world!', sound='default', badge=1, custom={'whoami': 'JPmens'})
 print payload.json()
 
 hextoken = devicetoken.replace(' ', '')
 
-# use_sandbox = True for Development environment
-# use_sandbox = False for Production environment
-
-apns = APNs(use_sandbox=True, cert_file=cert_file, key_file=key_file)
+apns = APNs(use_sandbox=sandbox, cert_file=cert_file, key_file=key_file)
 
 try:
     apns.gateway_server.send_notification(hextoken, payload)
