@@ -1,0 +1,16 @@
+# Convert Certification and Key files for APNS to be used with apns.php
+#
+# 1. copy the provided certification and key file to
+#	apns-dev-cert.p12
+#	apns-dev-key.p12
+#
+# 2. run make
+#	using the passwords given
+#	when converting the key file, enter a new password
+#
+# 3. copy the device token publihed by the IOS App to in MQTT
+#	 under "mqttitude/$devicename/loc/deviceToken" into apns.php
+#
+# 4. run php -f apns.php
+#
+
