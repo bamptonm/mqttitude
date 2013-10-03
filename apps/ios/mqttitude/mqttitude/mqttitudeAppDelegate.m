@@ -272,7 +272,8 @@
 
     NSString *message = [NSString stringWithFormat:@"%@: %@", topic, [Connection dataToString:data]];
     
-    if ([[topic stringByDeletingLastPathComponent] isEqualToString:[self theGeneralTopic]]) {
+    if (([topic isEqualToString:[self theAutomaticTopic]]) ||
+        ([topic isEqualToString:[self theManualTopic]])) {
         // received own data
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"listento"]]) {
         // received command
@@ -300,7 +301,10 @@
     } else {
         // received other data
         NSString *deviceName = topic;
-        deviceName = [deviceName stringByDeletingLastPathComponent];
+        if (([[deviceName lastPathComponent] isEqualToString:@"m"]) ||
+            ([[deviceName lastPathComponent] isEqualToString:@"deviceToken"])) {
+            deviceName = [deviceName stringByDeletingLastPathComponent];
+        }
         NSError *error;
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (dictionary) {
@@ -639,7 +643,7 @@
 
 - (NSString *)theAutomaticTopic
 {
-    return [[self theGeneralTopic] stringByAppendingString:@"/a"];
+    return [self theGeneralTopic];
 }
 
 - (NSString *)theManualTopic

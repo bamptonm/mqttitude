@@ -8,6 +8,7 @@ xcuserdata
 profile
 *.xcuserstate
 *.xcbkptlist
+*.xccheckout
 
 # Certificates and Keys
 *.pem

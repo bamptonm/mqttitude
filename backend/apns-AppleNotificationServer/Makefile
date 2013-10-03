@@ -1,10 +1,18 @@
-all: apns-dev-cert-bundle.pem
+all: apns-dev-cert-bundle.pem PyAPNS/keyfile.pem PyAPNS/cert.pem
 
 clean:
 	rm -f apns-dev-cert-bundle.pem
+	rm -f PyAPNS/keyfile.pem
+	rm -f PyAPNS/cert.pem
 	rm -f apns-dev-cert.pem
 	rm -f apns-dev-key.pem
 	rm -f apns-dev-keynopwd.pem
+
+PyAPNS/keyfile.pem:apns-dev-keynopwd.pem
+	cp apns-dev-keynopwd.pem PyAPNS/keyfile.pem
+
+PyAPNS/cert.pem:apns-dev-cert.pem
+	cp apns-dev-cert.pem PyAPNS/cert.pem
 
 apns-dev-cert-bundle.pem:apns-dev-keynopwd.pem apns-dev-cert.pem
 	cat apns-dev-cert.pem apns-dev-keynopwd.pem >apns-dev-cert-bundle.pem

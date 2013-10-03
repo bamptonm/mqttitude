@@ -1,10 +1,10 @@
 <?php
-$deviceToken="bd41949a c6f94c34 ab190cb1 93e246be 859cc5d8 488c916f 8d696656 8f1725d6";
+$deviceToken="769df01c e391d91b 1fc6bbb7 c16b533f d8ae80f1 1f453628 bbcb57b0 1aa9c31f";
 $payload['aps'] = array('alert' => 'Your Dad asks you to update your location');
 $output = json_encode($payload);
 $apnsHost = 'gateway.sandbox.push.apple.com';
 $apnsPort = 2195;
-$apnsCert = 'apns-dev.pem';
+$apnsCert = 'apns-dev-cert-bundle.pem';
 $streamContext = stream_context_create();
 stream_context_set_option($streamContext, 'ssl', 'local_cert', $apnsCert);
 $apns = stream_socket_client('ssl://' . $apnsHost . ':' . $apnsPort, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);

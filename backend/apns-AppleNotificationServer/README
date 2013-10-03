@@ -11,6 +11,10 @@
 # 3. copy the device token publihed by the IOS App to in MQTT
 #	 under "mqttitude/$devicename/loc/deviceToken" into apns.php
 #
+#    or do this to PyAPNS/jp.py
+#
 # 4. run php -f apns.php
+#
+#    or cd PyAPNS and run python jp.py
 #
 
