@@ -603,23 +603,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "";
-<<<<<<< HEAD
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-=======
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
->>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-<<<<<<< HEAD
 				PROVISIONING_PROFILE = "31A59A4A-125D-41EC-878E-E438B0F3C342";
-=======
-				PROVISIONING_PROFILE = "";
->>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -629,23 +620,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "";
-<<<<<<< HEAD
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-=======
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
->>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-<<<<<<< HEAD
 				PROVISIONING_PROFILE = "31A59A4A-125D-41EC-878E-E438B0F3C342";
-=======
-				PROVISIONING_PROFILE = "";
->>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

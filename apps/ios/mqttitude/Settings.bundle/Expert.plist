@@ -119,19 +119,6 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
-<<<<<<< HEAD
-=======
-			<key>DefaultValue</key>
-			<true/>
-			<key>Key</key>
-			<string>auth_preference</string>
-			<key>Title</key>
-			<string>Authorization</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
->>>>>>> 459c8592bf1d3ec71f4b9d7d6040b5803ef217f5
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
