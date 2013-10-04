@@ -49,10 +49,12 @@
     NSDictionary *appDefaults = @{
                                   @"mindist_preference" : @(200),
                                   @"mintime_preference" : @(180),
-                                  @"clientid_preference" : [UIDevice currentDevice].name,
-                                  @"subscription_preference" : @"mqttitude/+/loc/+",
+                                  @"deviceid_preference" : [UIDevice currentDevice].name,
+                                  @"clientid_preference" : @"",
+                                  @"subscription_preference" : @"mqttitude/#",
                                   @"subscriptionqos_preference": @(1),
                                   @"topic_preference" : @"",
+                                  @"manual_preference" : @"",
                                  @"retain_preference": @(TRUE),
                                  @"qos_preference": @(1),
                                  @"host_preference" : @"host",
@@ -648,15 +650,22 @@
 
 - (NSString *)theManualTopic
 {
-    return [[self theGeneralTopic] stringByAppendingString:@"/m"];
+    NSString *manualTopic = [self theGeneralTopic];
+    NSString *manualPostfix = [[NSUserDefaults standardUserDefaults] stringForKey:@"manual_preference"];
+
+    if (manualPostfix && ![manualPostfix isEqualToString:@""]) {
+        manualTopic = [manualTopic stringByAppendingString:manualPostfix];
+    }
+    return manualTopic;
 }
+
 - (NSString *)theGeneralTopic
 {
     NSString *topic;
     topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
     
     if (!topic || [topic isEqualToString:@""]) {
-        topic = [NSString stringWithFormat:@"mqttitude/%@/loc", [self theClientId]];
+        topic = [NSString stringWithFormat:@"mqttitude/%@", [self theClientId]];
     }
     return topic;
 }
@@ -679,10 +688,22 @@
     clientId = [[NSUserDefaults standardUserDefaults] stringForKey:@"clientid_preference"];
     
     if (!clientId || [clientId isEqualToString:@""]) {
-        clientId = [UIDevice currentDevice].name;
+        clientId = [self theDeviceId];
     }
     
     return clientId;
+}
+
+- (NSString *)theDeviceId
+{
+    NSString *deviceId;
+    deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"deviceid_preference"];
+    
+    if (!deviceId || [deviceId isEqualToString:@""]) {
+        deviceId = [UIDevice currentDevice].name;
+    }
+    
+    return deviceId;
 }
 
 @end

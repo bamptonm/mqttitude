@@ -19,7 +19,6 @@
 @property (nonatomic) BOOL reconnectFlag;
 
 @property (strong, nonatomic) MQTTSession *session;
-@property (strong, nonatomic) NSMutableArray *fifo;
 
 @property (strong, nonatomic) NSString *lastClientId;
 @property (strong, nonatomic) NSString *lastHost;
@@ -429,14 +428,6 @@
 #endif
     [self.delegate showState:self.state];
 }
-
-- (NSArray *)fifo
-{
-    if (!_fifo)
-        _fifo = [[NSMutableArray alloc] init];
-    return _fifo;
-}
-
 
 - (void)reconnect
 {

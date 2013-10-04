@@ -37,18 +37,16 @@
 
 - (void)viewDidLoad
 {
-    
+
     [super viewDidLoad];
 
     self.mapView.delegate = self;
     
     // Tracking Mode
-    self.friends = 1;
+    self.friends = 2;
     
     // Map Mode
     self.mapView.mapType = MKMapTypeStandard;
-    
-
 }
 
 
@@ -76,15 +74,20 @@
 #pragma UI actions
 
 - (IBAction)setCenter:(UIStoryboardSegue *)segue {
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(0, 0);
+    
     if ([segue.sourceViewController isKindOfClass:[mqttitudeFriendTVC class]]) {
         mqttitudeFriendTVC *friendTVC = (mqttitudeFriendTVC *)segue.sourceViewController;
-        [self.mapView setVisibleMapRect:[self centeredRect:friendTVC.selectedLocation.coordinate ] animated:YES];
-        self.friends = 4;
+        coordinate = friendTVC.selectedLocation.coordinate;
     }
     if ([segue.sourceViewController isKindOfClass:[mqttitudeLocationTVC class]]) {
         mqttitudeLocationTVC *locationTVC = (mqttitudeLocationTVC *)segue.sourceViewController;
-        [self.mapView setVisibleMapRect:[self centeredRect:locationTVC.selectedLocation.coordinate ] animated:YES];
-        self.friends = 4;
+        coordinate = locationTVC.selectedLocation.coordinate;
+    }
+    
+    if (coordinate.latitude != 0 || coordinate.longitude != 0) {
+        [self.mapView setVisibleMapRect:[self centeredRect:coordinate] animated:YES];
+        self.friends = 4; // this will set the move mode to follow when the map appeares again
     }
 }
 

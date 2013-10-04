@@ -20,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIeffectiveTopic;
 @property (weak, nonatomic) IBOutlet UITextField *UIeffectiveClientId;
 @property (weak, nonatomic) IBOutlet UITextField *UIeffectiveWillTopic;
+@property (weak, nonatomic) IBOutlet UITextField *UIeffectiveDeviceId;
+@property (weak, nonatomic) IBOutlet UITextField *UIeffectiveManualTopic;
 
 @end
 
@@ -38,8 +40,10 @@
                              self.connection.lastErrorCode.localizedDescription : @""];
 
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+    self.UIeffectiveDeviceId.text = [delegate theDeviceId];
     self.UIeffectiveClientId.text = [delegate theClientId];
-    self.UIeffectiveTopic.text = [delegate theGeneralTopic];
+    self.UIeffectiveTopic.text = [delegate theAutomaticTopic];
+    self.UIeffectiveManualTopic.text = [delegate theManualTopic];
     self.UIeffectiveWillTopic.text = [delegate theWillTopic];
 }
 

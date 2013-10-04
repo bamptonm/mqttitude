@@ -10,6 +10,7 @@
 #import <AddressBook/AddressBook.h>
 
 static ABAddressBookRef ab = nil;
+static BOOL isGranted = YES;
 
 @implementation Friend (Create)
 + (Friend *)friendWithTopic:(NSString *)topic
@@ -86,11 +87,20 @@ ABRecordRef recordWithTopic(CFStringRef topic)
 {
     // Address Book
     if (!ab) {
-        CFErrorRef error;
-        ab = ABAddressBookCreateWithOptions(NULL, &error);
-        ABAddressBookRequestAccessWithCompletion(ab, ^(bool granted, CFErrorRef error) {
-            // assuming access is granted
-        });
+        if (!isGranted) {
+            return nil;
+        } else {
+#ifdef DEBUG
+            NSLog(@"ABAddressBookCreateWithOptions");
+#endif
+            CFErrorRef error;
+            ab = ABAddressBookCreateWithOptions(NULL, &error);
+            if (!ab) {
+                NSLog(@"ABAddressBookCreateWithOptions not successfull %@", CFErrorCopyDescription(error));
+                isGranted = NO;
+                return nil;
+            }
+        }
     }
     
     CFArrayRef records = ABAddressBookCopyArrayOfAllPeople(ab);

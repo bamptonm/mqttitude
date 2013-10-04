@@ -27,6 +27,7 @@
 - (NSString *)theGeneralTopic;
 - (NSString *)theWillTopic;
 - (NSString *)theClientId;
+- (NSString *)theDeviceId;
 
 
 @end
