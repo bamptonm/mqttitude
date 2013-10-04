@@ -21,10 +21,10 @@ PyAPNS/prod-cert.pem:apns-prod-cert.pem
 	cp apns-prod-cert.pem PyAPNS/prod-cert.pem
 
 PyAPNS/dev-keyfile.pem:apns-dev-keynopwd.pem
-	cp apns-prod-keynopwd.pem PyAPNS/dev-keyfile.pem
+	cp apns-dev-keynopwd.pem PyAPNS/dev-keyfile.pem
 
 PyAPNS/dev-cert.pem:apns-dev-cert.pem
-	cp apns-prod-cert.pem PyAPNS/dev-cert.pem
+	cp apns-dev-cert.pem PyAPNS/dev-cert.pem
 
 apns-dev-cert-bundle.pem:apns-dev-keynopwd.pem apns-dev-cert.pem
 	cat apns-dev-cert.pem apns-dev-keynopwd.pem >apns-dev-cert-bundle.pem

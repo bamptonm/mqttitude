@@ -1,5 +1,5 @@
 <?php
-$deviceToken="9d9ed2f7 60780c69 1a4727e6 d428cbe7 7fd84bad 9ab16206 5afd8f4c f12feab3";
+$deviceToken="bf6b22f9 f9e42d17 3ecb8ee7 42ee18d9 2726575b 2180aa90 340b6b01 89108276";
 $payload['aps'] = array('alert' => 'Your Dad asks you to update your location');
 $output = json_encode($payload);
 
