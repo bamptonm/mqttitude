@@ -46,7 +46,7 @@ ones, or user provided ones that require a lock screen password to be set)
 * Runs on iPhones running IOS >=6.1 (3GS, 4, 4S, 5) and iPads running IOS >=6.1 as an iPhone app. Not tested on iPods yet.
 
 * Monitors "significant location changes" as define by Apple Inc (about 5 minutes AND 
-  "significant location changes" (>500m))
+  "significant location changes" (>500m)) or as described in Move Mode below.
 
 * publishes this locations via MQTT to the configured server while in foreground and background.
 
@@ -153,3 +153,36 @@ In order to associate an MQTT topic with our friend (Jane, in this case), edit y
 * Create a new relashionship (like 'Spouse') called `MQTTitude` (case insensitive), and add your friend's topic name to that (e.g. `mqttitude/jane/loc`)
 
 The addressbook API might need a while to be refreshed, but you may be able to speed that up by swiping the Friends list downward until the activity indicator appears, then let go).
+
+
+### Settings
+
+	Field							Default			Expert	Remarks
+	
+	DeviceID						$IOSDeviceName	no		needs to be unique per server
+	
+	Minimum Distance in Move Mode	200m			no		in Move Mode, app publishes when travelled 200m
+	Minimum Time in Move Mode		180sec			no		in Move Mode, app publishes every 180 seconds
+	
+	ClientID						<none>			no		if not set defaults to $DeviceID
+	host							<none>			no		IP or name
+	port							8883			yes
+	TLS								YES				yes
+	Authorize						YES				yes
+	UserID							<none>			no
+	Password						<none>			no
+	
+	Subscription					mqttitude/#		yes
+	Subscription QOS				1				yes
+	
+	Topic-Name						<none>			yes		if not set defaults to mqttitude/$DeviceID
+	Manual-Postfix					<none>			yes		effective Manual Topic is $Topic-Name$Manual-Postfix
+	QOS								1				yes
+	Retain							YES				yes
+	
+	Clean Session					NO				yes
+	Keep Alive						60sec			yes
+	WillTopic Name					<none>			yes		if not set defaults to $Topic_Name
+	Will							lwt				yes
+	Will QOS						1				yes
+	Will Retain						NO				yes
