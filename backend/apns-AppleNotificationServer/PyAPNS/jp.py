@@ -15,7 +15,7 @@ devicetoken = '9d9ed2f7 60780c69 1a4727e6 d428cbe7 7fd84bad 9ab16206 5afd8f4c f1
 #cert_file = 'dev-cert.pem'
 
 #
-# development environment
+# production environment
 #
 sandbox = False
 key_file = 'prod-keyfile.pem'
