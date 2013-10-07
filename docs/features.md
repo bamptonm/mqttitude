@@ -176,7 +176,6 @@ The addressbook API might need a while to be refreshed, but you may be able to s
 	Subscription QOS				1				yes
 	
 	Topic-Name						mqttitude/$UserId/$DeviceId			yes	If both not set, IOSDeviceName
-	Manual-Postfix					$Topic-Name		yes
 	QOS								1				yes
 	Retain							YES				yes
 	
