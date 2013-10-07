@@ -31,6 +31,7 @@ function mqtt_connect()
 
 	var options = {
 		timeout: 10,
+		useSSL: config.usetls,
 		onSuccess: function () {
 			$('#mqttstatus').val("connected");
 			client.subscribe(config.friendstopic, {qos: 0});
