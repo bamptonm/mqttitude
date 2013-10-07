@@ -159,12 +159,12 @@ The addressbook API might need a while to be refreshed, but you may be able to s
 
 	Field							Default			Expert	Remarks
 	
-	DeviceID						$IOSDeviceName	no		needs to be unique per server
+	DeviceID						none			no		
 	
 	Minimum Distance in Move Mode	200m			no		in Move Mode, app publishes when travelled 200m
 	Minimum Time in Move Mode		180sec			no		in Move Mode, app publishes every 180 seconds
 	
-	ClientID						<none>			no		if not set defaults to $DeviceID
+	ClientID						$UserId/$DeviceID Yes	If both not set, IOSDeviceName
 	host							<none>			no		IP or name
 	port							8883			yes
 	TLS								YES				yes
@@ -175,14 +175,14 @@ The addressbook API might need a while to be refreshed, but you may be able to s
 	Subscription					mqttitude/#		yes
 	Subscription QOS				1				yes
 	
-	Topic-Name						<none>			yes		if not set defaults to mqttitude/$DeviceID
-	Manual-Postfix					<none>			yes		effective Manual Topic is $Topic-Name$Manual-Postfix
+	Topic-Name						mqttitude/$UserId/$DeviceId			yes	If both not set, IOSDeviceName
+	Manual-Postfix					$Topic-Name		yes
 	QOS								1				yes
 	Retain							YES				yes
 	
 	Clean Session					NO				yes
 	Keep Alive						60sec			yes
-	WillTopic Name					<none>			yes		if not set defaults to $Topic_Name
+	WillTopic Name					$Topic-Name		yes
 	Will							lwt				yes
 	Will QOS						1				yes
 	Will Retain						NO				yes
