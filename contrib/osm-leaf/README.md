@@ -16,15 +16,55 @@ These things work:
 
 ```json
 {
-    "loc/jpm" : {
+    "mqttitude/jpm/3gs" : {
 	    "name": "JP",
 	    "mail": "jpmens@gmail.com"
     },
-    "loc/su00" : {
+    "mqttitude/su00/nexus" : {
     	"name": "Suze Smith",
 	"mail": "su@example.net"
     }
 }
+```
+
+## TLS
+
+Websockets over TLS has been tested using the `tls` branch of [WSS](https://github.com/stylpen/WSS/], which can do TLS on 'both' sides of a connection:
+
+```
+
+
+                       +------------------------------------+
+                       |               WSS                  |
+                       |------------------------------------|
+                       |                                    |
+                       |                                    |
+                       |                                    |
+         --ws-keyfile  |                                    |   --broker-ca
+         --ws-chainfile|                                    |
+       +--------------->                                    +--------------> MQTT broker
+                       |                                    |
+                       |                                    |
+                       |                                    |
+                       |                                    |
+                       |                                    |
+                       +------------------------------------+
+```
+
+As soon as you have a certificate and a key file for WSS proper, concatenate the two
+into a single file which you pass to `ws-chainfile`. For example, using `generate-CA.sh`
+you'd do as follows:
+
+```
+./generate-CA.sh
+cat server.crt ca.crt > chain.pem
+./WSS_static_armv6 \
+	--brokerHost 192.168.1.130 \
+	--brokerPort 8883 \
+	--broker-tls-enabled \
+	--ws-keyfile server.key \
+	--ws-chainfile chain.pem \
+	--verbose
 ```
 
 ## TODO
