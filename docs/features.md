@@ -44,6 +44,7 @@ ones, or user provided ones that require a lock screen password to be set)
 ## iOS
 
 * Runs on iPhones running IOS >=6.1 (3GS, 4, 4S, 5) and iPads running IOS >=6.1 as an iPhone app. Not tested on iPods yet.
+* UI is IOS7 compliant
 
 * Monitors "significant location changes" as define by Apple Inc (about 5 minutes AND 
   "significant location changes" (>500m)) or as described in Move Mode below.
@@ -149,10 +150,16 @@ If your iOS addressbook has an entry for, say, Jane Jolie, and Jane has an image
 
 In order to associate an MQTT topic with our friend (Jane, in this case), edit your addressbook entry on iOS for Jane and do either of the following:
 
-* Create a new service (like 'Twitter') called `MQTTitude` (case insensitive), and add your friend's topic name to that (e.g. `mqttitude/jane/loc`)
 * Create a new relashionship (like 'Spouse') called `MQTTitude` (case insensitive), and add your friend's topic name to that (e.g. `mqttitude/jane/loc`)
 
 The addressbook API might need a while to be refreshed, but you may be able to speed that up by swiping the Friends list downward until the activity indicator appears, then let go).
+
+or...
+
+Tap the Bookmark Button in the Navigation Bar on the Location screen. Select an entry from your Address Book.
+The entry will be marked with a relationship to the current friend's topic name.
+
+
 
 
 ### Settings
