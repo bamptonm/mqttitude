@@ -21,6 +21,8 @@
 			<string>deviceid_preference</string>
 			<key>KeyboardType</key>
 			<string>Alphabet</string>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>

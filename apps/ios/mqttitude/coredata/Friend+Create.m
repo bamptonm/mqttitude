@@ -7,12 +7,33 @@
 //
 
 #import "Friend+Create.h"
-#import <AddressBook/AddressBook.h>
-
-static ABAddressBookRef ab = nil;
-static BOOL isGranted = YES;
+#import "Location+Create.h"
 
 @implementation Friend (Create)
+
++ (ABAddressBookRef)theABRef
+{
+    static ABAddressBookRef ab = nil;
+    static BOOL isGranted = YES;
+    
+    if (!ab) {
+        if (isGranted) {
+#ifdef DEBUG
+            NSLog(@"ABAddressBookCreateWithOptions");
+#endif
+            CFErrorRef error;
+            ab = ABAddressBookCreateWithOptions(NULL, &error);
+            if (!ab) {
+                CFStringRef errorDescription = CFErrorCopyDescription(error);
+                NSLog(@"ABAddressBookCreateWithOptions not successfull %@", errorDescription);
+                CFRelease(errorDescription);
+                isGranted = NO;
+            }
+        }
+    }
+    return ab;
+}
+
 + (Friend *)friendWithTopic:(NSString *)topic
      inManagedObjectContext:(NSManagedObjectContext *)context
 
@@ -43,19 +64,28 @@ static BOOL isGranted = YES;
             // friend exists already
             friend = [matches lastObject];
         }
-        [friend refreshFromAB];
     }
     
     return friend;
-
 }
 
-- (void)refreshFromAB
+- (NSString *)name
 {
     ABRecordRef record = recordWithTopic((__bridge CFStringRef)(self.topic));
     if (record) {
-        self.name = [Friend nameOfPerson:record];
-        self.image = [Friend imageDataOfPerson:record];
+        return [Friend nameOfPerson:record];
+    } else {
+        return nil;
+    }
+}
+
+- (NSData *)image
+{
+    ABRecordRef record = recordWithTopic((__bridge CFStringRef)(self.topic));
+    if (record) {
+        return [Friend imageDataOfPerson:record];
+    } else {
+       return nil;
     }
 }
 
@@ -85,55 +115,10 @@ static BOOL isGranted = YES;
 
 ABRecordRef recordWithTopic(CFStringRef topic)
 {
-    // Address Book
-    if (!ab) {
-        if (!isGranted) {
-            return nil;
-        } else {
-#ifdef DEBUG
-            NSLog(@"ABAddressBookCreateWithOptions");
-#endif
-            CFErrorRef error;
-            ab = ABAddressBookCreateWithOptions(NULL, &error);
-            if (!ab) {
-                NSLog(@"ABAddressBookCreateWithOptions not successfull %@", CFErrorCopyDescription(error));
-                isGranted = NO;
-                return nil;
-            }
-        }
-    }
-    
-    CFArrayRef records = ABAddressBookCopyArrayOfAllPeople(ab);
+    CFArrayRef records = ABAddressBookCopyArrayOfAllPeople([Friend theABRef]);
     
     for (CFIndex i = 0; i < CFArrayGetCount(records); i++) {
         ABRecordRef record = CFArrayGetValueAtIndex(records, i);
-        
-        /*
-         * Social Services (not supported by all address books
-         */
-        
-        ABMultiValueRef socials = ABRecordCopyValue(record, kABPersonSocialProfileProperty);
-        if (socials) {
-            CFIndex socialsCount = ABMultiValueGetCount(socials);
-            
-            for (CFIndex k = 0 ; k < socialsCount ; k++) {
-                CFDictionaryRef socialValue = ABMultiValueCopyValueAtIndex(socials, k);
-                
-                if(CFStringCompare( CFDictionaryGetValue(socialValue, kABPersonSocialProfileServiceKey), SERVICE_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-                    if (CFStringCompare( CFDictionaryGetValue(socialValue, kABPersonSocialProfileUsernameKey), topic, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-                        CFRelease(socialValue);
-                        CFRelease(socials);
-                        return record;
-                    }
-                }
-                CFRelease(socialValue);
-            }
-            CFRelease(socials);
-        }
-        
-        /*
-         * Relations (family)
-         */
         
         ABMultiValueRef relations = ABRecordCopyValue(record, kABPersonRelatedNamesProperty);
         if (relations) {
@@ -151,11 +136,77 @@ ABRecordRef recordWithTopic(CFStringRef topic)
             }
             CFRelease(relations);
         }
-        
-        CFRelease(record);
     }
     return nil;
 }
 
+- (void)linkToAB:(ABRecordRef)record
+{
+    ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
+    
+    if (oldrecord) {
+        [self ABsetTopic:nil record:oldrecord];
+    }
+    
+    [self ABsetTopic:self.topic record:record];
+    for (Location *location in self.hasLocations) {
+        location.belongsTo = self;
+    }
+}
+
+- (void)ABsetTopic:(NSString *)topic record:(ABRecordRef)record
+{
+    CFErrorRef errorRef;
+
+    ABMutableMultiValueRef relationsRW;
+    
+    ABMultiValueRef relationsRO = ABRecordCopyValue(record, kABPersonRelatedNamesProperty);
+    
+    if (relationsRO) {
+        relationsRW = ABMultiValueCreateMutableCopy(relationsRO);
+        CFRelease(relationsRO);
+    } else {
+        relationsRW = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
+    }
+    
+    CFIndex relationsCount = ABMultiValueGetCount(relationsRW);
+    CFIndex i;
+    
+    for (i = 0 ; i < relationsCount ; i++) {
+        CFStringRef label = ABMultiValueCopyLabelAtIndex(relationsRW, i);
+        if(CFStringCompare(label, RELATION_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+            if (topic) {
+                if (!ABMultiValueReplaceValueAtIndex(relationsRW, (__bridge CFTypeRef)(topic), i)) {
+                    NSLog(@"Friend error ABMultiValueReplaceValueAtIndex %@ %ld", topic, i);
+                }
+            } else {
+                if (!ABMultiValueRemoveValueAndLabelAtIndex(relationsRW, i))  {
+                    NSLog(@"Friend error ABMultiValueRemoveValueAndLabelAtIndex %ld", i);
+                }
+            }
+            CFRelease(label);
+            break;
+        }
+        CFRelease(label);
+    }
+    if (i == relationsCount) {
+        if (topic) {
+            if (!ABMultiValueAddValueAndLabel(relationsRW, (__bridge CFStringRef)(self.topic), RELATION_NAME, NULL)) {
+                NSLog(@"Friend error ABMultiValueAddValueAndLabel %@ %@", topic, RELATION_NAME);
+            }
+        }
+    }
+        
+    if (!ABRecordSetValue(record, kABPersonRelatedNamesProperty, relationsRW, &errorRef)) {
+        NSLog(@"Friend error ABRecordSetValue %@", errorRef);
+    }
+    CFRelease(relationsRW);
+    
+    if (ABAddressBookHasUnsavedChanges([Friend theABRef])) {
+        if (!ABAddressBookSave([Friend theABRef], &errorRef)) {
+            NSLog(@"Friend error ABAddressBookSave %@", errorRef);
+        }
+    }
+}
 
 @end

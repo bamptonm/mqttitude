@@ -7,10 +7,16 @@
 //
 
 #import "Friend.h"
+#import <AddressBook/AddressBook.h>
 
 @interface Friend (Create)
++ (ABAddressBookRef)theABRef;
+
 + (Friend *)friendWithTopic:(NSString *)topic
      inManagedObjectContext:(NSManagedObjectContext *)context;
-- (void)refreshFromAB;
+
+- (void)linkToAB:(ABRecordRef)record;
+- (NSString *)name;
+- (NSData *)image;
 
 @end

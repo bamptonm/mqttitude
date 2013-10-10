@@ -50,6 +50,8 @@
                runLoop:(NSRunLoop *)runLoop
                forMode:(NSString *)runLoopMode
 {
+    self = [super init];
+    
     self.clientId = clientId;
     self.keepAliveInterval = keepAliveInterval;
     self.runLoop = runLoop;

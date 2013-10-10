@@ -18,10 +18,10 @@
 @property (strong, nonatomic) mqttitudeAlertView *alertView;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (strong, nonatomic) mqttitudeCoreData *coreData;
+@property (strong, nonatomic) NSDate *locationServiceStarted;
 
 @end
 
-#define LOCATION_IGNORE_OLDER_THAN -1.0
 #define BACKGROUND_DISCONNECT_AFTER 8.0
 #define DISMISS_AFTER 1.0
 
@@ -34,7 +34,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-// Override point for customization after application launch.
 #ifdef DEBUG
     NSLog(@"App didFinishLaunchingWithOptions");
     NSEnumerator *enumerator = [launchOptions keyEnumerator];
@@ -49,12 +48,11 @@
     NSDictionary *appDefaults = @{
                                   @"mindist_preference" : @(200),
                                   @"mintime_preference" : @(180),
-                                  @"deviceid_preference" : [UIDevice currentDevice].name,
+                                  @"deviceid_preference" : @"",
                                   @"clientid_preference" : @"",
                                   @"subscription_preference" : @"mqttitude/#",
                                   @"subscriptionqos_preference": @(1),
                                   @"topic_preference" : @"",
-                                  @"manual_preference" : @"",
                                  @"retain_preference": @(TRUE),
                                  @"qos_preference": @(1),
                                  @"host_preference" : @"host",
@@ -87,6 +85,7 @@
     if ([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
             self.manager = [[CLLocationManager alloc] init];
+            self.locationServiceStarted = [NSDate date];
             self.manager.delegate = self;
             
             self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
@@ -185,7 +184,6 @@
 
 #pragma CLLocationManagerDelegate
 
-
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
 #ifdef DEBUG
@@ -205,7 +203,7 @@
          **
          **/
         
-        if ([location.timestamp compare:[NSDate dateWithTimeIntervalSinceNow:LOCATION_IGNORE_OLDER_THAN]] != NSOrderedAscending ) {
+        if ([location.timestamp compare:self.locationServiceStarted] != NSOrderedAscending ) {
             [self publishLocation:location automatic:YES];
         }
     }
@@ -274,8 +272,7 @@
 
     NSString *message = [NSString stringWithFormat:@"%@: %@", topic, [Connection dataToString:data]];
     
-    if (([topic isEqualToString:[self theAutomaticTopic]]) ||
-        ([topic isEqualToString:[self theManualTopic]])) {
+    if ([topic isEqualToString:[self theGeneralTopic]]) {
         // received own data
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"listento"]]) {
         // received command
@@ -303,8 +300,7 @@
     } else {
         // received other data
         NSString *deviceName = topic;
-        if (([[deviceName lastPathComponent] isEqualToString:@"m"]) ||
-            ([[deviceName lastPathComponent] isEqualToString:@"deviceToken"])) {
+        if ([[deviceName lastPathComponent] isEqualToString:@"deviceToken"]) {
             deviceName = [deviceName stringByDeletingLastPathComponent];
         }
         NSError *error;
@@ -415,11 +411,11 @@
             self.manager.distanceFilter = [[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"];
             self.manager.desiredAccuracy = kCLLocationAccuracyBest;
             self.manager.pausesLocationUpdatesAutomatically = YES;
+            [self.manager stopMonitoringSignificantLocationChanges];
             
             [self.manager startUpdatingLocation];
             self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
             [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
-            [self.manager stopMonitoringSignificantLocationChanges];
             break;
         case 1:
             [self.activityTimer invalidate];
@@ -465,7 +461,7 @@
     NSData *data = [self encodeLocationData:location];
     
     NSInteger msgID = [self.connection sendData:data
-                                          topic:automatic ? [self theAutomaticTopic] : [self theManualTopic]
+                                          topic:[self theGeneralTopic]
                                             qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
                                          retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
     
@@ -643,29 +639,13 @@
 
 #pragma construct topic names
 
-- (NSString *)theAutomaticTopic
-{
-    return [self theGeneralTopic];
-}
-
-- (NSString *)theManualTopic
-{
-    NSString *manualTopic = [self theGeneralTopic];
-    NSString *manualPostfix = [[NSUserDefaults standardUserDefaults] stringForKey:@"manual_preference"];
-
-    if (manualPostfix && ![manualPostfix isEqualToString:@""]) {
-        manualTopic = [manualTopic stringByAppendingString:manualPostfix];
-    }
-    return manualTopic;
-}
-
 - (NSString *)theGeneralTopic
 {
     NSString *topic;
     topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
     
     if (!topic || [topic isEqualToString:@""]) {
-        topic = [NSString stringWithFormat:@"mqttitude/%@", [self theClientId]];
+        topic = [NSString stringWithFormat:@"mqttitude/%@", [self theId]];
     }
     return topic;
 }
@@ -676,7 +656,7 @@
     topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"willtopic_preference"];
     
     if (!topic || [topic isEqualToString:@""]) {
-        topic = [self theAutomaticTopic];
+        topic = [self theGeneralTopic];
     }
     
     return topic;
@@ -688,21 +668,40 @@
     clientId = [[NSUserDefaults standardUserDefaults] stringForKey:@"clientid_preference"];
     
     if (!clientId || [clientId isEqualToString:@""]) {
-        clientId = [self theDeviceId];
+        clientId = [self theId];
     }
-    
     return clientId;
+}
+
+- (NSString *)theId
+{
+    NSString *theId;
+    NSString *user;
+    user = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"];
+    NSString *deviceId;
+    deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"deviceid_preference"];
+    
+        if (!user || [user isEqualToString:@""]) {
+            if (!deviceId || [deviceId isEqualToString:@""]) {
+                theId = [[UIDevice currentDevice] name];
+            } else {
+                theId = deviceId;
+            }
+        } else {
+            if (!deviceId || [deviceId isEqualToString:@""]) {
+                theId = user;
+            } else {
+                theId = [NSString stringWithFormat:@"%@/%@", user, deviceId];
+            }
+        }
+    
+    return theId;
 }
 
 - (NSString *)theDeviceId
 {
     NSString *deviceId;
     deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"deviceid_preference"];
-    
-    if (!deviceId || [deviceId isEqualToString:@""]) {
-        deviceId = [UIDevice currentDevice].name;
-    }
-    
     return deviceId;
 }
 

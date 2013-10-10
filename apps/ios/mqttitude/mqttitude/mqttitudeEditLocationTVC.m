@@ -28,7 +28,7 @@
 {
     [super viewWillAppear:animated];
     
-    self.title = self.location.belongsTo.name ? self.location.belongsTo.name : self.location.belongsTo.topic;
+    self.title = [self.location.belongsTo name] ? [self.location.belongsTo name] : self.location.belongsTo.topic;
     
     self.UIcoordinate.text = [NSString stringWithFormat:@"%f,%f", [self.location.latitude doubleValue] , [self.location.longitude doubleValue]];
     self.UItimestamp.text = [NSDateFormatter localizedStringFromDate:self.location.timestamp

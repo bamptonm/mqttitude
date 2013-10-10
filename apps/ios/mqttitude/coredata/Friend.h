@@ -2,7 +2,7 @@
 //  Friend.h
 //  mqttitude
 //
-//  Created by Christoph Krey on 01.10.13.
+//  Created by Christoph Krey on 10.10.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
@@ -14,8 +14,6 @@
 @interface Friend : NSManagedObject
 
 @property (nonatomic, retain) NSString * device;
-@property (nonatomic, retain) NSData * image;
-@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * topic;
 @property (nonatomic, retain) NSSet *hasLocations;
 @end

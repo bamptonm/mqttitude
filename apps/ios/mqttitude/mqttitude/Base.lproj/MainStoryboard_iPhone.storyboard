@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
         <development version="4600" identifier="xcode"/>
@@ -268,42 +268,8 @@
                                             <constraint firstItem="tId-oe-y5y" firstAttribute="centerY" secondItem="XF5-TA-daq" secondAttribute="centerY" constant="-0.5" type="default" id="plz-0Y-fh3"/>
                                         </constraints>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="oQv-L4-FMU">
-                                        <rect key="frame" x="0.0" y="292" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manual Topic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MFu-yJ-z1u">
-                                                    <rect key="frame" x="20" y="11" width="102" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="manualtopic" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="feV-Yd-huv">
-                                                    <rect key="frame" x="130" y="7" width="170" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="c28-Kk-086"/>
-                                                    </constraints>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                </textField>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <constraints>
-                                            <constraint firstItem="MFu-yJ-z1u" firstAttribute="leading" secondItem="oQv-L4-FMU" secondAttribute="leading" constant="20" type="default" id="3Mr-dm-OpQ"/>
-                                            <constraint firstItem="feV-Yd-huv" firstAttribute="leading" secondItem="MFu-yJ-z1u" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="YcF-qJ-o1G"/>
-                                            <constraint firstAttribute="trailing" secondItem="feV-Yd-huv" secondAttribute="trailing" constant="20" type="default" id="ZqQ-6F-CLb"/>
-                                            <constraint firstItem="feV-Yd-huv" firstAttribute="top" secondItem="oQv-L4-FMU" secondAttribute="top" constant="7" id="aX5-CI-n11"/>
-                                            <constraint firstItem="MFu-yJ-z1u" firstAttribute="centerY" secondItem="oQv-L4-FMU" secondAttribute="centerY" constant="-0.5" type="default" id="zuO-6v-NZa"/>
-                                        </constraints>
-                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8VR-3f-FXr">
-                                        <rect key="frame" x="0.0" y="336" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="292" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -348,7 +314,6 @@
                     <connections>
                         <outlet property="UIeffectiveClientId" destination="tas-Tl-Qny" id="xcR-9n-vAl"/>
                         <outlet property="UIeffectiveDeviceId" destination="IIg-tr-L88" id="qqG-tB-YxL"/>
-                        <outlet property="UIeffectiveManualTopic" destination="feV-Yd-huv" id="cyQ-aE-KsU"/>
                         <outlet property="UIeffectiveTopic" destination="YbR-9Z-Kbj" id="xaY-bK-W3q"/>
                         <outlet property="UIeffectiveWillTopic" destination="WU9-PW-XRc" id="gQq-CS-z2u"/>
                         <outlet property="UIerrorCode" destination="xLk-V9-E1v" id="YIx-vm-TdX"/>
@@ -404,12 +369,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Friends" id="LEh-gi-5Te"/>
-                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="3G3-FH-dv6">
-                        <autoresizingMask key="autoresizingMask"/>
-                        <connections>
-                            <action selector="refresh" destination="UkR-Kt-FVm" eventType="valueChanged" id="LwJ-CO-qLe"/>
-                        </connections>
-                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KQ7-es-Wv2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MTY-2Z-7Gr" userLabel="Exit" sceneMemberID="exit"/>
@@ -460,10 +419,13 @@
                             <outlet property="delegate" destination="pfi-pJ-tUz" id="ziF-Gd-CH3"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Locations" id="GM9-KK-8vY"/>
-                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="zVI-5m-LQt">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </refreshControl>
+                    <navigationItem key="navigationItem" title="Locations" id="GM9-KK-8vY">
+                        <barButtonItem key="rightBarButtonItem" systemItem="bookmarks" id="qOx-nX-Gy7">
+                            <connections>
+                                <action selector="addressbook:" destination="pfi-pJ-tUz" id="uIP-kd-Xgg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xNK-rw-Y7y" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="zyA-vN-ZRx" userLabel="Exit" sceneMemberID="exit"/>

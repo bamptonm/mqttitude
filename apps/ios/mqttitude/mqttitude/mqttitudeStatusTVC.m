@@ -21,7 +21,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIeffectiveClientId;
 @property (weak, nonatomic) IBOutlet UITextField *UIeffectiveWillTopic;
 @property (weak, nonatomic) IBOutlet UITextField *UIeffectiveDeviceId;
-@property (weak, nonatomic) IBOutlet UITextField *UIeffectiveManualTopic;
 
 @end
 
@@ -42,8 +41,7 @@
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     self.UIeffectiveDeviceId.text = [delegate theDeviceId];
     self.UIeffectiveClientId.text = [delegate theClientId];
-    self.UIeffectiveTopic.text = [delegate theAutomaticTopic];
-    self.UIeffectiveManualTopic.text = [delegate theManualTopic];
+    self.UIeffectiveTopic.text = [delegate theGeneralTopic];
     self.UIeffectiveWillTopic.text = [delegate theWillTopic];
 }
 

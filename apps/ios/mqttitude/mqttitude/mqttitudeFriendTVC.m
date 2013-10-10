@@ -17,20 +17,6 @@
 
 @implementation mqttitudeFriendTVC
 
-- (IBAction)refresh {
-    dispatch_queue_t friendsQ = dispatch_queue_create("friendsQ", NULL);
-    dispatch_async(friendsQ, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[mqttitudeCoreData theManagedObjectContext] performBlock:^{
-                for (Friend *friend in [self.fetchedResultsController fetchedObjects]) {
-                    [friend refreshFromAB];
-                }
-                [self.refreshControl endRefreshing];
-            }];
-        });
-    });
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -42,7 +28,6 @@
                                                                         managedObjectContext:[mqttitudeCoreData theManagedObjectContext]
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
-    [self refresh];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

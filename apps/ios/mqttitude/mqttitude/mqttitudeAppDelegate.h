@@ -22,8 +22,6 @@
 - (void)reconnect;
 - (void)connectionOff;
 
-- (NSString *)theAutomaticTopic;
-- (NSString *)theManualTopic;
 - (NSString *)theGeneralTopic;
 - (NSString *)theWillTopic;
 - (NSString *)theClientId;

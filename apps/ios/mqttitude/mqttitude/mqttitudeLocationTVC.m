@@ -13,13 +13,13 @@
 
 @end
 
-@implementation mqttitudeLocationTVC
+@implementation mqttitudeLocationTVC 
 
 - (void)setFriend:(Friend *)friend
 {
     _friend = friend;
     
-    self.title = friend.name ? friend.name : friend.topic;
+    self.title = [friend name] ? [friend name] : friend.topic;
     
     if (friend && friend.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
@@ -51,6 +51,7 @@
     } else {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
+    cell.imageView.image = location.belongsTo.image ? [UIImage imageWithData:[location.belongsTo image]] : [UIImage imageNamed:@"icon_57x57"];
     
     return cell;
 }
@@ -91,6 +92,42 @@
         Location *location = [self.fetchedResultsController objectAtIndexPath:indexPath];
         [self.fetchedResultsController.managedObjectContext deleteObject:location];
     }
+}
+
+- (IBAction)addressbook:(UIBarButtonItem *)sender {
+    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
+    picker.peoplePickerDelegate = self;
+    picker.addressBook = [Friend theABRef];
+	// Display only a person's phone, email, and birthdate
+	NSArray *displayedItems = [NSArray arrayWithObjects:[NSNumber numberWithInt:kABPersonPhoneProperty],
+                               [NSNumber numberWithInt:kABPersonEmailProperty],
+                               [NSNumber numberWithInt:kABPersonBirthdayProperty], nil];
+	
+	
+	picker.displayedProperties = displayedItems;
+	// Show the picker
+    [self presentViewController:picker animated:YES completion:nil];
+    
+}
+
+#pragma ABPeoplePickerNavigationControllerDelegate
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person
+{
+    [self.friend linkToAB:person];
+    [self.tableView reloadData];
+    self.title = self.friend.name ? self.friend.name : self.friend.topic;
+    [self dismissViewControllerAnimated:YES completion:NULL];
+    return NO;
+}
+
+-(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
+{
+    return NO;
+}
+
+-(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

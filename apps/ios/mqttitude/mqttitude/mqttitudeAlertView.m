@@ -16,6 +16,7 @@
 
 - (id)initWithMessage:(NSString *)message dismissAfter:(NSTimeInterval)interval
 {
+    self = [super init];
     self.alertView = [[UIAlertView alloc] initWithTitle:[NSBundle mainBundle].infoDictionary[@"CFBundleName"]
                                                         message:message
                                                        delegate:self

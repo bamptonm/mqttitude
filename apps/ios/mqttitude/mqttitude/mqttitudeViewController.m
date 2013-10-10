@@ -85,10 +85,8 @@
         coordinate = locationTVC.selectedLocation.coordinate;
     }
     
-    if (coordinate.latitude != 0 || coordinate.longitude != 0) {
-        [self.mapView setVisibleMapRect:[self centeredRect:coordinate] animated:YES];
-        self.friends = 4; // this will set the move mode to follow when the map appeares again
-    }
+    [self.mapView setVisibleMapRect:[self centeredRect:coordinate] animated:YES];
+    self.friends = 4; // this will set the move mode to follow when the map appeares again
 }
 
 - (IBAction)location:(UIBarButtonItem *)sender {
@@ -316,7 +314,7 @@
                 return pinAnnotationView;
             } else {
                 Friend *friend = location.belongsTo;
-                if (friend && friend.image) {
+                if (friend && [friend image]) {
                     UIColor *color;
                     if ([location.timestamp compare:[NSDate dateWithTimeIntervalSinceNow:OLD_TIME]] == NSOrderedAscending) {
                         color = [UIColor redColor];
@@ -325,23 +323,17 @@
                     }
 
                     MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_PICTURE];
+                    mqttitudeFriendAnnotationView *friendAnnotationView;
                     if (annotationView) {
-                        if ([annotationView respondsToSelector:@selector(setPersonImage:)]) {
-                            [annotationView performSelector:@selector(setPersonImage:) withObject:[UIImage imageWithData:friend.image]];
-                        }
-                        if ([annotationView respondsToSelector:@selector(setCircleColor:)]) {
-                            [annotationView performSelector:@selector(setCircleColor:) withObject:color];
-                        }
-
-                        [annotationView setNeedsDisplay];
-                        return annotationView;
+                        friendAnnotationView = (mqttitudeFriendAnnotationView *)annotationView;
                     } else {
-                        mqttitudeFriendAnnotationView *annotationView = [[mqttitudeFriendAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_PICTURE];
-                        annotationView.personImage = [UIImage imageWithData:friend.image];
-                        annotationView.circleColor = color;
-                        annotationView.canShowCallout = YES;
-                        return annotationView;
+                        friendAnnotationView = [[mqttitudeFriendAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_PICTURE];
+                        friendAnnotationView.canShowCallout = YES;
                     }
+                    friendAnnotationView.personImage = [UIImage imageWithData:[friend image]];
+                    friendAnnotationView.circleColor = color;
+                    [friendAnnotationView setNeedsDisplay];
+                    return friendAnnotationView;
                 } else {
                     MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_OTHER];
                     if (annotationView) {
@@ -362,9 +354,20 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
+#ifdef DEBUG
+    NSLog(@"didSelectAnnotationView");
+#endif
+
     if ([view.annotation respondsToSelector:@selector(getReverseGeoCode)]) {
         [view.annotation performSelector:@selector(getReverseGeoCode)];
     }
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
+{
+#ifdef DEBUG
+    NSLog(@"calloutAccessoryControlTapped");
+#endif
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -390,7 +393,6 @@
 #endif
     }
     [self.mapView addAnnotations:[Location allLocationsInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]];
-    
 }
 
 - (void)setFrc:(NSFetchedResultsController *)newfrc
@@ -463,7 +465,8 @@
                 break;
                 
             case NSFetchedResultsChangeUpdate:
-                //
+                [self.mapView removeAnnotation:anObject];
+                [self.mapView addAnnotation:anObject];
                 break;
                 
             case NSFetchedResultsChangeMove:
