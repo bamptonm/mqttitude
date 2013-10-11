@@ -26,6 +26,7 @@ We're back in MQTTitude, and we see the picture from the addressbook.
 ![](ios-friends-05.png)
 
 Back to the list of friends: 
+
 ![](ios-friends-06.png)
 
 And Kate's image as seen on the map in MQTTitude.
