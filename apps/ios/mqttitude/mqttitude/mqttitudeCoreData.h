@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface mqttitudeCoreData : NSObject
-@property (strong, nonatomic) UIManagedDocument *document;
+@interface mqttitudeCoreData : UIManagedDocument
 + (NSManagedObjectContext *)theManagedObjectContext;
-- (void)useDocument;
 @end

@@ -249,7 +249,7 @@
         [self.session close];
     } else {
         self.state = state_starting;
-        NSLog(@"MQTTitude not connected, can't close");
+        NSLog(@"Connection not connected, can't close");
     }
 }
 
@@ -386,7 +386,7 @@
                                port:self.lastPort
                            usingSSL:self.lastTls];
     } else {
-        NSLog(@"MQTTitude not starting, can't connect");
+        NSLog(@"Connection not starting, can't connect");
     }
 }
 

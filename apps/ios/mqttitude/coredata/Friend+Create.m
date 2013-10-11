@@ -115,6 +115,8 @@
 
 ABRecordRef recordWithTopic(CFStringRef topic)
 {
+    ABRecordRef theRecord = NULL;
+    
     CFArrayRef records = ABAddressBookCopyArrayOfAllPeople([Friend theABRef]);
     
     for (CFIndex i = 0; i < CFArrayGetCount(records); i++) {
@@ -129,15 +131,20 @@ ABRecordRef recordWithTopic(CFStringRef topic)
                 CFStringRef value = ABMultiValueCopyValueAtIndex(relations, k);
                 if(CFStringCompare(label, RELATION_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
                     if(CFStringCompare(value, topic, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-                        CFRelease(relations);
-                        return record;
+                        theRecord = record;
+                        CFRelease(label);
+                        CFRelease(value);
+                        break;
                     }
                 }
+                CFRelease(label);
+                CFRelease(value);
             }
             CFRelease(relations);
         }
     }
-    return nil;
+    CFRelease(records);
+    return theRecord;
 }
 
 - (void)linkToAB:(ABRecordRef)record

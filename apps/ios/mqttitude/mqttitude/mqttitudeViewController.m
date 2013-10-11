@@ -61,14 +61,16 @@
     [self mapMode:nil];
     [self location:nil];
 
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
-    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES]];
-    
-    self.frc = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                   managedObjectContext:[mqttitudeCoreData theManagedObjectContext]
-                                                     sectionNameKeyPath:nil
-                                                              cacheName:nil];
-    self.frc.delegate = self;
+    if ([mqttitudeCoreData theManagedObjectContext]) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES]];
+        
+        self.frc = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                       managedObjectContext:[mqttitudeCoreData theManagedObjectContext]
+                                                         sectionNameKeyPath:nil
+                                                                  cacheName:nil];
+        self.frc.delegate = self;
+    }
 }
 
 #pragma UI actions

@@ -7,7 +7,6 @@
 //
 
 #import "mqttitudeAppDelegate.h"
-#import "mqttitudeAlertView.h"
 #import "mqttitudeCoreData.h"
 #import "Friend+Create.h"
 #import "Location+Create.h"
@@ -15,7 +14,7 @@
 @interface mqttitudeAppDelegate()
 @property (strong, nonatomic) NSTimer *disconnectTimer;
 @property (strong, nonatomic) NSTimer *activityTimer;
-@property (strong, nonatomic) mqttitudeAlertView *alertView;
+@property (strong, nonatomic) UIAlertView *alertView;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (strong, nonatomic) mqttitudeCoreData *coreData;
 @property (strong, nonatomic) NSDate *locationServiceStarted;
@@ -72,15 +71,30 @@
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    self.coreData = [[mqttitudeCoreData alloc] init];
-    [self.coreData useDocument];
+    /*
+     * Core Data using UIManagedDocument
+     */
     
-    while (![mqttitudeCoreData theManagedObjectContext]) {
+    self.coreData = [[mqttitudeCoreData alloc] init];
+    UIDocumentState state;
+    
+    do {
+        state = self.coreData.documentState;
+        if (state) {
 #ifdef DEBUG
-        NSLog(@"APP Waiting for document to open");
+            NSLog(@"APP Waiting for document to open documentState = 0x%02x",
+                  self.coreData.documentState);
 #endif
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-    }
+            if (state & UIDocumentStateInConflict || state & UIDocumentStateSavingError) {
+                break;
+            }
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        }
+    } while (state);
+    
+    /*
+     * CLLocationManager
+     */
     
     if ([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
@@ -90,17 +104,8 @@
             
             self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
              
-        } else {
-            NSString *message = NSLocalizedString(@"No significant location change monitoring available", @"No significant location change monitoring available");
-            [self alert:message];
         }
         
-    } else {
-        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        NSString *message = [NSString stringWithFormat:@"%@ %d",
-                     NSLocalizedString(@"Application not authorized for CoreLocation", @"Application not authorized for CoreLocation"),
-                     status];
-        [self alert:message];
     }
         
     self.connection = [[Connection alloc] init];
@@ -163,6 +168,24 @@
 #ifdef DEBUG
     NSLog(@"App applicationDidBecomeActive");
 #endif
+    if (self.coreData.documentState) {
+        NSString *message = [NSString stringWithFormat:@"Application error opening CoreData %@ 0x%02x",
+                             self.coreData.fileURL,
+                             self.coreData.documentState];
+        [self alert:message];
+    }
+    if (![CLLocationManager significantLocationChangeMonitoringAvailable]) {
+        NSString *message = @"No significant location change monitoring available";
+        [self alert:message];
+    }
+    if (![CLLocationManager locationServicesEnabled]) {
+        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+        NSString *message = [NSString stringWithFormat:@"%@ %d",
+                             @"Application not authorized for CoreLocation",
+                             status];
+        [self alert:message];
+    }
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -179,7 +202,7 @@
     NSLog(@"App didReceiveLocalNotification");
 #endif
 
-    [self alert:notification.alertBody];
+    [self disappearingAlert:notification.alertBody];
 }
 
 #pragma CLLocationManagerDelegate
@@ -289,7 +312,7 @@
 #ifdef DEBUG
             NSLog(@"App unknown command %@)", message);
 #endif
-            NSString *message = NSLocalizedString(@"MQTTitude received an unknown command", @"MQTTitude received an unknown command");
+            NSString *message = @"MQTTitude received an unknown command";
             [self alert:message];
         }
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"message"]]) {
@@ -510,15 +533,48 @@
 
 #pragma internal helpers
 
+- (void)disappearingAlert:(NSString *)message
+{
+    [self anyAlert:message dismissAfter:DISMISS_AFTER];
+}
+
 - (void)alert:(NSString *)message
+{
+    [self anyAlert:message dismissAfter:0];
+}
+
+- (void)anyAlert:(NSString *)message dismissAfter:(NSTimeInterval)interval
 {
 #ifdef DEBUG
     NSLog(@"App alert %@", message);
 #endif
 
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        self.alertView = [[mqttitudeAlertView alloc] initWithMessage:message dismissAfter:DISMISS_AFTER];
+        self.alertView = [[UIAlertView alloc] initWithTitle:[NSBundle mainBundle].infoDictionary[@"CFBundleName"]
+                                                    message:message
+                                                   delegate:self
+                                          cancelButtonTitle:interval ? nil : @"OK"
+                                          otherButtonTitles:nil];
+        self.alertView.delegate = self;
+        
+        [self.alertView show];
+        
+        if (interval) {
+            [self performSelector:@selector(dismissAfterDelay:) withObject:self.alertView afterDelay:interval];
+        }
     }
+}
+
+- (void)dismissAfterDelay:(UIAlertView *)alertView
+{
+    [alertView dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+#ifdef DEBUG
+    NSLog(@"AlertView clickedButtonAtIndex %d", buttonIndex);
+#endif
 }
 
 - (void)notification:(NSString *)message
@@ -600,7 +656,8 @@
 #ifdef DEBUG
     NSLog(@"App didFailToRegisterForRemoteNotificationsWithError %@", error);
 #endif
-
+        NSString *message = [NSString stringWithFormat:@"App didFailToRegisterForRemoteNotificationsWithError %@", error];
+        [self alert:message];
 }
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {

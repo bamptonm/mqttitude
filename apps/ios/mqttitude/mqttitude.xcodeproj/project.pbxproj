@@ -71,7 +71,6 @@
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
 		84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */; };
-		84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */; };
 		84CCFCF018069A6C008A9454 /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CCFCEF18069A6C008A9454 /* Friend.m */; };
 		84CF9A0917BEED5B00E1333C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0817BEED5B00E1333C /* UIKit.framework */; };
 		84CF9A0B17BEED5B00E1333C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0A17BEED5B00E1333C /* Foundation.framework */; };
@@ -81,12 +80,12 @@
 		84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5117BEF44F00E1333C /* MapKit.framework */; };
 		84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5317BEF45700E1333C /* CoreLocation.framework */; };
 		84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */; };
-		84F93C0717C029580060E809 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0517C029580060E809 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8414726817C9E5F900F76EAB /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		8414726917C9E5F900F76EAB /* Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connection.m; sourceTree = "<group>"; };
+		8421367A1807F730000E8C24 /* MQTTitude 4.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MQTTitude 4.3.xcdatamodel"; sourceTree = "<group>"; };
 		8440549417F4EFF300455E26 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		846597C217F6631100BEA7A8 /* MQTTitude.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MQTTitude.entitlements; path = MQTTitude/MQTTitude.entitlements; sourceTree = "<group>"; };
@@ -170,8 +169,6 @@
 		84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeViewController.m; sourceTree = "<group>"; };
 		84C50F4017E04B7D00726FD5 /* mqttitudeStatusTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeStatusTVC.h; sourceTree = "<group>"; };
 		84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeStatusTVC.m; sourceTree = "<group>"; };
-		84C50F4317E0540200726FD5 /* mqttitudeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAlertView.h; sourceTree = "<group>"; };
-		84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAlertView.m; sourceTree = "<group>"; };
 		84CCFCEE18069A6C008A9454 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		84CCFCEF18069A6C008A9454 /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,8 +182,6 @@
 		84CF9A5117BEF44F00E1333C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84CF9A5317BEF45700E1333C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		84F93C0417C028690060E809 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
-		84F93C0617C029580060E809 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		84F93C0917C02A030060E809 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -348,15 +343,12 @@
 				8414726917C9E5F900F76EAB /* Connection.m */,
 				846597D817F78F3D00BEA7A8 /* mqttitudeCoreData.h */,
 				846597D917F78F3D00BEA7A8 /* mqttitudeCoreData.m */,
-				84C50F4317E0540200726FD5 /* mqttitudeAlertView.h */,
-				84C50F4417E0540200726FD5 /* mqttitudeAlertView.m */,
 				84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */,
 				84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */,
 				848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */,
 				848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */,
 				84C50F4017E04B7D00726FD5 /* mqttitudeStatusTVC.h */,
 				84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */,
-				84F93C0517C029580060E809 /* Localizable.strings */,
 				84CF9A0F17BEED5B00E1333C /* Supporting Files */,
 			);
 			path = mqttitude;
@@ -456,7 +448,6 @@
 				8484688B17FD785D0012FC18 /* Location.gpx in Resources */,
 				8484688717FD785D0012FC18 /* iTunesArtwork in Resources */,
 				8484688917FD785D0012FC18 /* iTunesArtwork@2x in Resources */,
-				84F93C0717C029580060E809 /* Localizable.strings in Resources */,
 				8484689A17FD785D0012FC18 /* UserTrackingFollowWithHeading.png in Resources */,
 				8484688A17FD785D0012FC18 /* iTunesArtwork@2x.png in Resources */,
 				8484688E17FD785D0012FC18 /* LocationOn.png in Resources */,
@@ -509,7 +500,6 @@
 				846597DA17F78F3D00BEA7A8 /* mqttitudeCoreData.m in Sources */,
 				84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */,
 				848468C617FD7A740012FC18 /* MQTTEncoder.m in Sources */,
-				84C50F4517E0540200726FD5 /* mqttitudeAlertView.m in Sources */,
 				848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */,
 				848468AF17FD7A100012FC18 /* Location+Create.m in Sources */,
 			);
@@ -524,15 +514,6 @@
 				84F93C0417C028690060E809 /* Base */,
 			);
 			name = MainStoryboard_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		84F93C0517C029580060E809 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				84F93C0617C029580060E809 /* en */,
-				84F93C0917C02A030060E809 /* de */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -658,9 +639,10 @@
 		848468A717FD7A100012FC18 /* MQTTitude.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8421367A1807F730000E8C24 /* MQTTitude 4.3.xcdatamodel */,
 				848468A817FD7A100012FC18 /* MQTTitude.xcdatamodel */,
 			);
-			currentVersion = 848468A817FD7A100012FC18 /* MQTTitude.xcdatamodel */;
+			currentVersion = 8421367A1807F730000E8C24 /* MQTTitude 4.3.xcdatamodel */;
 			path = MQTTitude.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -275,9 +275,10 @@
             switch ([msg type]) {
                 case MQTTConnack:
                     if ([[msg data] length] != 2) {
-                        [self error:MQTTSessionEventProtocolError error:[NSError errorWithDomain:@"MQTT"
-                                                                                            code:-2
-                                                                                        userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"CONNACK expected", @"MQTT protocol CONNACK expected")}]];
+                        [self error:MQTTSessionEventProtocolError
+                              error:[NSError errorWithDomain:@"MQTT"
+                                                        code:-2
+                                                    userInfo:@{NSLocalizedDescriptionKey : @"MQTT protocol CONNACK expected"}]];
                     }
                     else {
                         const UInt8 *bytes = [[msg data] bytes];
@@ -295,22 +296,22 @@
                             NSString *errorDescription;
                             switch (bytes[1]) {
                                 case 1:
-                                    errorDescription = NSLocalizedString(@"unacceptable protocol version", @"MQTT protocol no CONNACK");
+                                    errorDescription = @"MQTT CONNACK: unacceptable protocol version";
                                     break;
                                 case 2:
-                                    errorDescription = NSLocalizedString(@"identifier rejected", @"MQTT protocol no CONNACK");
+                                    errorDescription = @"MQTT CONNACK: identifier rejected";
                                     break;
                                 case 3:
-                                    errorDescription = NSLocalizedString(@"server unavailable", @"MQTT protocol no CONNACK");
+                                    errorDescription = @"MQTT CONNACK: server unavailable";
                                     break;
                                 case 4:
-                                    errorDescription = NSLocalizedString(@"bad user name or password", @"MQTT protocol no CONNACK");
+                                    errorDescription = @"MQTT CONNACK: bad user name or password";
                                     break;
                                 case 5:
-                                    errorDescription = NSLocalizedString(@"not authorized", @"MQTT protocol no CONNACK");
+                                    errorDescription = @"MQTT CONNACK: not authorized";
                                     break;
                                 default:
-                                    errorDescription = NSLocalizedString(@"reserved for future use", @"MQTT protocol no CONNACK");
+                                    errorDescription = @"MQTT CONNACK: reserved for future use";
                                     break;
                             }
 
@@ -321,9 +322,10 @@
                     }
                     break;
                 default:
-                    [self error:MQTTSessionEventProtocolError error:[NSError errorWithDomain:@"MQTT"
-                                                                                        code:-1
-                                                                                    userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"No CONNACK received", @"MQTT protocol no CONNACK")}]];
+                    [self error:MQTTSessionEventProtocolError
+                          error:[NSError errorWithDomain:@"MQTT"
+                                                    code:-1
+                                                userInfo:@{NSLocalizedDescriptionKey : @"MQTT protocol no CONNACK"}]];
                     break;
             }
             break;

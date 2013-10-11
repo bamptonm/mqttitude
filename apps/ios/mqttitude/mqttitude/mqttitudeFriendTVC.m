@@ -24,10 +24,13 @@
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
     
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"topic" ascending:YES]];
+    
+    if ([mqttitudeCoreData theManagedObjectContext]) {
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
                                                                         managedObjectContext:[mqttitudeCoreData theManagedObjectContext]
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
