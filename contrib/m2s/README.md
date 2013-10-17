@@ -2,6 +2,35 @@
 
 This is part of the MQTTitude back-end. This program subscribes to a configured MQTT topic (default: `mqttitude/+/+`), extracts the JSON payload from received messages, optionally looks up weather and reverse-geo for the reported `lat` and `lon`, and stores the result. Storage is pluggable (see below), and we provide a default MySQL storage plugin.
 
+
+```
+
+                    +-------------------------+
+                    |         m2s             |
+                    |-------------------------|
+                    |                         |
+         +--------->| +---------+             |
+                    |           |             |
+                    |           |             |
+                    |     +-----v-------+     |       +----------------+
+                    |     |             +------------>| OpenWeatherMap |
+                    |     |             |     |       +----------------+
+                    |     |   Queue     |     |       
+                    |     |             +------------>+----------------+
+                    |     +-----+-------+     |       | Nominatim (Geo)|
+                    |           |             |       +----------------+
+                    |           |             |
+                    |     +-----v-------+     |
+                    |     | storage.py  |     |
+                    |     |-------------|     |
+                    |     |    SQL      |     |
+                    |     |   NoSQL     |     |
+                    |     |   Files     |     |
+                    |     +-------------+     |
+                    |                         |
+                    +-------------------------+
+```
+
 ### Configuration
 
 1. Copy `settings.py.sample` to `settings.py` and edit. Note that this must be valid Python code
