@@ -18,3 +18,13 @@ topics = [
 dbname = 'mqttitude'          # default: "mqttitude"
 dbuser = 'username'
 dbpasswd = 'password'
+
+# Features
+
+# Obtain weather data for lat/lon at OpenWeatherMap.org
+
+feature_weather = True
+
+# Attempt to reverse geo-code lat/lon using Nominatim
+
+feature_revgeo = True

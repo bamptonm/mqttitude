@@ -121,17 +121,23 @@ def processor():
         address = {}
         if lat is not None and lon is not None:
             try:
-                weather =  owm.weather(lat, lon)
-                address = nominatim.reverse(lat, lon)
+                if cf.get('feature_weather'):
+                    weather =  owm.weather(lat, lon)
+                if cf.get('feature_revgeo'):
+                    address = nominatim.reverse(lat, lon)
             except:
                 pass
 
-            item['weather_data'] = json.dumps(weather)
-            item['map_data'] = json.dumps(address)
-            item['weather'] = weather.get('current')    # "Rain"
-            item['celsius'] = weather.get('celsius')    # 13.2
-            item['tst'] = item['date_string']           # replace for database
+            if cf.get('feature_weather'):
+                item['weather_data'] = json.dumps(weather)
+                item['weather'] = weather.get('current')    # "Rain"
+                item['celsius'] = weather.get('celsius')    # 13.2
 
+            if cf.get('feature_revgeo'):
+                item['map_data'] = json.dumps(address)
+
+
+            item['tst'] = item['date_string']           # replace for database
 
             try:
                 loca = Location(**item)

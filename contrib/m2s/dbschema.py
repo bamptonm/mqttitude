@@ -23,10 +23,12 @@ class Location(MySQLModel):
     lon             = CharField(null=False)
     tst             = DateTimeField(default=datetime.datetime.now, index=True)
     acc             = CharField(null=True)
-    weather         = CharField(null=True)
-    celsius         = CharField(null=True)
-    weather_data    = TextField(null=True)
-    map_data        = TextField(null=True)
+    if cf.get('feature_weather'):
+        weather         = CharField(null=True)
+        celsius         = CharField(null=True)
+        weather_data    = TextField(null=True)
+    if cf.get('feature_revgeo'):
+        map_data        = TextField(null=True)
 
 
 if __name__ == '__main__':
