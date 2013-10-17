@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# JPM
+__author__    = 'Jan-Piet Mens <jpmens()gmail.com>'
+__copyright__ = 'Copyright 2013 Jan-Piet Mens'
+__license__   = """Eclipse Public License - v 1.0 (http://www.eclipse.org/legal/epl-v10.html)"""
 
 from config import Config
 import mosquitto
+import signal
+import logging
 import sys
 import json
 import datetime
@@ -27,31 +31,59 @@ mqtt = mosquitto.Mosquitto()
 q_in = Queue.Queue(maxsize=0)
 num_workers = 1
 
+LOGFILE = cf.get('logfile', 'logfile')
+LOGFORMAT = '%(asctime)-15s %(message)s'
+DEBUG=True
+
+if DEBUG:
+    logging.basicConfig(filename=LOGFILE, level=logging.DEBUG, format=LOGFORMAT)
+else:
+    logging.basicConfig(filename=LOGFILE, level=logging.INFO, format=LOGFORMAT)
+
+logging.info("Starting")
+logging.debug("DEBUG MODE")
+
+
+
+def cleanup(signum, frame):
+    """
+    Signal handler to disconnect and cleanup.
+    """
+
+    logging.info("Disconnecting from broker")
+    mqtt.disconnect()
+    logging.info("Waiting for queue to drain")
+    q_in.join()       # block until all tasks are done
+    logging.info("Exiting on signal %d", signum)
+    sys.exit(signum)
+
 def on_connect(mosq, userdata, rc):
 
     for topic in cf.get('topics'):
-        print "Subscribing to ", topic
+        logging.info("Subscribing to %s", topic)
         mqtt.subscribe(topic, 0)
 
 def on_disconnect(mosq, userdata, rc):
-    print "OOOOPS! disconnect"
+    logging.info("OOOOPS! disconnect")
 
 def on_publish(mosq, userdata, mid):
-    print("--> PUB mid: "+str(mid))
-    pass
+    logging.debug("--> PUB mid: %s" % (str(mid)))
 
 def on_subscribe(mosq, userdata, mid, granted_qos):
     pass
 
 def on_message(mosq, userdata, msg):
-    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
 
     if msg.retain == 1:
-        print "Skipping retained %s" % msg.topic
+        logging.debug("Skipping retained %s" % msg.topic)
         return
 
-    if 'isim' in msg.topic:
-        return
+    blocked_topics = cf.get('blocked_topics')
+    if blocked_topics is not None:
+        for t in blocked_topics:
+            if t in msg.topic:
+                logging.debug("Skipping blocked topic %s" % msg.topic)
+                return
 
     topic = msg.topic
     payload = str(msg.payload)
@@ -110,12 +142,12 @@ def processor():
     while True:
         item = q_in.get()
 
-        print item
         topic = item.get('topic')
         lat = item.get('lat')
         lon = item.get('lon')
 
-        print "WORKER: %s" % (topic)
+        logging.debug("WORKER is handling %s" % (topic))
+        logging.debug(item)
 
         weather = {}
         address = {}
@@ -142,11 +174,11 @@ def processor():
             try:
                 loca = Location(**item)
                 loca.save()
-            except:
-                print "Cannot store in DB"
+            except Exception, e:
+                logging.info("Cannot store in DB: %s" % (str(e)))
 
         else:
-            print "WORKER: can't work: lat or lon missing!"
+            logging.info("WORKER: can't work: lat or lon missing!")
 
         q_in.task_done()
 
@@ -176,13 +208,10 @@ def main():
          t.start()
 
 
-    try:
-        mqtt.loop_forever()
-    except KeyboardInterrupt:
-        print "Interrupted; waiting for background tasks"
-        q_in.join()       # block until all tasks are done
-        sys.exit(0)
+    mqtt.loop_forever()
 
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, cleanup)
+    signal.signal(signal.SIGTERM, cleanup)
     main()

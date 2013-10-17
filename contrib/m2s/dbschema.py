@@ -16,7 +16,7 @@ class MySQLModel(Model):
         database = mysql_db
 
 class Location(MySQLModel):
-#    topic           = CharField(null=False)
+    topic           = BlobField(null=False)
     username        = CharField(null=False)
     device          = CharField(null=False)
     lat             = CharField(null=False)
@@ -34,5 +34,8 @@ class Location(MySQLModel):
 if __name__ == '__main__':
     mysql_db.connect()
 
-    Location.create_table()
+    try:
+        Location.create_table()
+    except Exception, e:
+        print str(e)
 

@@ -1,6 +1,10 @@
 #(@)settings.py
 # Note: this must be valid Python!
 
+# Sundry
+
+logfile	= 'logfile'		
+
 # Broker
 
 mqtt_broker = 'localhost'       # default: 'localhost'
@@ -13,6 +17,11 @@ topics = [
         'mqttitude/+/+',
         'foo/bar'
     ]
+
+# optional: if any words in this list are present in a topic
+# name, ignore the message
+
+# blocked_topics = [ 'isim', 'jjolie' ]
 
 # Database
 dbname = 'mqttitude'          # default: "mqttitude"
