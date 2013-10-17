@@ -1,0 +1,20 @@
+#(@)settings.py
+# Note: this must be valid Python!
+
+# Broker
+
+mqtt_broker = 'localhost'       # default: 'localhost'
+mqtt_port = 1883                # default: 1883
+# mqtt_username = 'jane'
+# mqtt_password = 'secret'
+
+# List of topics we should subscribe to
+topics = [
+        'mqttitude/+/+',
+        'foo/bar'
+    ]
+
+# Database
+dbname = 'mqttitude'          # default: "mqttitude"
+dbuser = 'username'
+dbpasswd = 'password'
