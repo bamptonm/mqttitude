@@ -7,6 +7,7 @@ __license__   = """Eclipse Public License - v 1.0 (http://www.eclipse.org/legal/
 
 from config import Config
 import mosquitto
+import socket
 import signal
 import logging
 import sys
@@ -225,9 +226,17 @@ def main():
     if username is not None and password is not None:
         mqtt.username_pw_set(username, password)
 
+    # Delays will be: 3, 6, 12, 24, 30, 30, ...
+    mqtt.reconnect_delay_set(delay=3, delay_max=30, exponential_backoff=True)
+
     host = cf.get('mqtt_broker', 'localhost')
     port = int(cf.get('mqtt_port', '1883'))
-    mqtt.connect(host, port, 60)
+
+    try:
+        mqtt.connect(host, port, 60)
+    except Exception, e:
+        logging.info("MQTT connection failed: %s" % (str(e)))
+        sys.exit(1)
 
     # Launch worker threads to operate on queue
     for i in range(num_workers):
@@ -236,7 +245,14 @@ def main():
          t.start()
 
 
-    mqtt.loop_forever()
+    while True:
+        try:
+            mqtt.loop_forever()
+        except socket.error:
+            logging.info("MQTT server disconnected; sleeping")
+            time.sleep(5)
+        except:
+            raise
 
 
 if __name__ == '__main__':
