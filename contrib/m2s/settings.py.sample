@@ -23,7 +23,9 @@ topics = [
 
 # blocked_topics = [ 'isim', 'jjolie' ]
 
-# Database
+# Storage
+
+storage_plugin = 'storage.py'
 dbname = 'mqttitude'          # default: "mqttitude"
 dbuser = 'username'
 dbpasswd = 'password'

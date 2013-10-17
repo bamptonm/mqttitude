@@ -5,6 +5,10 @@
 1. Copy `settings.py.sample` to `settings.py` and edit. Note that this must be valid Python code
 2. Pay particular attention to the _features_, namely whether you'd like weather data and reverse-geocoding data.
 
+### Storage
+
+Storage of data is pluggable, and the default (in `storage.py`) uses peewee and MySQL. See `storage.py` and `settings.py` on how to change that.
+
 ### Create database
 
 1. Create MySQL database

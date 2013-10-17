@@ -21,7 +21,8 @@ import Queue
 import threading
 from weather import OpenWeatherMAP
 from nominatim import ReverseGeo
-from dbschema import Location
+import imp
+import os
 
 cf = Config()
 owm = OpenWeatherMAP()
@@ -58,6 +59,9 @@ def cleanup(signum, frame):
     sys.exit(signum)
 
 def on_connect(mosq, userdata, rc):
+    """
+    Subscribe to topics upon connecting
+    """
 
     for topic in cf.get('topics'):
         logging.info("Subscribing to %s", topic)
@@ -73,6 +77,13 @@ def on_subscribe(mosq, userdata, mid, granted_qos):
     pass
 
 def on_message(mosq, userdata, msg):
+    """
+    We get a message from the broker. If it's retained or it's topic
+    contains a blocked word, skip it. Decode the JSON payload, check
+    for correct _type (i.e. 'location'), ensure we have 'lat' and
+    'lon' and shove it into the queue for the background thread to
+    process.
+    """
 
     if msg.retain == 1:
         logging.debug("Skipping retained %s" % msg.topic)
@@ -135,9 +146,11 @@ def on_message(mosq, userdata, msg):
     q_in.put(item)
 
 def processor():
-    '''
-    Do the actual work on a decoded item.
-    '''
+    """
+    Do the actual work on a decoded item. Get an item from the queue,
+    if weather or reverse geo-coding are desired, do that, and save
+    the result into persistent storage.
+    """
 
     while True:
         item = q_in.get()
@@ -171,12 +184,23 @@ def processor():
 
             item['tst'] = item['date_string']           # replace for database
 
-            try:
-                loca = Location(**item)
-                loca.save()
-            except Exception, e:
-                logging.info("Cannot store in DB: %s" % (str(e)))
+            # If a storage plugin has been configured, use it if it's loadable.
+            # If none has been configured or the plugin cannot be loaded, ignore
 
+            storage_plugin = cf.get('storage_plugin')
+            if storage_plugin is not None:
+                do_store = True
+                try:
+                    mod = imp.load_source('storage', storage_plugin)
+                except Exception, e:
+                    logging.info("Can't import storage_plugin %s: %s" % (storage_plugin, e))
+                    do_store = False
+
+                if do_store:
+                    try:
+                        mod.storage(topic, item)
+                    except Exception, e:
+                        logging.info("storage_plugin %s: %s" % (storage_plugin, e))
         else:
             logging.info("WORKER: can't work: lat or lon missing!")
 
@@ -184,6 +208,10 @@ def processor():
 
 
 def main():
+    """
+    Connect to broker, launch daemon thread(s) and listen forever.
+    """
+
     mqtt.on_connect = on_connect
     mqtt.on_disconnect = on_disconnect
     mqtt.on_subscribe = on_subscribe
