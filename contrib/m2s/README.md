@@ -1,4 +1,6 @@
-# MQTTitude to Storage
+# MQTTitude to Storage (m2s)
+
+This is part of the MQTTitude back-end. This program subscribes to a configured MQTT topic (default: `mqttitude/+/+`), extracts the JSON payload from received messages, optionally looks up weather and reverse-geo for the reported `lat` and `lon`, and stores the result. Storage is pluggable (see below), and we provide a default MySQL storage plugin.
 
 ### Configuration
 
@@ -12,7 +14,8 @@ Storage of data is pluggable, and the default (in `storage.py`) uses peewee and 
 ### Create database
 
 1. Create MySQL database
-2. run `python dbschema.py` to create the necessary tables
+2. Check database settings in `settings.py`
+3. run `python dbschema.py` to create the necessary tables
 
 ### Launch
 
