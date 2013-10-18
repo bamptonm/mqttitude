@@ -14,6 +14,8 @@ def storage(topic, item):
 
     logging.debug("---- in storage: %s" % topic)
 
+    item['tst'] = item['date_string']           # replace for database
+
     try:
         loca = Location(**item)
         loca.save()

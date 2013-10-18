@@ -196,8 +196,6 @@ def processor():
                 item['map_data'] = json.dumps(address)
 
 
-            item['tst'] = item['date_string']           # replace for database
-
             if storage_module is not None:
                 try:
                     storage_module.storage(topic, item)
