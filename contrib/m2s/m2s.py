@@ -30,6 +30,7 @@ owm = OpenWeatherMAP()
 nominatim = ReverseGeo()
 mqtt = mosquitto.Mosquitto()
 
+
 q_in = Queue.Queue(maxsize=0)
 num_workers = 1
 
@@ -46,6 +47,18 @@ logging.info("Starting")
 logging.debug("DEBUG MODE")
 
 
+# If a storage plugin has been configured, use it if it's loadable.
+# If none has been configured or the plugin cannot be loaded, ignore
+
+storage_module = None
+storage_plugin = cf.get('storage_plugin')
+if storage_plugin is not None:
+    try:
+        storage_module = imp.load_source('storage', storage_plugin)
+    except Exception, e:
+        logging.info("Can't import storage_plugin %s: %s" % (storage_plugin, e))
+else:
+    logging.warning("No storage plugin configured")
 
 def cleanup(signum, frame):
     """
@@ -185,23 +198,13 @@ def processor():
 
             item['tst'] = item['date_string']           # replace for database
 
-            # If a storage plugin has been configured, use it if it's loadable.
-            # If none has been configured or the plugin cannot be loaded, ignore
-
-            storage_plugin = cf.get('storage_plugin')
-            if storage_plugin is not None:
-                do_store = True
+            if storage_module is not None:
                 try:
-                    mod = imp.load_source('storage', storage_plugin)
+                    storage_module.storage(topic, item)
                 except Exception, e:
-                    logging.info("Can't import storage_plugin %s: %s" % (storage_plugin, e))
-                    do_store = False
+                    logging.info("storage_plugin %s: %s" % (storage_plugin, e))
 
-                if do_store:
-                    try:
-                        mod.storage(topic, item)
-                    except Exception, e:
-                        logging.info("storage_plugin %s: %s" % (storage_plugin, e))
+
         else:
             logging.info("WORKER: can't work: lat or lon missing!")
 
