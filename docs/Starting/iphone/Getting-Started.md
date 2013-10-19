@@ -56,7 +56,11 @@ Let's look at the main screen for a moment:
 
 The icons on the bottom row are as follows:
 
-1. 
+1. Map Follow Mode:
+  - outlined arrow - map does not follow user's location (indicated by blue spot)
+  - filled arrow - map does follow the current location
+  - upward pointing arrow - map does follow the current location and heading
+  - friends symbol - map zooms out to show the positions of all friends
 2. Type of map display.
 3. The "Pin". Tapping this will deliver your current position to the MQTT broker immediately.
 4. Mode: filled circle is automatic, empty cirle is manual, car is move-mode.
