@@ -34,11 +34,21 @@ Verify the _Effective Settings_ by a click on _Status_. This shows you the URL t
 
 ![](images/05.jpg)
 
-At this point in time you should check that the MQTT broker is actually receiving location messages. We recommend you subscribe to your broker as follows:
+### Follow your broker
+
+At this point in time you should check that the MQTT broker is actually receiving location messages. We recommend you subscribe to your broker to trace what's happening. First, I launch `mosquitto_sub` in the shell.
 
 ```
 mosquitto_sub -h hostname -v -t '#'
 ```
+
+As soon as the app delivers (PUBlishes) its location, I'll see something like this:
+
+```
+mqttitude/jjolie/4s {"tst":"1382172843","lat":"48.858330","_type":"location","lon":"2.295130","acc":"5m"}
+```
+
+### Main screen
 
 Let's look at the main screen for a moment:
 
@@ -61,6 +71,8 @@ More [details](https://github.com/binarybucks/mqttitude/blob/master/docs/feature
 Tap on _Friends_ to see your position.
 
 ![](images/07.jpg)
+
+### Expert stuff
 
 The app's settings has a number of additional _Expert_ settings:
 
