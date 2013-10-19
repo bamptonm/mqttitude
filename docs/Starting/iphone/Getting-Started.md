@@ -50,7 +50,13 @@ The icons on the bottom row are as follows:
 2. Type of map display.
 3. The "Pin". Tapping this will deliver your current position to the MQTT broker immediately.
 4. Mode: filled circle is automatic, empty cirle is manual, car is move-mode.
-5. Status: green is connected, etc.
+5. Status
+  - BLUE=IDLE, no connection established
+  - GREEN=CONNECTED, server connection established
+  - AMBER=ERROR OCCURED, WAITING FOR RECONNECT, app will automatically try to reconnect to the server
+  - RED=ERROR, no connection to the server possible or transient errror condition
+
+More [details](https://github.com/binarybucks/mqttitude/blob/master/docs/features.md)
 
 Tap on _Friends_ to see your position.
 
