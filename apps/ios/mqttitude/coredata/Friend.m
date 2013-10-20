@@ -2,7 +2,7 @@
 //  Friend.m
 //  mqttitude
 //
-//  Created by Christoph Krey on 10.10.13.
+//  Created by Christoph Krey on 17.10.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
@@ -14,6 +14,7 @@
 
 @dynamic device;
 @dynamic topic;
+@dynamic abRecordId;
 @dynamic hasLocations;
 
 @end

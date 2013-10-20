@@ -9,6 +9,9 @@
 #import "Friend+Create.h"
 #import "Location+Create.h"
 
+#undef WITH_TOPIC // in AB pointing to Friend
+#define WITH_REFERENCE // from Friend pointing to AB
+
 @implementation Friend (Create)
 
 + (ABAddressBookRef)theABRef
@@ -21,11 +24,11 @@
 #ifdef DEBUG
             NSLog(@"ABAddressBookCreateWithOptions");
 #endif
-            CFErrorRef error;
-            ab = ABAddressBookCreateWithOptions(NULL, &error);
+            CFErrorRef cfError;
+            ab = ABAddressBookCreateWithOptions(NULL, &cfError);
             if (!ab) {
-                CFStringRef errorDescription = CFErrorCopyDescription(error);
-                NSLog(@"ABAddressBookCreateWithOptions not successfull %@", errorDescription);
+                CFStringRef errorDescription = CFErrorCopyDescription(cfError);
+                [Friend error:[NSString stringWithFormat:@"ABAddressBookCreateWithOptions not successfull %@", errorDescription]];
                 CFRelease(errorDescription);
                 isGranted = NO;
             }
@@ -59,6 +62,7 @@
             friend.topic = topic;
             
             friend.device = nil;
+            friend.abRecordId = @(kABRecordInvalidID);
             friend.hasLocations = [[NSSet alloc] init];
         } else {
             // friend exists already
@@ -71,7 +75,8 @@
 
 - (NSString *)name
 {
-    ABRecordRef record = recordWithTopic((__bridge CFStringRef)(self.topic));
+    ABRecordRef record = [self recordOfFriend];
+    
     if (record) {
         return [Friend nameOfPerson:record];
     } else {
@@ -81,7 +86,8 @@
 
 - (NSData *)image
 {
-    ABRecordRef record = recordWithTopic((__bridge CFStringRef)(self.topic));
+    ABRecordRef record = [self recordOfFriend];
+    
     if (record) {
         return [Friend imageDataOfPerson:record];
     } else {
@@ -89,8 +95,35 @@
     }
 }
 
-#define SERVICE_NAME CFSTR("MQTTitude")
-#define RELATION_NAME CFSTR("MQTTitude")
+- (ABRecordRef)recordOfFriend
+{
+    ABRecordRef record = NULL;
+
+#ifdef WITH_REFERENCE
+#ifdef DEBUG
+    NSLog(@"Friend abRecordId =  %d", [self.abRecordId intValue]);
+#endif
+
+    if ([self.abRecordId intValue] != kABRecordInvalidID) {
+        record = ABAddressBookGetPersonWithRecordID([Friend theABRef],
+                                                   [self.abRecordId intValue]);
+#ifdef DEBUG
+        NSLog(@"Friend ABRecordRef by abRecordID =  %p", record);
+#endif
+    }
+#endif
+    
+#ifdef WITH_TOPIC
+    if (!record) {
+        record = recordWithTopic((__bridge CFStringRef)(self.topic));
+#ifdef DEBUG
+        NSLog(@"Friend ABRecordRef by topic =  %p", record);
+#endif
+    }
+#endif
+    
+    return record;
+}
 
 + (NSString *)nameOfPerson:(ABRecordRef)record
 {
@@ -112,6 +145,33 @@
     }
     return imageData;
 }
+
+- (void)linkToAB:(ABRecordRef)record
+{
+#ifdef WITH_REFERENCE
+    ABRecordID abRecordID = ABRecordGetRecordID(record);
+    self.abRecordId = @(abRecordID);
+#endif
+    
+#ifdef WITH_TOPIC
+    ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
+    
+    if (oldrecord) {
+        [self ABsetTopic:nil record:oldrecord];
+    }
+    
+    [self ABsetTopic:self.topic record:record];
+#endif
+    
+    // make sure all locations are updated so all views get updated
+    for (Location *location in self.hasLocations) {
+        location.belongsTo = self;
+    }
+}
+
+#ifdef WITH_TOPIC
+
+#define RELATION_NAME CFSTR("MQTTitude")
 
 ABRecordRef recordWithTopic(CFStringRef topic)
 {
@@ -147,22 +207,9 @@ ABRecordRef recordWithTopic(CFStringRef topic)
     return theRecord;
 }
 
-- (void)linkToAB:(ABRecordRef)record
-{
-    ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
-    
-    if (oldrecord) {
-        [self ABsetTopic:nil record:oldrecord];
-    }
-    
-    [self ABsetTopic:self.topic record:record];
-    for (Location *location in self.hasLocations) {
-        location.belongsTo = self;
-    }
-}
-
 - (void)ABsetTopic:(NSString *)topic record:(ABRecordRef)record
 {
+    
     CFErrorRef errorRef;
 
     ABMutableMultiValueRef relationsRW;
@@ -184,11 +231,11 @@ ABRecordRef recordWithTopic(CFStringRef topic)
         if(CFStringCompare(label, RELATION_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
             if (topic) {
                 if (!ABMultiValueReplaceValueAtIndex(relationsRW, (__bridge CFTypeRef)(topic), i)) {
-                    NSLog(@"Friend error ABMultiValueReplaceValueAtIndex %@ %ld", topic, i);
+                    [Friend error:[NSString stringWithFormat:@"Friend error ABMultiValueReplaceValueAtIndex %@ %ld", topic, i]];
                 }
             } else {
                 if (!ABMultiValueRemoveValueAndLabelAtIndex(relationsRW, i))  {
-                    NSLog(@"Friend error ABMultiValueRemoveValueAndLabelAtIndex %ld", i);
+                    [Friend error:[NSString stringWithFormat:@"Friend error ABMultiValueRemoveValueAndLabelAtIndex %ld", i]];
                 }
             }
             CFRelease(label);
@@ -199,21 +246,38 @@ ABRecordRef recordWithTopic(CFStringRef topic)
     if (i == relationsCount) {
         if (topic) {
             if (!ABMultiValueAddValueAndLabel(relationsRW, (__bridge CFStringRef)(self.topic), RELATION_NAME, NULL)) {
-                NSLog(@"Friend error ABMultiValueAddValueAndLabel %@ %@", topic, RELATION_NAME);
+                [Friend error:[NSString stringWithFormat:@"Friend error ABMultiValueAddValueAndLabel %@ %@", topic, RELATION_NAME]];
             }
         }
     }
         
     if (!ABRecordSetValue(record, kABPersonRelatedNamesProperty, relationsRW, &errorRef)) {
-        NSLog(@"Friend error ABRecordSetValue %@", errorRef);
+        [Friend error:[NSString stringWithFormat:@"Friend error ABRecordSetValue %@", errorRef]];
     }
     CFRelease(relationsRW);
     
     if (ABAddressBookHasUnsavedChanges([Friend theABRef])) {
         if (!ABAddressBookSave([Friend theABRef], &errorRef)) {
-            NSLog(@"Friend error ABAddressBookSave %@", errorRef);
+            [Friend error:[NSString stringWithFormat:@"Friend error ABAddressBookSave %@", errorRef]];
         }
     }
+}
+#endif
+
++ (void)error:(NSString *)message
+{
+#ifdef DEBUG
+    NSLog(@"Friend error %@", message);
+#endif
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSBundle mainBundle].infoDictionary[@"CFBundleName"]
+                                                        message:message
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    
+    [alertView show];
+    
 }
 
 @end

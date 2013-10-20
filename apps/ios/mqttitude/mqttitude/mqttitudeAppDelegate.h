@@ -27,5 +27,4 @@
 - (NSString *)theClientId;
 - (NSString *)theDeviceId;
 
-
 @end

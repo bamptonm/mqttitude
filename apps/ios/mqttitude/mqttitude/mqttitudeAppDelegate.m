@@ -80,17 +80,18 @@
     
     do {
         state = self.coreData.documentState;
-        if (state) {
+        if (state || ![mqttitudeCoreData theManagedObjectContext]) {
 #ifdef DEBUG
-            NSLog(@"APP Waiting for document to open documentState = 0x%02x",
-                  self.coreData.documentState);
+            NSLog(@"APP Waiting for document to open documentState = 0x%02x theManagedObjectContext = %@",
+                  self.coreData.documentState, [mqttitudeCoreData theManagedObjectContext]);
 #endif
             if (state & UIDocumentStateInConflict || state & UIDocumentStateSavingError) {
+                [self alert:[NSString stringWithFormat:@"App failed opening document documentState = 0x%02x", state]];
                 break;
             }
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         }
-    } while (state);
+    } while (state || ![mqttitudeCoreData theManagedObjectContext]);
     
     /*
      * CLLocationManager

@@ -98,16 +98,7 @@
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
     picker.peoplePickerDelegate = self;
     picker.addressBook = [Friend theABRef];
-	// Display only a person's phone, email, and birthdate
-	NSArray *displayedItems = [NSArray arrayWithObjects:[NSNumber numberWithInt:kABPersonPhoneProperty],
-                               [NSNumber numberWithInt:kABPersonEmailProperty],
-                               [NSNumber numberWithInt:kABPersonBirthdayProperty], nil];
-	
-	
-	picker.displayedProperties = displayedItems;
-	// Show the picker
-    [self presentViewController:picker animated:YES completion:nil];
-    
+    [self presentViewController:picker animated:YES completion:nil];    
 }
 
 #pragma ABPeoplePickerNavigationControllerDelegate
