@@ -54,8 +54,8 @@ address and the topic on which you want to publish your device's location.
   and to subscribe to/from an MQTT broker. 
   Some valid examples are
 ```
-/location/mom
-myphone/jane/loca
+mqttitude/john/iphone
+myphone/jane/nexus4
 ```
 
 * _QoS_ or Quality of Service, specifies how the app should attempt to publish
@@ -68,7 +68,10 @@ myphone/jane/loca
 * Retain means that the MQTT broker will attempt to store a published message
   on a particular topic. Some brokers do not support retained messages.
 
+## Sites
 
+* [MQTTitude.org](http://mqttitude.org)
+* [MQTTitude Blog](http://blog.mqttitude.org)
 
   [MQTT]: http://mqtt.org
   [JSON]: http://json.org
