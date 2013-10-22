@@ -26,6 +26,15 @@ Returns true or false.
 Checks password against DB saved one.
 
 
+This is derivative work based on the original php-pbkdf2 - https://defuse.ca/php-pbkdf2.htm
+
+I have no claim for original work - I've just modified the code to provide password HASHes compatable
+with mosquitto-auth-plug.
+
+
 ```
-The following code is a PBKDF2 implementation in PHP. It is in the public domain, so feel free to use it for any purpose whatsoever. It complies with the PBKDF2 test vectors in RFC 6070. Performance improvements to the original code were provided by variations-of-shadow.com.
+The following code is a PBKDF2 implementation in PHP. It is in the public domain, 
+so feel free to use it for any purpose whatsoever. It complies with the PBKDF2 test 
+vectors in RFC 6070. Performance improvements to the original code were provided by 
+variations-of-shadow.com.
 ```
