@@ -18,6 +18,7 @@
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (strong, nonatomic) mqttitudeCoreData *coreData;
 @property (strong, nonatomic) NSDate *locationServiceStarted;
+@property (strong, nonatomic) NSString *processingMessage;
 
 @end
 
@@ -31,10 +32,10 @@
 
 #pragma ApplicationDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #ifdef DEBUG
-    NSLog(@"App didFinishLaunchingWithOptions");
+    NSLog(@"App willFinishLaunchingWithOptions");
     NSEnumerator *enumerator = [launchOptions keyEnumerator];
     NSString *key;
     while ((key = [enumerator nextObject])) {
@@ -52,25 +53,135 @@
                                   @"subscription_preference" : @"mqttitude/#",
                                   @"subscriptionqos_preference": @(1),
                                   @"topic_preference" : @"",
-                                 @"retain_preference": @(TRUE),
-                                 @"qos_preference": @(1),
-                                 @"host_preference" : @"host",
-                                 @"port_preference" : @(8883),
-                                 @"tls_preference": @(YES),
-                                 @"auth_preference": @(YES),
-                                 @"user_preference": @"user",
-                                 @"auth_preference": @"pass",
-                                 @"keepalive_preference" : @(60),
-                                 @"clean_preference" : @(NO),
-                                 @"will_preference": @"lwt",
-                                 @"willtopic_preference": @"",
-                                 @"willretain_preference":@(NO),
-                                 @"willqos_preference": @(1),
+                                  @"retain_preference": @(TRUE),
+                                  @"qos_preference": @(1),
+                                  @"host_preference" : @"host",
+                                  @"port_preference" : @(8883),
+                                  @"tls_preference": @(YES),
+                                  @"auth_preference": @(YES),
+                                  @"user_preference": @"user",
+                                  @"pass_preference": @"pass",
+                                  @"keepalive_preference" : @(60),
+                                  @"clean_preference" : @(NO),
+                                  @"will_preference": @"lwt",
+                                  @"willtopic_preference": @"",
+                                  @"willretain_preference":@(NO),
+                                  @"willqos_preference": @(1),
                                   @"monitoring_preference": @(1)
-                                };
+                                  };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
+    return TRUE;
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+#ifdef DEBUG
+    NSLog(@"App didFinishLaunchingWithOptions");
+    NSEnumerator *enumerator = [launchOptions keyEnumerator];
+    NSString *key;
+    while ((key = [enumerator nextObject])) {
+        NSLog(@"App options %@:%@", key, [[launchOptions objectForKey:key] description]);
+    }
+#endif
+    
+    NSURL *url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    
+    if (url) {
+        NSError *error;
+        NSInputStream *input = [NSInputStream inputStreamWithURL:url];
+        if ([input streamError]) {
+            self.processingMessage = [NSString stringWithFormat:@"App error inputStreamWithURL %@ %@", [input streamError], url];
+            return FALSE;
+        }
+        [input open];
+        if ([input streamError]) {
+            self.processingMessage = [NSString stringWithFormat:@"App error open %@ %@", [input streamError], url];
+            return FALSE;
+        }
+        
+        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithStream:input options:0 error:&error];
+        if (dictionary) {
+            for (NSString *key in [dictionary allKeys]) {
+                NSLog(@"Configuration %@:%@", key, dictionary[key]);
+            }
+            
+            if ([dictionary[@"_type"] isEqualToString:@"configuration"]) {
+                NSString *string;
+                
+                string = dictionary[@"deviceid"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"deviceid_preference"];
+                
+                string = dictionary[@"clientid"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"clientid_preference"];
+                
+                string = dictionary[@"subscription"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"subscription_preference"];
+                
+                string = dictionary[@"topic"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"topic_preference"];
+                
+                string = dictionary[@"host"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"host_preference"];
+                
+                string = dictionary[@"user"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"user_preference"];
+                
+                string = dictionary[@"pass"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"pass_preference"];
+                
+                string = dictionary[@"will"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"will_preference"];
+                
+                string = dictionary[@"willtopic"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"willtopic_preference"];
+                
+                string = dictionary[@"subscriptionqos"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"subscriptionqos_preference"];
+                
+                string = dictionary[@"qos"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"qos_preference"];
+                
+                string = dictionary[@"port"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"port_preference"];
+                
+                string = dictionary[@"keepalive"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"keepalive_preference"];
+                
+                string = dictionary[@"willqos"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"willqos_preference"];
+                
+                
+                string = dictionary[@"retain"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"retain_preference"];
+                
+                string = dictionary[@"tls"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"tls_preference"];
+                
+                string = dictionary[@"auth"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"auth_preference"];
+                
+                string = dictionary[@"clean"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"clean_preference"];
+                
+                string = dictionary[@"willretain"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"willretain_preference"];
+                
+            } else {
+                self.processingMessage = [NSString stringWithFormat:@"App received invalid configuration file %@)", dictionary[@"_type"]];
+                return FALSE;
+            }
+        } else {
+            self.processingMessage = [NSString stringWithFormat:@"App received illegal json in configuration file %@)", error];
+            return FALSE;
+        }
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.processingMessage = [NSString stringWithFormat:@"App configuration file %@ successfully processed)", [url lastPathComponent]];
+        
+    }
+
     /*
      * Core Data using UIManagedDocument
      */
@@ -169,6 +280,12 @@
 #ifdef DEBUG
     NSLog(@"App applicationDidBecomeActive");
 #endif
+    
+    if (self.processingMessage) {
+        [self alert:self.processingMessage];
+        self.processingMessage = nil;
+    }
+    
     if (self.coreData.documentState) {
         NSString *message = [NSString stringWithFormat:@"Application error opening CoreData %@ 0x%02x",
                              self.coreData.fileURL,

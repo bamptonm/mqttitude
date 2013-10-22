@@ -88,5 +88,44 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>MQTTitude Configuration File</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+                <string>org.mqttitude.mqtc</string>
+			</array>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>org.mqttitude.mqtc</string>
+			<key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>mqtc</string>
+                </array>
+            </dict>
+            <key>UTTypeReferenceURL</key>
+            <string>http://www.mqttitude.org</string>
+            <key>UTTypeDescription</key>
+            <string>MQTTitude Configuration File</string>
+            <key>UTTypeIconFile</key>
+            <string>icon_mqtc.icns</string>
+		</dict>
+	</array>
 </dict>
 </plist>

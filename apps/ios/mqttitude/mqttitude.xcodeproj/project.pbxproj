@@ -67,6 +67,9 @@
 		848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036817E47ADC00152C26 /* AddressBook.framework */; };
 		848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036A17E4841500152C26 /* AddressBookUI.framework */; };
 		848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */; };
+		848D74C71817053100E93B84 /* icon_mqtc_ipad.icns in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C41817053100E93B84 /* icon_mqtc_ipad.icns */; };
+		848D74C81817053100E93B84 /* icon_mqtc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C51817053100E93B84 /* icon_mqtc.icns */; };
+		848D74C91817053100E93B84 /* icon_mqtc@2x.icns in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C61817053100E93B84 /* icon_mqtc@2x.icns */; };
 		84B7B91117FB11AD0014049E /* mqttitudeEditLocationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */; };
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
@@ -161,6 +164,9 @@
 		848A036A17E4841500152C26 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendAnnotationView.h; sourceTree = "<group>"; };
 		848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeFriendAnnotationView.m; sourceTree = "<group>"; };
+		848D74C41817053100E93B84 /* icon_mqtc_ipad.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon_mqtc_ipad.icns; sourceTree = "<group>"; };
+		848D74C51817053100E93B84 /* icon_mqtc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon_mqtc.icns; sourceTree = "<group>"; };
+		848D74C61817053100E93B84 /* icon_mqtc@2x.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "icon_mqtc@2x.icns"; sourceTree = "<group>"; };
 		84B7B90F17FB11AD0014049E /* mqttitudeEditLocationTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeEditLocationTVC.h; sourceTree = "<group>"; };
 		84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeEditLocationTVC.m; sourceTree = "<group>"; };
 		84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAppDelegate.h; sourceTree = "<group>"; };
@@ -169,7 +175,7 @@
 		84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeViewController.m; sourceTree = "<group>"; };
 		84C50F4017E04B7D00726FD5 /* mqttitudeStatusTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeStatusTVC.h; sourceTree = "<group>"; };
 		84C50F4117E04B7D00726FD5 /* mqttitudeStatusTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeStatusTVC.m; sourceTree = "<group>"; };
-		84CDE36A1810442100717359 /* MQTTitude 5.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MQTTitude 5.1.xcdatamodel"; sourceTree = "<group>"; };
+		84CDE36A1810442100717359 /* MQTTitude 5.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MQTTitude 5.1.xcdatamodel"; sourceTree = "<group>"; };
 		84CDE36B1810454700717359 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		84CDE36C1810454800717359 /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -216,6 +222,9 @@
 				8484685817FD785D0012FC18 /* FriendsOn@2x.png */,
 				8484685917FD785D0012FC18 /* HybridOn.png */,
 				8484685A17FD785D0012FC18 /* HybridOn@2x.png */,
+				848D74C41817053100E93B84 /* icon_mqtc_ipad.icns */,
+				848D74C51817053100E93B84 /* icon_mqtc.icns */,
+				848D74C61817053100E93B84 /* icon_mqtc@2x.icns */,
 				8484685B17FD785D0012FC18 /* icon_114x114.png */,
 				8484685C17FD785D0012FC18 /* icon_120x120.png */,
 				8484685D17FD785D0012FC18 /* icon_144x144.png */,
@@ -432,6 +441,7 @@
 				8484688D17FD785D0012FC18 /* LocationOff@2x.png in Resources */,
 				8484687C17FD785D0012FC18 /* FriendsOn@2x.png in Resources */,
 				8484689017FD785D0012FC18 /* move.png in Resources */,
+				848D74C71817053100E93B84 /* icon_mqtc_ipad.icns in Resources */,
 				8484688117FD785D0012FC18 /* icon_144x144.png in Resources */,
 				848468B717FD7A3F0012FC18 /* Default-568h@2x.png in Resources */,
 				8484689517FD785D0012FC18 /* SatelliteOff@2x.png in Resources */,
@@ -448,11 +458,13 @@
 				8484689C17FD785D0012FC18 /* UserTrackingNone.png in Resources */,
 				8484688B17FD785D0012FC18 /* Location.gpx in Resources */,
 				8484688717FD785D0012FC18 /* iTunesArtwork in Resources */,
+				848D74C81817053100E93B84 /* icon_mqtc.icns in Resources */,
 				8484688917FD785D0012FC18 /* iTunesArtwork@2x in Resources */,
 				8484689A17FD785D0012FC18 /* UserTrackingFollowWithHeading.png in Resources */,
 				8484688A17FD785D0012FC18 /* iTunesArtwork@2x.png in Resources */,
 				8484688E17FD785D0012FC18 /* LocationOn.png in Resources */,
 				8484689D17FD785D0012FC18 /* UserTrackingNone@2x.png in Resources */,
+				848D74C91817053100E93B84 /* icon_mqtc@2x.icns in Resources */,
 				8484688F17FD785D0012FC18 /* LocationOn@2x.png in Resources */,
 				8484689117FD785D0012FC18 /* Move@2x.png in Resources */,
 				8484687E17FD785D0012FC18 /* HybridOn@2x.png in Resources */,
