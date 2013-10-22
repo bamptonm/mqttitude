@@ -1,4 +1,5 @@
-<?php /*
+<?php 
+/*
  * Password hashing with PBKDF2.
  * Author: havoc AT defuse.ca
  * www: https://defuse.ca/php-pbkdf2.htm
@@ -6,7 +7,7 @@
 
 define("PBKDF2_HASH_CONTAINER", "PBKDF2");
 define("PBKDF2_HASH_ALGORITHM", "sha256"); 
-define("PBKDF2_ITERATIONS", 901); 
+//define("PBKDF2_ITERATIONS", 901); 
 define("PBKDF2_SALT_BYTES", 12); 
 define("PBKDF2_HASH_BYTES", 24); 
 define("HASH_SECTIONS", 5); 
@@ -16,15 +17,15 @@ define("HASH_ITERATION_INDEX", 2);
 define("HASH_SALT_INDEX", 3); 
 define("HASH_PBKDF2_INDEX", 4); 
 
-function create_hash($password) {
+function create_hash($password, $iterations = 901) {
     // format: algorithm:iterations:salt:hash
     $salt = base64_encode(mcrypt_create_iv(PBKDF2_SALT_BYTES, MCRYPT_DEV_URANDOM));
-    return PBKDF2_HASH_CONTAINER . "$" .PBKDF2_HASH_ALGORITHM . "$" . PBKDF2_ITERATIONS . "$" .  $salt . "$" .
+    return PBKDF2_HASH_CONTAINER . "$" .PBKDF2_HASH_ALGORITHM . "$" . $iterations . "$" .  $salt . "$" .
         base64_encode(pbkdf2(
             PBKDF2_HASH_ALGORITHM,
             $password,
             $salt,
-            PBKDF2_ITERATIONS,
+            $iterations,
             PBKDF2_HASH_BYTES,
             true
         ));
