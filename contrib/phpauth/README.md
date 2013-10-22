@@ -4,14 +4,28 @@ PHP include file to be used with mosquitto-auth-plug password standards of gener
 
 functions:
 
-create_hash(password);
+```
+create_hash(password, iterations);
+```
+You could send secondary parameter for how meny iterations to be made before giving the hash.
+
+DEFAULT is 901 (number given in np)
 
 returns password hash.
 
 Create PBKDF2 password hashe with mosquitto-auth-plug compatability
 
+```
 validate_password(password, valid_hash);
+
+```
+
 
 Returns true or false.
 
 Checks password against DB saved one.
+
+
+```
+The following code is a PBKDF2 implementation in PHP. It is in the public domain, so feel free to use it for any purpose whatsoever. It complies with the PBKDF2 test vectors in RFC 6070. Performance improvements to the original code were provided by variations-of-shadow.com.
+```
