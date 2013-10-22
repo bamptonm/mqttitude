@@ -1,4 +1,5 @@
-<?php /*
+<?php 
+/*
  * Password hashing with PBKDF2.
  * Author: havoc AT defuse.ca
  * www: https://defuse.ca/php-pbkdf2.htm
