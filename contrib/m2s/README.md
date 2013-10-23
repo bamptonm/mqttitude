@@ -36,7 +36,40 @@ This is part of the MQTTitude back-end. This program subscribes to a configured 
 1. Copy `settings.py.sample` to `settings.py` and edit. Note that this must be valid Python code
 2. Pay particular attention to the _data_plugins_, which you can write yourself. 
 
-### Plugins
+### Data Plugins
+
+Data plugins allow me to invoke a list of plugins in the order specified in settings. For example:
+
+```python
+data_plugins = [
+        dict(column='weather',      filename='pl-weather.py'),
+        dict(column='revgeo',       filename='pl-revgeo.py'),
+]
+```
+
+The two plugins called `weather` and `revgeo` are loaded from their respective files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin.
+
+Each plugin returns a `(string, dict)` tuple. The string value is loaded into the database column named as the plugin (i.e. `weather` and `revgeo`) and must be pre-created in the database schema (see `dbschema.py`). The _dict_ is merged into the current _item_, whereby existing values _are not_ overwritten. The newly created _item_ is passed on to the next plugin if there is one.
+
+Basically, a plugin looks like this:
+
+```python
+def plugin(item=None):
+
+    lat = item['lat']
+    lon = item['lon']
+
+    # do something ...
+
+    value = "*goes into column*"
+    new_data = dict(a=1, b=2, c="something else")
+
+    # the resulting JSON in the database will have this key added to it
+    data = dict(my_special_data=new_data)
+
+    return  (value, data)
+```
+
 
 
 ### Storage
