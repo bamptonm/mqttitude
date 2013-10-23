@@ -23,12 +23,11 @@ class Location(MySQLModel):
     lon             = CharField(null=False)
     tst             = DateTimeField(default=datetime.datetime.now, index=True)
     acc             = CharField(null=True)
-    if cf.get('feature_weather'):
-        weather         = CharField(null=True)
-        celsius         = CharField(null=True)
-        weather_data    = TextField(null=True)
-    if cf.get('feature_revgeo'):
-        map_data        = TextField(null=True)
+    # optional: full JSON of item including all data from plugins
+    json            = TextField(null=True)
+    # the following fields must be correlated to settings.py (plugin columns)
+    weather         = CharField(null=True)
+    revgeo          = CharField(null=True)
 
 
 if __name__ == '__main__':

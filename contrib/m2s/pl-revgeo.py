@@ -45,3 +45,16 @@ if __name__ == '__main__':
     nominatim = ReverseGeo()
 
     print nominatim.reverse(48.858334, 2.295134)
+
+
+def plugin(item=None):
+
+    nominatim = ReverseGeo()
+
+    nom = nominatim.reverse(item['lat'], item['lon'])
+
+    value = nom['display_name']
+
+    data = dict(nominatim=nom)
+
+    return  (value, data)

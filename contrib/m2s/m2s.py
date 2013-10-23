@@ -23,6 +23,7 @@ import threading
 from weather import OpenWeatherMAP
 from nominatim import ReverseGeo
 import imp
+import md5
 import os
 
 cf = Config()
@@ -45,6 +46,32 @@ else:
 
 logging.info("Starting")
 logging.debug("DEBUG MODE")
+
+# http://code.davidjanes.com/blog/2008/11/27/how-to-dynamically-load-python-code/
+def load_module(path):
+    try:
+        fp = open(path, 'rb')
+        return imp.load_source(md5.new(path).hexdigest(), path, fp)
+    finally:
+        try:
+            fp.close()
+        except:
+            pass
+
+def load_plugins(plugin_list=None):
+    for p in plugin_list:
+        if 'column' in p and 'filename' in p:
+            colname = p['column']
+            filename = p['filename']
+
+            try:
+                p['mod'] = load_module(filename)
+                logging.debug("Plugin [%s] loaded from %s" % (colname, filename))
+            except Exception, e:
+                logging.error("Can't load %s plugin (%s): %s" % (colname, filename, str(e)))
+                sys.exit(1)
+        else:
+            print "Error in plugin configuration: column or filename missing"
 
 
 # If a storage plugin has been configured, use it if it's loadable.
@@ -176,28 +203,35 @@ def processor():
         logging.debug("WORKER is handling %s" % (topic))
         logging.debug(item)
 
-        weather = {}
-        address = {}
         if lat is not None and lon is not None:
-            try:
-                if cf.get('feature_weather'):
-                    weather =  owm.weather(lat, lon)
-                if cf.get('feature_revgeo'):
-                    address = nominatim.reverse(lat, lon)
-            except:
-                pass
+            """
+            For each configured plugin, invoke it. The plugin returns a tuple
+            (value, data). The former is a string, the latter must be a dict.
+            Set item[colname] to the string 'value' and merge the data dict into
+            the current 'item', ensuring that no overwriting occurs (e.g. the
+            plugin cannot modify 'lat' or 'lon', etc.
+            """
 
-            if cf.get('feature_weather'):
-                item['weather_data'] = json.dumps(weather)
-                item['weather'] = weather.get('current')    # "Rain"
-                item['celsius'] = weather.get('celsius')    # 13.2
+            plugin_list = cf.get('data_plugins', None)
+            if plugin_list is not None:
 
-            if cf.get('feature_revgeo'):
-                item['map_data'] = json.dumps(address)
+                for p in plugin_list:
+                    if 'column' in p and 'mod' in p:
+                        colname = p['column']
+
+                        try:
+                            (value, data) = p['mod'].plugin(item)
+                            item = dict(data.items() + item.items())
+                            # locals()[colname] = value
+                            item[colname] = value
+                        except Exception, e:
+                            logging.warning("Cannot invoke [%s] plugin: %s" % (colname, str(e)))
 
 
             if storage_module is not None:
                 try:
+                    # Add the JSON of the full 'item' into item
+                    item['json'] = json.dumps(item)
                     storage_module.storage(topic, item)
                 except Exception, e:
                     logging.info("storage_plugin %s: %s" % (storage_plugin, e))
@@ -213,6 +247,9 @@ def main():
     """
     Connect to broker, launch daemon thread(s) and listen forever.
     """
+
+    if cf.get('data_plugins') is not None:
+        load_plugins(cf.get('data_plugins'))
 
     mqtt.on_connect = on_connect
     mqtt.on_disconnect = on_disconnect
