@@ -30,12 +30,11 @@ dbname = 'mqttitude'          # default: "mqttitude"
 dbuser = 'username'
 dbpasswd = 'password'
 
-# Features
+# Plugins
 
-# Obtain weather data for lat/lon at OpenWeatherMap.org
-
-feature_weather = True
-
-# Attempt to reverse geo-code lat/lon using Nominatim
-
-feature_revgeo = True
+# data_plugins = None
+data_plugins = [
+        # dbcolumn=pluginname       path-to-plugin.py
+        dict(column='weather',      filename='pl-weather.py'),
+        dict(column='revgeo',       filename='pl-revgeo.py'),
+]
