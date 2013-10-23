@@ -91,8 +91,28 @@ Storage of data is pluggable, and the default (in `storage.py`) uses peewee and 
 
 ### Show
 
+Note how in the example below:
+
+* the column _weather_ has been set by a plugin
+* the column _revgeo_ has been set by a plugin
+* the column _json_ contains the full JSON of all the data in _item_
+
 ```
 mysql> SELECT * FROM location;
+*************************** 1. row ***************************
+      id: 21
+   topic: mq/jjolie/ipod
+username: jjolie
+  device: ipod
+     lat: 48.858334
+     lon: 2.295134
+     tst: 2013-10-23 17:29:51
+     acc: 1414m
+    json: {"username": "jjolie", "acc": "1414m", "nominatim": {"display_name": "Tour Eiffel, Avenue Pierre Loti, Gros-Caillou, 7e Arrondissement, Paris, \u00cele-de-France, 75725, France m\u00e9tropolitaine, European Union", "place_id": "20399540", "lon": "2.29450008726263", "osm_type": "way", "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright", "osm_id": "5013364", "lat": "48.8582609", "address": {"pedestrian": "Avenue Pierre Loti", "city": "Paris", "suburb": "Gros-Caillou", "country": "France m\u00e9tropolitaine", "county": "Paris", "attraction": "Tour Eiffel", "state": "\u00cele-de-France", "city_district": "7e Arrondissement", "postcode": "75725", "country_code": "fr", "continent": "European Union"}}, "revgeo": "Tour Eiffel, Avenue Pierre Loti, Gros-Caillou, 7e Arrondissement, Paris, \u00cele-de-France, 75725, France m\u00e9tropolitaine, European Union", "lon": "2.295134", "topic": "mq/jjolie/ipod", "device": "ipod", "weather": "Clouds 17.2C", "lat": "48.858334", "tst": "1382549391", "weather_data": {"clouds": {"all": 56}, "name": "Paris 14", "coord": {"lat": 48.86, "lon": 2.3}, "sys": {"country": "FR", "sunset": 1382546728, "sunrise": 1382509476}, "weather": [{"main": "Clouds", "id": 803, "icon": "04n", "description": "broken clouds"}], "rain": {"3h": 0}, "base": "global stations", "dt": 1382549090, "main": {"pressure": 1007.4, "temp_min": 289.95, "temp_max": 291.15, "temp": 290.36, "humidity": 79}, "id": 6618620, "wind": {"speed": 5.11, "deg": 233.502}, "cod": 200}, "date_string": "2013-10-23 17:29:51"}
+ weather: Clouds 17.2C
+  revgeo: Tour Eiffel, Avenue Pierre Loti, Gros-Caillou, 7e Arrondissement, Paris, Île-de-France, 75725, France métropolitaine, European Union
+1 row in set (0.00 sec)
+```
 
 
 ### Weather
