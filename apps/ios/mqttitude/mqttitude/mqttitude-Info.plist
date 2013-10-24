@@ -118,13 +118,19 @@
                 <array>
                     <string>mqtc</string>
                 </array>
+                <key>public.mime-type</key>
+                <string>application/json</string>
             </dict>
             <key>UTTypeReferenceURL</key>
             <string>http://www.mqttitude.org</string>
             <key>UTTypeDescription</key>
             <string>MQTTitude Configuration File</string>
             <key>UTTypeIconFile</key>
-            <string>icon_mqtc.icns</string>
+            <string>icon_mqtc_iphone</string>
+            <key>UTTypeSize64IconFile</key>
+            <string>icon_mqtc_ipad64</string>
+            <key>UTTypeSize320IconFile</key>
+            <string>icon_mqtc_ipad320</string>
 		</dict>
 	</array>
 </dict>

@@ -67,9 +67,9 @@
 		848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036817E47ADC00152C26 /* AddressBook.framework */; };
 		848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036A17E4841500152C26 /* AddressBookUI.framework */; };
 		848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */; };
-		848D74C71817053100E93B84 /* icon_mqtc_ipad.icns in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C41817053100E93B84 /* icon_mqtc_ipad.icns */; };
-		848D74C81817053100E93B84 /* icon_mqtc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C51817053100E93B84 /* icon_mqtc.icns */; };
-		848D74C91817053100E93B84 /* icon_mqtc@2x.icns in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C61817053100E93B84 /* icon_mqtc@2x.icns */; };
+		848D74C71817053100E93B84 /* icon_mqtc_ipad64.png in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C41817053100E93B84 /* icon_mqtc_ipad64.png */; };
+		848D74C81817053100E93B84 /* icon_mqtc_iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C51817053100E93B84 /* icon_mqtc_iphone.png */; };
+		848D74C91817053100E93B84 /* icon_mqtc_iphone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 848D74C61817053100E93B84 /* icon_mqtc_iphone@2x.png */; };
 		84B7B91117FB11AD0014049E /* mqttitudeEditLocationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */; };
 		84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
@@ -82,6 +82,7 @@
 		84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */; };
 		84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5117BEF44F00E1333C /* MapKit.framework */; };
 		84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5317BEF45700E1333C /* CoreLocation.framework */; };
+		84D4D111181995E200C23EFC /* icon_mqtc_ipad320.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */; };
 		84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -164,9 +165,9 @@
 		848A036A17E4841500152C26 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendAnnotationView.h; sourceTree = "<group>"; };
 		848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeFriendAnnotationView.m; sourceTree = "<group>"; };
-		848D74C41817053100E93B84 /* icon_mqtc_ipad.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon_mqtc_ipad.icns; sourceTree = "<group>"; };
-		848D74C51817053100E93B84 /* icon_mqtc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon_mqtc.icns; sourceTree = "<group>"; };
-		848D74C61817053100E93B84 /* icon_mqtc@2x.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "icon_mqtc@2x.icns"; sourceTree = "<group>"; };
+		848D74C41817053100E93B84 /* icon_mqtc_ipad64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mqtc_ipad64.png; sourceTree = "<group>"; };
+		848D74C51817053100E93B84 /* icon_mqtc_iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mqtc_iphone.png; sourceTree = "<group>"; };
+		848D74C61817053100E93B84 /* icon_mqtc_iphone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_mqtc_iphone@2x.png"; sourceTree = "<group>"; };
 		84B7B90F17FB11AD0014049E /* mqttitudeEditLocationTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeEditLocationTVC.h; sourceTree = "<group>"; };
 		84B7B91017FB11AD0014049E /* mqttitudeEditLocationTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeEditLocationTVC.m; sourceTree = "<group>"; };
 		84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAppDelegate.h; sourceTree = "<group>"; };
@@ -188,6 +189,7 @@
 		84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		84CF9A5117BEF44F00E1333C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84CF9A5317BEF45700E1333C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mqtc_ipad320.png; sourceTree = "<group>"; };
 		84F93C0417C028690060E809 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -222,9 +224,10 @@
 				8484685817FD785D0012FC18 /* FriendsOn@2x.png */,
 				8484685917FD785D0012FC18 /* HybridOn.png */,
 				8484685A17FD785D0012FC18 /* HybridOn@2x.png */,
-				848D74C41817053100E93B84 /* icon_mqtc_ipad.icns */,
-				848D74C51817053100E93B84 /* icon_mqtc.icns */,
-				848D74C61817053100E93B84 /* icon_mqtc@2x.icns */,
+				848D74C41817053100E93B84 /* icon_mqtc_ipad64.png */,
+				84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */,
+				848D74C51817053100E93B84 /* icon_mqtc_iphone.png */,
+				848D74C61817053100E93B84 /* icon_mqtc_iphone@2x.png */,
 				8484685B17FD785D0012FC18 /* icon_114x114.png */,
 				8484685C17FD785D0012FC18 /* icon_120x120.png */,
 				8484685D17FD785D0012FC18 /* icon_144x144.png */,
@@ -441,7 +444,7 @@
 				8484688D17FD785D0012FC18 /* LocationOff@2x.png in Resources */,
 				8484687C17FD785D0012FC18 /* FriendsOn@2x.png in Resources */,
 				8484689017FD785D0012FC18 /* move.png in Resources */,
-				848D74C71817053100E93B84 /* icon_mqtc_ipad.icns in Resources */,
+				848D74C71817053100E93B84 /* icon_mqtc_ipad64.png in Resources */,
 				8484688117FD785D0012FC18 /* icon_144x144.png in Resources */,
 				848468B717FD7A3F0012FC18 /* Default-568h@2x.png in Resources */,
 				8484689517FD785D0012FC18 /* SatelliteOff@2x.png in Resources */,
@@ -458,16 +461,17 @@
 				8484689C17FD785D0012FC18 /* UserTrackingNone.png in Resources */,
 				8484688B17FD785D0012FC18 /* Location.gpx in Resources */,
 				8484688717FD785D0012FC18 /* iTunesArtwork in Resources */,
-				848D74C81817053100E93B84 /* icon_mqtc.icns in Resources */,
+				848D74C81817053100E93B84 /* icon_mqtc_iphone.png in Resources */,
 				8484688917FD785D0012FC18 /* iTunesArtwork@2x in Resources */,
 				8484689A17FD785D0012FC18 /* UserTrackingFollowWithHeading.png in Resources */,
 				8484688A17FD785D0012FC18 /* iTunesArtwork@2x.png in Resources */,
 				8484688E17FD785D0012FC18 /* LocationOn.png in Resources */,
 				8484689D17FD785D0012FC18 /* UserTrackingNone@2x.png in Resources */,
-				848D74C91817053100E93B84 /* icon_mqtc@2x.icns in Resources */,
+				848D74C91817053100E93B84 /* icon_mqtc_iphone@2x.png in Resources */,
 				8484688F17FD785D0012FC18 /* LocationOn@2x.png in Resources */,
 				8484689117FD785D0012FC18 /* Move@2x.png in Resources */,
 				8484687E17FD785D0012FC18 /* HybridOn@2x.png in Resources */,
+				84D4D111181995E200C23EFC /* icon_mqtc_ipad320.png in Resources */,
 				8484689717FD785D0012FC18 /* SatelliteOn@2x.png in Resources */,
 				8484689B17FD785D0012FC18 /* UserTrackingFollowWithHeading@2x.png in Resources */,
 				8484689317FD785D0012FC18 /* Pin@2x.png in Resources */,

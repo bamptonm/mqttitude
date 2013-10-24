@@ -72,7 +72,7 @@
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    return TRUE;
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -86,7 +86,59 @@
     }
 #endif
     
-    NSURL *url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    /*
+     * Core Data using UIManagedDocument
+     */
+    
+    self.coreData = [[mqttitudeCoreData alloc] init];
+    UIDocumentState state;
+    
+    do {
+        state = self.coreData.documentState;
+        if (state || ![mqttitudeCoreData theManagedObjectContext]) {
+#ifdef DEBUG
+            NSLog(@"APP Waiting for document to open documentState = 0x%02x theManagedObjectContext = %@",
+                  self.coreData.documentState, [mqttitudeCoreData theManagedObjectContext]);
+#endif
+            if (state & UIDocumentStateInConflict || state & UIDocumentStateSavingError) {
+                [self alert:[NSString stringWithFormat:@"App failed opening document documentState = 0x%02x", state]];
+                break;
+            }
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        }
+    } while (state || ![mqttitudeCoreData theManagedObjectContext]);
+    
+    /*
+     * CLLocationManager
+     */
+    
+    if ([CLLocationManager locationServicesEnabled]) {
+        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
+            self.manager = [[CLLocationManager alloc] init];
+            self.locationServiceStarted = [NSDate date];
+            self.manager.delegate = self;
+            
+            self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
+             
+        }
+        
+    }
+        
+    self.connection = [[Connection alloc] init];
+    self.connection.delegate = self;
+    
+    [self connect];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+#ifdef DEBUG
+    NSLog(@"App openURL %@ from %@ annotation %@", url, sourceApplication, annotation);
+#endif
     
     if (url) {
         NSError *error;
@@ -137,6 +189,7 @@
                 string = dictionary[@"willtopic"];
                 if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"willtopic_preference"];
                 
+                
                 string = dictionary[@"subscriptionqos"];
                 if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"subscriptionqos_preference"];
                 
@@ -151,6 +204,15 @@
                 
                 string = dictionary[@"willqos"];
                 if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"willqos_preference"];
+                
+                string = dictionary[@"mindist"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"mindist_preference"];
+                
+                string = dictionary[@"mintime"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"mintime_preference"];
+                
+                string = dictionary[@"monitoring"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"monitoring_preference"];
                 
                 
                 string = dictionary[@"retain"];
@@ -181,55 +243,10 @@
         self.processingMessage = [NSString stringWithFormat:@"App configuration file %@ successfully processed)", [url lastPathComponent]];
         
     }
-
-    /*
-     * Core Data using UIManagedDocument
-     */
     
-    self.coreData = [[mqttitudeCoreData alloc] init];
-    UIDocumentState state;
-    
-    do {
-        state = self.coreData.documentState;
-        if (state || ![mqttitudeCoreData theManagedObjectContext]) {
-#ifdef DEBUG
-            NSLog(@"APP Waiting for document to open documentState = 0x%02x theManagedObjectContext = %@",
-                  self.coreData.documentState, [mqttitudeCoreData theManagedObjectContext]);
-#endif
-            if (state & UIDocumentStateInConflict || state & UIDocumentStateSavingError) {
-                [self alert:[NSString stringWithFormat:@"App failed opening document documentState = 0x%02x", state]];
-                break;
-            }
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-        }
-    } while (state || ![mqttitudeCoreData theManagedObjectContext]);
-    
-    /*
-     * CLLocationManager
-     */
-    
-    if ([CLLocationManager locationServicesEnabled]) {
-        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-            self.manager = [[CLLocationManager alloc] init];
-            self.locationServiceStarted = [NSDate date];
-            self.manager.delegate = self;
-            
-            self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
-             
-        }
-        
-    }
-        
-    self.connection = [[Connection alloc] init];
-    self.connection.delegate = self;
-    
-    [self connect];
-    
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
-    
-    return YES;
+    return TRUE;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -284,6 +301,7 @@
     if (self.processingMessage) {
         [self alert:self.processingMessage];
         self.processingMessage = nil;
+        [self reconnect];
     }
     
     if (self.coreData.documentState) {
