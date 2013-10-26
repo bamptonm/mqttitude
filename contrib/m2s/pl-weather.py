@@ -60,7 +60,7 @@ if __name__ == '__main__':
     print weather.weather(48.858334, 2.295134)
 
 
-def plugin(item=None):
+def plugin(item, m2s=None):
 
     weather = OpenWeatherMAP()
 

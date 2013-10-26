@@ -58,7 +58,7 @@ def load_module(path):
         except:
             pass
 
-def load_plugins(plugin_list=None):
+def load_plugins(plugin_list, m2s):
     for p in plugin_list:
         if 'column' in p and 'filename' in p:
             colname = p['column']
@@ -66,6 +66,7 @@ def load_plugins(plugin_list=None):
 
             try:
                 p['mod'] = load_module(filename)
+                p['m2s'] = m2s
                 logging.debug("Plugin [%s] loaded from %s" % (colname, filename))
             except Exception, e:
                 logging.error("Can't load %s plugin (%s): %s" % (colname, filename, str(e)))
@@ -206,10 +207,12 @@ def processor():
         if lat is not None and lon is not None:
             """
             For each configured plugin, invoke it. The plugin returns a tuple
-            (value, data). The former is a string, the latter must be a dict.
+            (value, data). The former is a string, the latter can be a dict.
             Set item[colname] to the string 'value' and merge the data dict into
             the current 'item', ensuring that no overwriting occurs (e.g. the
             plugin cannot modify 'lat' or 'lon', etc.
+
+            If either of the returned values is None, skip that step.
             """
 
             plugin_list = cf.get('data_plugins', None)
@@ -220,10 +223,12 @@ def processor():
                         colname = p['column']
 
                         try:
-                            (value, data) = p['mod'].plugin(item)
-                            item = dict(data.items() + item.items())
-                            # locals()[colname] = value
-                            item[colname] = value
+                            (value, data) = p['mod'].plugin(item, p['m2s'])
+                            if value is not None:
+                                # locals()[colname] = value
+                                item[colname] = value
+                            if data is not None:
+                                item = dict(data.items() + item.items())
                         except Exception, e:
                             logging.warning("Cannot invoke [%s] plugin: %s" % (colname, str(e)))
 
@@ -242,14 +247,23 @@ def processor():
 
         q_in.task_done()
 
+class M2S(object):
+    def __init__(self, mqttc):
+        self.mqttc = mqttc
+
+    def publish(self, topic, payload, qos=0, retain=False):
+        rc, mid = self.mqttc.publish(topic, payload, qos=qos, retain=retain)
+        return (rc, mid)
 
 def main():
     """
     Connect to broker, launch daemon thread(s) and listen forever.
     """
 
+    m2s = M2S(mqtt)
+
     if cf.get('data_plugins') is not None:
-        load_plugins(cf.get('data_plugins'))
+        load_plugins(cf.get('data_plugins'), m2s)
 
     mqtt.on_connect = on_connect
     mqtt.on_disconnect = on_disconnect

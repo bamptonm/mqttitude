@@ -47,7 +47,7 @@ if __name__ == '__main__':
     print nominatim.reverse(48.858334, 2.295134)
 
 
-def plugin(item=None):
+def plugin(item, m2s=None):
 
     nominatim = ReverseGeo()
 

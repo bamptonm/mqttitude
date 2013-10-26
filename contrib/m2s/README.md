@@ -47,14 +47,18 @@ data_plugins = [
 ]
 ```
 
-The two plugins called `weather` and `revgeo` are loaded from their respective files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin.
+The two plugins called `weather` and `revgeo` are loaded from their respective files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin, and plugins may add values to that item.
+
+Plugins may choose to _not_ return values and act as triggers instead. In order to accomplish that, the plugin must return a tuple of two None.
+
+See [pl-example.py](pl-example.py) for an example plugin with a number of examples in the comments.
 
 Each plugin returns a `(string, dict)` tuple. The string value is loaded into the database column named as the plugin (i.e. `weather` and `revgeo`) and must be pre-created in the database schema (see `dbschema.py`). The _dict_ is merged into the current _item_, whereby existing values _are not_ overwritten. The newly created _item_ is passed on to the next plugin if there is one.
 
 Basically, a plugin looks like this:
 
 ```python
-def plugin(item=None):
+def plugin(item, m2s=None):
 
     lat = item['lat']
     lon = item['lon']
@@ -69,6 +73,10 @@ def plugin(item=None):
 
     return  (value, data)
 ```
+
+`m2s` is an object with a helper function:
+
+`m2s.publish(topic, payload, qos=0, retain=False)` publishes to the same broker `m2s` is connected to.
 
 
 
