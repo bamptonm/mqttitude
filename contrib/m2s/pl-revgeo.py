@@ -41,10 +41,10 @@ class ReverseGeo(object):
 
         return self.parse_json(response)
 
-if __name__ == '__main__':
-    nominatim = ReverseGeo()
-
-    print nominatim.reverse(48.858334, 2.295134)
+#if __name__ == '__main__':
+#    nominatim = ReverseGeo()
+#
+#    print nominatim.reverse(48.858334, 2.295134)
 
 
 def plugin(item, m2s=None):
@@ -58,3 +58,14 @@ def plugin(item, m2s=None):
     data = dict(nominatim=nom)
 
     return  (value, data)
+
+if __name__ == '__main__':
+
+    item = {
+        'lat' :  "48.858334",
+        'lon' :  "2.295134",
+    }
+
+
+    (v, d) = plugin(item, None)
+    print v
