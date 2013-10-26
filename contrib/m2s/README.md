@@ -38,7 +38,7 @@ This is part of the MQTTitude back-end. This program subscribes to a configured 
 
 ### Data Plugins
 
-Data plugins allow me to invoke a list of plugins in the order specified in settings. For example:
+Data plugins allow me to invoke a list of plugins in the order I specify in settings. For example:
 
 ```python
 data_plugins = [
@@ -47,13 +47,19 @@ data_plugins = [
 ]
 ```
 
-The two plugins called `weather` and `revgeo` are loaded from their respective files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin, and plugins may add values to that item.
+The two plugins called `weather` and `revgeo` are loaded from their respective files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin, and plugins may add values to that item by returning a value. So, if the plugin called _revgeo_ returns `"Hello"`, this value is added to the item as
 
-Plugins may choose to _not_ return values and act as triggers instead. In order to accomplish that, the plugin must return a tuple of two None.
+```
+item = {
+  ...
+  'revgeo' : "Hello",
+  ...
+}
+```
 
-See [pl-example.py](pl-example.py) for an example plugin with a number of examples in the comments.
+Plugins may choose to _not_ return values and act as triggers instead. In order to accomplish that, the plugin must return a tuple of two None. See [pl-example.py](pl-example.py) for an example plugin with a number of examples in the comments.
 
-Each plugin returns a `(string, dict)` tuple. The string value is loaded into the database column named as the plugin (i.e. `weather` and `revgeo`) and must be pre-created in the database schema (see `dbschema.py`). The _dict_ is merged into the current _item_, whereby existing values _are not_ overwritten. The newly created _item_ is passed on to the next plugin if there is one.
+Each plugin returns a `(string, dict)` tuple. The string value is loaded into the database column named as the plugin (i.e. `weather` and `revgeo`) and can be pre-created in the database schema (see `dbschema.py`) if the column is to be saved to storage. The _dict_ is merged into the current _item_, whereby existing values _are not_ overwritten. The newly created _item_ is passed on to the next plugin if there is one.
 
 Basically, a plugin looks like this:
 

@@ -38,7 +38,7 @@ def plugin(item, m2s=None):
         return (None, None)
         
     3. Store a value in the database, in a column called 'xname'
-        a. ensure column defined in dbschema.py
+        a. ensure column `xname` is defined in dbschema.py
         b. add plugin for column 'xname' to settings.py
 
         value = "Blabla1"
@@ -54,7 +54,7 @@ def plugin(item, m2s=None):
        plugin which ran BEFORE this one:
 
         current = item['weather']
-        m2s.publish(str("weather/location"), str(weather))
+        m2s.publish(str("location/weather"), str(weather))
         return (None, None)
 
 
