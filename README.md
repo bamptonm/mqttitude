@@ -1,6 +1,6 @@
 # MQTTitude
 
-MQTTitude is an app (well, two apps actually -- one for Android, and another for iOS),
+MQTTitude is an app (well, two apps actually -- one for [Android], and another for [iOS]),
 which allow a device to periodically publish its location status to an [MQTT]
 broker. If you've previously used Google Latitude, you can think of this as a a
 _decentralized Google Latitude_. MQTTitude was started because Google Latitude
@@ -22,8 +22,8 @@ There are three components to MQTTitude (and a whole slew of useful things you c
 with them):
 
 * The _App_, or front-end which runs on a supported device. This reports location
-  data to the [MQTT] broker. The app will be made available for iOS on the App store and for
-  Android on Google Play.
+  data to the [MQTT] broker. The app will be made available for [iOS] on the App store and for
+  [Android] on Google Play.
 * The MQTT broker is the service with which the App talks. You set up your own
   broker (which is easy to do) or use an existing broker, for example one of the
   test brokers or that of a friend. The important thing is: _MQTTitude doesn't enforce
@@ -74,6 +74,8 @@ myphone/jane/nexus4
 * [MQTTitude Blog](http://blog.mqttitude.org)
 
   [MQTT]: http://mqtt.org
+  [iOS]: https://itunes.apple.com/en/app/mqttitude/id692424691?mt=8
+  [Android]: https://play.google.com/store/apps/details?id=st.alr.mqttitude
   [JSON]: http://json.org
   [TLS]: http://en.wikipedia.org/wiki/Transport_Layer_Security
   [publicbroker]: http://mqtt.org/wiki/doku.php/public_brokers
