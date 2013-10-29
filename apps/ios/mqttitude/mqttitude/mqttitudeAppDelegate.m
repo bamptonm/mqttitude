@@ -478,7 +478,6 @@
                                                            accuracy:location.horizontalAccuracy
                                                           automatic:TRUE
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
-                [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
             } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
                 Friend *friend = [Friend friendWithTopic:deviceName inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
@@ -630,6 +629,8 @@
         [self notification:message];
 
     }
+    
+    [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
     
     [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OWN_LOCATIONS];
     

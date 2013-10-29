@@ -15,6 +15,10 @@
 + (Friend *)friendWithTopic:(NSString *)topic
      inManagedObjectContext:(NSManagedObjectContext *)context;
 
++ (NSString *)nameOfPerson:(ABRecordRef)record;
++ (NSData *)imageDataOfPerson:(ABRecordRef)record;
+
+
 - (void)linkToAB:(ABRecordRef)record;
 - (NSString *)name;
 - (NSData *)image;

@@ -8,9 +8,9 @@
 
 #import "mqttitudeLocationTVC.h"
 #import "Location+Create.h"
+#import "mqttitudePersonTVC.h"
 
 @interface mqttitudeLocationTVC ()
-
 @end
 
 @implementation mqttitudeLocationTVC 
@@ -79,8 +79,6 @@
     }
 }
 
-
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
@@ -94,31 +92,13 @@
     }
 }
 
-- (IBAction)addressbook:(UIBarButtonItem *)sender {
-    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
-    picker.peoplePickerDelegate = self;
-    picker.addressBook = [Friend theABRef];
-    [self presentViewController:picker animated:YES completion:nil];    
-}
-
-#pragma ABPeoplePickerNavigationControllerDelegate
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person
-{
-    [self.friend linkToAB:person];
-    [self.tableView reloadData];
-    self.title = self.friend.name ? self.friend.name : self.friend.topic;
-    [self dismissViewControllerAnimated:YES completion:NULL];
-    return NO;
-}
-
--(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
-{
-    return NO;
-}
-
--(void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
-{
-    [self dismissViewControllerAnimated:YES completion:NULL];
+- (IBAction)setPerson:(UIStoryboardSegue *)segue {
+    if ([segue.sourceViewController isKindOfClass:[mqttitudePersonTVC class]]) {
+        mqttitudePersonTVC *personTVC = (mqttitudePersonTVC *)segue.sourceViewController;
+        [self.friend linkToAB:personTVC.person];
+        [self.tableView reloadData];
+        self.title = self.friend.name ? self.friend.name : self.friend.topic;
+    }
 }
 
 @end
