@@ -9,9 +9,6 @@
 #import "Friend+Create.h"
 #import "Location+Create.h"
 
-#undef WITH_TOPIC // in AB pointing to Friend
-#define WITH_REFERENCE // from Friend pointing to AB
-
 @implementation Friend (Create)
 
 + (ABAddressBookRef)theABRef
@@ -97,32 +94,44 @@
 
 - (ABRecordRef)recordOfFriend
 {
-    ABRecordRef record = NULL;
+    ABRecordRef recordDirect = NULL;
+    ABRecordRef recordViaTopic = NULL;
 
-#ifdef WITH_REFERENCE
 #ifdef DEBUG
     NSLog(@"Friend abRecordId =  %d", [self.abRecordId intValue]);
 #endif
 
     if ([self.abRecordId intValue] != kABRecordInvalidID) {
-        record = ABAddressBookGetPersonWithRecordID([Friend theABRef],
+        recordDirect = ABAddressBookGetPersonWithRecordID([Friend theABRef],
                                                    [self.abRecordId intValue]);
 #ifdef DEBUG
-        NSLog(@"Friend ABRecordRef by abRecordID =  %p", record);
+        NSLog(@"Friend ABRecordRef by abRecordID =  %p", recordDirect);
 #endif
     }
-#endif
     
-#ifdef WITH_TOPIC
-    if (!record) {
-        record = recordWithTopic((__bridge CFStringRef)(self.topic));
+    recordViaTopic = recordWithTopic((__bridge CFStringRef)(self.topic));
 #ifdef DEBUG
-        NSLog(@"Friend ABRecordRef by topic =  %p", record);
+    NSLog(@"Friend ABRecordRef by topic =  %p", recordViaTopic);
 #endif
+
+    if (recordDirect) {
+        if (recordViaTopic) {
+            if (recordDirect == recordViaTopic) {
+                return recordDirect;
+            } else {
+                [self linkToAB:recordViaTopic];
+                return recordViaTopic;
+            }
+        } else {
+            [self linkToAB:recordDirect];
+            return recordDirect;
+        }
+    } else {
+        if (recordViaTopic) {
+                [self linkToAB:recordViaTopic];
+        }
+        return recordDirect;
     }
-#endif
-    
-    return record;
 }
 
 + (NSString *)nameOfPerson:(ABRecordRef)record
@@ -148,12 +157,9 @@
 
 - (void)linkToAB:(ABRecordRef)record
 {
-#ifdef WITH_REFERENCE
     ABRecordID abRecordID = ABRecordGetRecordID(record);
     self.abRecordId = @(abRecordID);
-#endif
-    
-#ifdef WITH_TOPIC
+
     ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
     
     if (oldrecord) {
@@ -161,15 +167,12 @@
     }
     
     [self ABsetTopic:self.topic record:record];
-#endif
     
     // make sure all locations are updated so all views get updated
     for (Location *location in self.hasLocations) {
         location.belongsTo = self;
     }
 }
-
-#ifdef WITH_TOPIC
 
 #define RELATION_NAME CFSTR("MQTTitude")
 
@@ -262,7 +265,6 @@ ABRecordRef recordWithTopic(CFStringRef topic)
         }
     }
 }
-#endif
 
 + (void)error:(NSString *)message
 {
