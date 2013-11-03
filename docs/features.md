@@ -159,6 +159,7 @@ or...
 Tap the Bookmark Button in the Navigation Bar on the Location screen. Select an entry from your Address Book.
 The entry will be marked with a relationship to the current friend's topic name.
 
+Beginning with iPhone app version 5.1, there's now a switch in Expert Mode settings titled _Update Address Book". If this is _on_, the app uses related names from the address book to identify topics and updates address book as described above. If the switch is _off_, the app maintains an internal reference to the address book record and doesn't modify the address book.
 
 
 
