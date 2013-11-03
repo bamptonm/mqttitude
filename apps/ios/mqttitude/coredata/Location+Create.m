@@ -33,14 +33,18 @@
     if (!matches) {
         // handle error
     } else {
-        //create new location
-        location = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:context];
-        
-        location.belongsTo = friend;
-        location.timestamp = [NSDate dateWithTimeInterval:[matches count] / 1000 sinceDate:timestamp];
-        [location setCoordinate:coordinate];
-        location.accuracy = @(accuracy);
-        location.automatic = @(automatic);
+        if (![matches count]) {
+            //create new location
+            location = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:context];
+            
+            location.belongsTo = friend;
+            location.timestamp = [NSDate dateWithTimeInterval:[matches count] / 1000 sinceDate:timestamp];
+            [location setCoordinate:coordinate];
+            location.accuracy = @(accuracy);
+            location.automatic = @(automatic);
+        } else {
+            location = [matches lastObject];
+        }
     }
     
     return location;

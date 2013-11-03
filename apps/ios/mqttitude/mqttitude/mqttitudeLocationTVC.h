@@ -8,9 +8,7 @@
 
 #import "CoreDataTableViewController.h"
 #import "Friend+Create.h"
-#import <AddressBookUI/AddressBookUI.h>
-
-@interface mqttitudeLocationTVC : CoreDataTableViewController <ABPeoplePickerNavigationControllerDelegate>
+@interface mqttitudeLocationTVC : CoreDataTableViewController
 @property (strong, nonatomic) Friend *friend;
 @property (strong, nonatomic) Location *selectedLocation;
 

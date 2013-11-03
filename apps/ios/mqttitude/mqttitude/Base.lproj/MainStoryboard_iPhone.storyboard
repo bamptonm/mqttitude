@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
         <development version="4600" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
         <!--Mqttitude View Controller - MQTTitude-->
@@ -77,7 +77,7 @@
                     <navigationItem key="navigationItem" title="MQTTitude" id="OeB-EW-2jx">
                         <barButtonItem key="leftBarButtonItem" title="Friends" id="yKS-ap-Von">
                             <connections>
-                                <segue destination="UkR-Kt-FVm" kind="push" id="8bK-5f-SMu"/>
+                                <segue destination="UkR-Kt-FVm" kind="push" identifier="friends" id="8bK-5f-SMu"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Status" id="Efb-89-JWb">
@@ -422,7 +422,7 @@
                     <navigationItem key="navigationItem" title="Locations" id="GM9-KK-8vY">
                         <barButtonItem key="rightBarButtonItem" systemItem="bookmarks" id="qOx-nX-Gy7">
                             <connections>
-                                <action selector="addressbook:" destination="pfi-pJ-tUz" id="uIP-kd-Xgg"/>
+                                <segue destination="iPa-VA-0w0" kind="push" id="gW5-CQ-wmT"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -431,6 +431,46 @@
                 <exit id="zyA-vN-ZRx" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2167" y="-476"/>
+        </scene>
+        <!--Mqttitude PersonTVC - Persons-->
+        <scene sceneID="5qX-fR-Kwf">
+            <objects>
+                <tableViewController id="iPa-VA-0w0" customClass="mqttitudePersonTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="shE-3u-z7Y">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="person" id="wZl-XO-WGw">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <segue destination="bsg-U3-OBt" kind="unwind" identifier="setPerson:" unwindAction="setPerson:" id="YAU-nf-LDe"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="iPa-VA-0w0" id="C70-4r-Srg"/>
+                            <outlet property="delegate" destination="iPa-VA-0w0" id="6J2-fy-tdW"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Persons" id="KOf-PY-JcB">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="J1J-vf-aTc">
+                            <connections>
+                                <segue destination="bsg-U3-OBt" kind="unwind" unwindAction="setPerson:" id="lyH-mg-GE1"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fxt-g4-fBh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="bsg-U3-OBt" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2716" y="-1205"/>
         </scene>
         <!--Mqttitude Edit LocationTVC - Details-->
         <scene sceneID="lpX-ll-DMd">
