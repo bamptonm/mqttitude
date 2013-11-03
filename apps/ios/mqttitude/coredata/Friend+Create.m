@@ -94,44 +94,24 @@
 
 - (ABRecordRef)recordOfFriend
 {
-    ABRecordRef recordDirect = NULL;
-    ABRecordRef recordViaTopic = NULL;
-
+    ABRecordRef record = NULL;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ab_preference"]) {
+        record = recordWithTopic((__bridge CFStringRef)(self.topic));
 #ifdef DEBUG
-    NSLog(@"Friend abRecordId =  %d", [self.abRecordId intValue]);
+        NSLog(@"Friend ABRecordRef by topic =  %p", record);
 #endif
-
-    if ([self.abRecordId intValue] != kABRecordInvalidID) {
-        recordDirect = ABAddressBookGetPersonWithRecordID([Friend theABRef],
-                                                   [self.abRecordId intValue]);
+    } else {
+        if ([self.abRecordId intValue] != kABRecordInvalidID) {
+            record = ABAddressBookGetPersonWithRecordID([Friend theABRef],
+                                                              [self.abRecordId intValue]);
 #ifdef DEBUG
-        NSLog(@"Friend ABRecordRef by abRecordID =  %p", recordDirect);
+            NSLog(@"Friend ABRecordRef by abRecordID =  %p", record);
 #endif
+        }
     }
     
-    recordViaTopic = recordWithTopic((__bridge CFStringRef)(self.topic));
-#ifdef DEBUG
-    NSLog(@"Friend ABRecordRef by topic =  %p", recordViaTopic);
-#endif
-
-    if (recordDirect) {
-        if (recordViaTopic) {
-            if (recordDirect == recordViaTopic) {
-                return recordDirect;
-            } else {
-                [self linkToAB:recordViaTopic];
-                return recordViaTopic;
-            }
-        } else {
-            [self linkToAB:recordDirect];
-            return recordDirect;
-        }
-    } else {
-        if (recordViaTopic) {
-                [self linkToAB:recordViaTopic];
-        }
-        return recordDirect;
-    }
+    return record;
 }
 
 + (NSString *)nameOfPerson:(ABRecordRef)record
@@ -157,16 +137,18 @@
 
 - (void)linkToAB:(ABRecordRef)record
 {
-    ABRecordID abRecordID = ABRecordGetRecordID(record);
-    self.abRecordId = @(abRecordID);
-
-    ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
-    
-    if (oldrecord) {
-        [self ABsetTopic:nil record:oldrecord];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ab_preference"]) {
+        ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
+        
+        if (oldrecord) {
+            [self ABsetTopic:nil record:oldrecord];
+        }
+        
+        [self ABsetTopic:self.topic record:record];
+    } else {
+        ABRecordID abRecordID = ABRecordGetRecordID(record);
+        self.abRecordId = @(abRecordID);
     }
-    
-    [self ABsetTopic:self.topic record:record];
     
     // make sure all locations are updated so all views get updated
     for (Location *location in self.hasLocations) {

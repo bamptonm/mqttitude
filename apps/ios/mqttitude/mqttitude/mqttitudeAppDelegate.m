@@ -67,7 +67,8 @@
                                   @"willtopic_preference": @"",
                                   @"willretain_preference":@(NO),
                                   @"willqos_preference": @(1),
-                                  @"monitoring_preference": @(1)
+                                  @"monitoring_preference": @(1),
+                                  @"ab_preference": @(YES)
                                   };
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -229,6 +230,9 @@
                 
                 string = dictionary[@"willretain"];
                 if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"willretain_preference"];
+
+                string = dictionary[@"ab"];
+                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"ab_preference"];
                 
             } else {
                 self.processingMessage = [NSString stringWithFormat:@"App received invalid configuration file %@)", dictionary[@"_type"]];
