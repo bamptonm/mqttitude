@@ -179,6 +179,7 @@ The entry will be marked with a relationship to the current friend's topic name.
 	UserID							<none>			no
 	Password						<none>			no
 	
+	Update Address Book				YES				yes	
 	Subscription					mqttitude/#		yes
 	Subscription QOS				1				yes
 	
