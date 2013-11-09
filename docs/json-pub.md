@@ -29,3 +29,15 @@ A _Last Will and Testament_ is optionally posted by the MQTT broker when it no l
 ```
 
 The timestamp is the Unix epoch time at which the app first connected (i.e. *not* the time at which the LWT was published).
+
+## deviceToken
+
+The iPhone app sends out a _deviceToken_ object at initial connection to the broker. This is a device-unique token which can be used to notify the app via the Apple notification system. Note that this is experimental only and currently cannot be used!
+
+```json
+{
+    "_type": "deviceToken", 
+    "dev": "<abcded29 3f745ea9 c5f431a1 19a1b25c 53c85415 5a0a87c1 409aa683 410c3c3b>", 
+    "tst": "1383818459"
+}
+```
