@@ -44,7 +44,7 @@ Voila!
 
 Note: this works only with contacts stored locally -- not with corporate address books associated with your iPhone.
 
-To support corporate address books (which usually cannot be updated) the ios app Version >5.1 can be set to store the associations
+To support corporate address books (which usually cannot be updated) the ios app Version >=5.1 can be set to store the associations
 locally rather than in the address book. You find the respective switch in the expert mode settings.
 
 ![](ios-friends-08.png)
