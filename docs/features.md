@@ -194,3 +194,45 @@ Beginning with iPhone app version 5.1, there's now a switch in Expert Mode setti
 	Will							lwt				yes
 	Will QOS						1				yes
 	Will Retain						NO				yes
+	
+	Monitoring						1				n/a					0 = no monitorint, 1 = standard, 2 = move mode
+
+### Remote Configuration
+
+Getting bored and frustrated by telling other people how to edit settings on their iPhone to connect to your server?
+
+Here's what you can do with iPhone App Version >= 5.1:
+
+* Create a configuration file in JSON with a .mqtc suffix (for MQTTitude Configuration).
+* Send the file to the device via email, http, dropbox, ... you name it. 
+* Open the file on the device with MQTTitude
+
+Here is a sample configuration file which follows the settings as explaind abov. Boolean values are represented as
+0/1 for FALSE/TRUE. The _type entry is mandatory, all other entries are optional.
+
+	{
+		"_type": "configuration",
+		"deviceid": "iphone",
+    	"clientid": "",
+		"subscription": "mqttitude/#",
+    	"topic": "",
+    	"host": "broker.my.net",
+    	"user": "user",
+    	"pass": "passed",
+        "will": "lwt",
+        "willtopic": "",
+        "subscriptionqos": "1",
+        "qos": "1",
+        "port": "8883",
+        "keepalive": "60",
+        "willqos": "1",
+        "retain": "1",
+        "tls": "1",
+        "auth": "1",
+        "clean": "0",
+        "willretain": "0",
+        "mindist": "200",
+        "mintime": "180",
+        "monitoring": "1",
+        "ab": "0"
+	}
