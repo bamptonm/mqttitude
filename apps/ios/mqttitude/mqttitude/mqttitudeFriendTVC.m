@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
+#import "mqttitudeAppDelegate.h"
 #import "mqttitudeFriendTVC.h"
 #import "Friend+Create.h"
 #import "Location+Create.h"
@@ -47,6 +48,18 @@
                                                   [NSString stringWithFormat:@"%f,%f", newestLocation.coordinate.latitude, newestLocation.coordinate.longitude]) : @"???";
     
     cell.imageView.image = friend.image ? [UIImage imageWithData:friend.image] : [UIImage imageNamed:@"icon_57x57"];
+    
+    /*
+     * I take this out so the user can check the last enty timestamp
+     *
+     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+     
+     if ([friend.topic isEqualToString:[delegate theGeneralTopic]]) {
+        [cell setAccessoryType:UITableViewCellAccessoryDetailButton];
+    } else {
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
+    }
+     */
     
     return cell;
 }

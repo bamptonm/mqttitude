@@ -32,12 +32,12 @@
     
     self.UIurl.text = self.connection.url;
     
-    self.UIerrorCode.text = [NSString stringWithFormat:@"%@ %d %@",
-                             self.connection.lastErrorCode.domain,
-                             self.connection.lastErrorCode.code,
-                             self.connection.lastErrorCode.localizedDescription ?
-                             self.connection.lastErrorCode.localizedDescription : @""];
-
+    self.UIerrorCode.text = self.connection.lastErrorCode ? [NSString stringWithFormat:@"%@ %d %@",
+                                                             self.connection.lastErrorCode.domain,
+                                                             self.connection.lastErrorCode.code,
+                                                             self.connection.lastErrorCode.localizedDescription ?
+                                                             self.connection.lastErrorCode.localizedDescription : @""]
+                                                            : @"<no error>";
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     self.UIeffectiveDeviceId.text = [delegate theDeviceId];
     self.UIeffectiveClientId.text = [delegate theClientId];

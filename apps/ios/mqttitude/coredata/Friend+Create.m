@@ -23,14 +23,38 @@
 #endif
             CFErrorRef cfError;
             ab = ABAddressBookCreateWithOptions(NULL, &cfError);
-            if (!ab) {
+            if (ab) {
+#ifdef DEBUG
+                NSLog(@"ABAddressBookCreateWithOptions successful");
+#endif
+            } else {
                 CFStringRef errorDescription = CFErrorCopyDescription(cfError);
                 [Friend error:[NSString stringWithFormat:@"ABAddressBookCreateWithOptions not successfull %@", errorDescription]];
                 CFRelease(errorDescription);
                 isGranted = NO;
             }
+            
+#ifdef DEBUG
+            NSLog(@"ABAddressBookRequestAccessWithCompletion");
+#endif
+            
+            ABAddressBookRequestAccessWithCompletion(ab, ^(bool granted, CFErrorRef error) {
+                if (granted) {
+#ifdef DEBUG
+                    NSLog(@"ABAddressBookRequestAccessCompletionHandler successful");
+#endif
+                } else {
+                    isGranted = NO;
+                    CFRelease(ab);
+                    ab = nil;
+                }
+            });
+        } else {
+            [Friend error:[NSString stringWithFormat:@"ABAddressBookRequestAccessWithCompletion not successfull"]];
         }
+        
     }
+    
     return ab;
 }
 
@@ -164,31 +188,33 @@ ABRecordRef recordWithTopic(CFStringRef topic)
     
     CFArrayRef records = ABAddressBookCopyArrayOfAllPeople([Friend theABRef]);
     
-    for (CFIndex i = 0; i < CFArrayGetCount(records); i++) {
-        ABRecordRef record = CFArrayGetValueAtIndex(records, i);
-        
-        ABMultiValueRef relations = ABRecordCopyValue(record, kABPersonRelatedNamesProperty);
-        if (relations) {
-            CFIndex relationsCount = ABMultiValueGetCount(relations);
+    if (records) {
+        for (CFIndex i = 0; i < CFArrayGetCount(records); i++) {
+            ABRecordRef record = CFArrayGetValueAtIndex(records, i);
             
-            for (CFIndex k = 0 ; k < relationsCount ; k++) {
-                CFStringRef label = ABMultiValueCopyLabelAtIndex(relations, k);
-                CFStringRef value = ABMultiValueCopyValueAtIndex(relations, k);
-                if(CFStringCompare(label, RELATION_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-                    if(CFStringCompare(value, topic, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-                        theRecord = record;
-                        CFRelease(label);
-                        CFRelease(value);
-                        break;
+            ABMultiValueRef relations = ABRecordCopyValue(record, kABPersonRelatedNamesProperty);
+            if (relations) {
+                CFIndex relationsCount = ABMultiValueGetCount(relations);
+                
+                for (CFIndex k = 0 ; k < relationsCount ; k++) {
+                    CFStringRef label = ABMultiValueCopyLabelAtIndex(relations, k);
+                    CFStringRef value = ABMultiValueCopyValueAtIndex(relations, k);
+                    if(CFStringCompare(label, RELATION_NAME, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                        if(CFStringCompare(value, topic, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+                            theRecord = record;
+                            CFRelease(label);
+                            CFRelease(value);
+                            break;
+                        }
                     }
+                    CFRelease(label);
+                    CFRelease(value);
                 }
-                CFRelease(label);
-                CFRelease(value);
+                CFRelease(relations);
             }
-            CFRelease(relations);
         }
+        CFRelease(records);
     }
-    CFRelease(records);
     return theRecord;
 }
 

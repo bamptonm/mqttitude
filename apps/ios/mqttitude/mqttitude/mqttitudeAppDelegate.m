@@ -26,7 +26,7 @@
 #define DISMISS_AFTER 1.0
 
 #define MAX_OWN_LOCATIONS 100
-#define MAX_OTHER_LOCATIONS 3
+#define MAX_OTHER_LOCATIONS 1
 
 @implementation mqttitudeAppDelegate
 

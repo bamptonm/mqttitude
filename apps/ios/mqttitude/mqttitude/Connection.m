@@ -289,6 +289,8 @@
     switch (eventCode) {
         case MQTTSessionEventConnected:
         {
+            self.lastErrorCode = nil;
+
             self.state = state_connected;
             if (self.lastClean || !self.reconnectFlag) {
                 [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
