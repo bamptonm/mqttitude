@@ -8,7 +8,8 @@ cf = Config()
 
 mysql_db = MySQLDatabase(cf.get('dbname', 'mqttitude'),
     user=cf.get('dbuser'),
-    passwd=cf.get('dbpasswd'))
+    passwd=cf.get('dbpasswd'),
+    threadlocals=True)
 
 class MySQLModel(Model):
 
