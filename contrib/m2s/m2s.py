@@ -21,7 +21,12 @@ except ImportError:
 import Queue
 import threading
 import imp
-import md5
+try:
+    import hashlib
+    md = hashlib.md5
+except ImportError:
+    import md5
+    md = md5.new
 import os
 
 cf = Config()
@@ -46,7 +51,7 @@ logging.debug("DEBUG MODE")
 def load_module(path):
     try:
         fp = open(path, 'rb')
-        return imp.load_source(md5.new(path).hexdigest(), path, fp)
+        return imp.load_source(md(path).hexdigest(), path, fp)
     finally:
         try:
             fp.close()
