@@ -192,4 +192,4 @@ curl 'http://api.openweathermap.org/data/2.5/weather?lat=48.858334&lon=2.295134'
 ### Requirements
 
 * Mosquitto (Python)
-* [PeeWee](http://peewee.readthedocs.org/en/latest/). No need to install if you don't want to: put `peewee.py` alongside these files.
+* [PeeWee](http://peewee.readthedocs.org/en/latest/). You don't have to install this; we've got a copy of `peewee.py` in this repository, but remove our copy if you have PeeWee.
