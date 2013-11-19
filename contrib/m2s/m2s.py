@@ -20,17 +20,12 @@ except ImportError:
     import simplejson as json
 import Queue
 import threading
-from weather import OpenWeatherMAP
-from nominatim import ReverseGeo
 import imp
 import md5
 import os
 
 cf = Config()
-owm = OpenWeatherMAP()
-nominatim = ReverseGeo()
 mqtt = mosquitto.Mosquitto()
-
 
 q_in = Queue.Queue(maxsize=0)
 num_workers = 1
