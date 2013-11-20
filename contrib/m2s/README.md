@@ -80,9 +80,10 @@ def plugin(item, m2s=None):
     return  (value, data)
 ```
 
-`m2s` is an object with a helper function:
+`m2s` is an object with the following helper functions:
 
 `m2s.publish(topic, payload, qos=0, retain=False)` publishes to the same broker `m2s` is connected to.
+`m2s.info(string=None)` sends `string' (if not None) to the logging.info() channel used by `m2s`.
 
 
 

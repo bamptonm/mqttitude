@@ -255,6 +255,10 @@ class M2S(object):
         rc, mid = self.mqttc.publish(topic, payload, qos=qos, retain=retain)
         return (rc, mid)
 
+    def info(self, s=None):
+        if s is not None:
+            logging.info(s)
+
 def main():
     """
     Connect to broker, launch daemon thread(s) and listen forever.

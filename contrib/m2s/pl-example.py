@@ -8,6 +8,7 @@ def plugin(item, m2s=None):
 
     `m2s' is an object with the following helper functions:
         .publish(topic, payload, qos=0, retain=False)
+        .info(string)       # logging.info() to the m2s log
 
     This plugin returns a tuple of two values: a string and a dict.
     The string is stored in the database column of the same name
