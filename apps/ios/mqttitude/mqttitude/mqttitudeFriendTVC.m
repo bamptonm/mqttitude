@@ -44,8 +44,7 @@
     Location *newestLocation = [self newestLocation:friend];
     [newestLocation getReverseGeoCode];
     
-    cell.detailTextLabel.text = newestLocation ? (newestLocation.placemark ? newestLocation.placemark :
-                                                  [NSString stringWithFormat:@"%f,%f", newestLocation.coordinate.latitude, newestLocation.coordinate.longitude]) : @"???";
+    cell.detailTextLabel.text = newestLocation ? [newestLocation subtitle] : @"???";
     
     cell.imageView.image = friend.image ? [UIImage imageWithData:friend.image] : [UIImage imageNamed:@"icon_57x57"];
     

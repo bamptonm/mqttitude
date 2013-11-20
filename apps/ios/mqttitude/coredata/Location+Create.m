@@ -80,15 +80,33 @@
 }
 
 - (NSString *)title {
-    return self.belongsTo ? (self.belongsTo.name ? self.belongsTo.name : self.belongsTo.topic) : @"";
+    return [NSString stringWithFormat:@"%@", [self nameText]];
 }
 
 - (NSString *)subtitle {
-    return  [NSString stringWithFormat:@"%@ %@",
-             [NSDateFormatter localizedStringFromDate:self.timestamp
-                                            dateStyle:NSDateFormatterShortStyle
-                                            timeStyle:NSDateFormatterMediumStyle],
-             (self.placemark) ? self.placemark : [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude]];
+    return [NSString stringWithFormat:@"%@ %@",
+            [NSDateFormatter localizedStringFromDate:self.timestamp
+                                           dateStyle:NSDateFormatterShortStyle
+                                           timeStyle:NSDateFormatterShortStyle],
+            [self locationText]];
+}
+
+- (NSString *)nameText
+{
+    return self.belongsTo ? (self.belongsTo.name ? self.belongsTo.name : self.belongsTo.topic) : @"";
+}
+- (NSString *)timestampText
+{
+    return [NSDateFormatter localizedStringFromDate:self.timestamp
+                                          dateStyle:NSDateFormatterShortStyle
+                                          timeStyle:NSDateFormatterMediumStyle];
+}
+- (NSString *)locationText
+{
+    return [NSString stringWithFormat:@"+-%.0fm %@",
+            [self.accuracy floatValue],
+            (self.placemark) ? self.placemark :
+            [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude]];
 }
 
 - (CLLocationCoordinate2D)coordinate
@@ -121,6 +139,7 @@
              if ([placemarks count] > 0) {
                  CLPlacemark *placemark = placemarks[0];
                  self.placemark = ABCreateStringWithAddressDictionary (placemark.addressDictionary, TRUE);
+                 self.placemark = [self.placemark stringByReplacingOccurrencesOfString:@"\n" withString:@", "];
              } else {
                  self.placemark = nil;
              }

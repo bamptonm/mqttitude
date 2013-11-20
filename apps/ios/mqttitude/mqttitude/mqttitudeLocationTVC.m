@@ -45,7 +45,8 @@
     cell.textLabel.text = location.remark ? location.remark : [NSDateFormatter localizedStringFromDate:location.timestamp
                                                                                              dateStyle:NSDateFormatterShortStyle
                                                                                              timeStyle:NSDateFormatterMediumStyle];
-    cell.detailTextLabel.text = (location.placemark) ? location.placemark : [NSString stringWithFormat:@"%f,%f", location.coordinate.latitude, location.coordinate.longitude];
+    cell.detailTextLabel.text = [location locationText];
+    
     if ([location.automatic boolValue]) {
         cell.accessoryType = UITableViewCellAccessoryNone;
     } else {
