@@ -44,10 +44,11 @@ Data plugins allow me to invoke a list of plugins in the order I specify in sett
 data_plugins = [
         dict(column='weather',      filename='pl-weather.py'),
         dict(column='revgeo',       filename='pl-revgeo.py'),
+	dict(column='plrepublish',  filename='pl-republish.py'),
 ]
 ```
 
-The two plugins called `weather` and `revgeo` are loaded from their respective files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin, and plugins may add values to that item by returning a value. So, if the plugin called _revgeo_ returns `"Hello"`, this value is added to the item as
+The three plugins called `weather`, `revgeo`, and `plrepublish` are loaded from the specified Python files. When `m2s` receives a message, it decodes the JSON into what we internally call an _item_. This _item_ is handed from plugin to plugin in the order you configure them to be invoked, and plugins may add values to that item by returning a value. So, if the plugin called _revgeo_ returns `"Hello"`, this value is added to the item as
 
 ```
 item = {
@@ -59,7 +60,7 @@ item = {
 
 Plugins may choose to _not_ return values and act as triggers instead. In order to accomplish that, the plugin must return a tuple of two None. See [pl-example.py](pl-example.py) for an example plugin with a number of examples in the comments.
 
-Each plugin returns a `(string, dict)` tuple. The string value is loaded into the database column named as the plugin (i.e. `weather` and `revgeo`) and can be pre-created in the database schema (see `dbschema.py`) if the column is to be saved to storage. The _dict_ is merged into the current _item_, whereby existing values _are not_ overwritten. The newly created _item_ is passed on to the next plugin if there is one.
+Each plugin can return a `(string, dict)` tuple. The string value is loaded into the database column named as the plugin (i.e. `weather` and `revgeo`) and can be pre-created in the database schema (see `dbschema.py`) if the column is to be saved to storage. (If the column name you specify doesn't exist in the database, the value will silently be discarded.) The returned _dict_ is merged into the current _item_, whereby existing values _are not_ overwritten. The newly created _item_ is passed on to the next plugin if there is one.
 
 Basically, a plugin looks like this:
 
@@ -85,6 +86,21 @@ def plugin(item, m2s=None):
 `m2s.publish(topic, payload, qos=0, retain=False)` publishes to the same broker `m2s` is connected to.
 `m2s.info(string=None)` sends `string' (if not None) to the logging.info() channel used by `m2s`.
 
+Furthermore, `m2s` has an object called `cf` which is loaded with configuration settings you can pass to plugins. In order to do that, specify something like the following in `settings.py`:
+
+```python
+plugin_configs = {
+	"republish_topic" : "local/loca",
+	"name" : "JP Mens",
+	"size" : "xtralarge",
+}
+```
+
+The keys of the `plugin_configs` dict are loaded as attributes into the `cf` object. In other words, when your plugins are invoked, you can get my name as
+
+```python
+m2s.cf.name
+```
 
 
 ### Storage
