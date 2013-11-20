@@ -42,9 +42,9 @@ Data plugins allow me to invoke a list of plugins in the order I specify in sett
 
 ```python
 data_plugins = [
-        dict(column='weather',      filename='pl-weather.py'),
-        dict(column='revgeo',       filename='pl-revgeo.py'),
-	dict(column='plrepublish',  filename='pl-republish.py'),
+    dict(column='weather',      filename='pl-weather.py'),
+    dict(column='revgeo',       filename='pl-revgeo.py'),
+    dict(column='plrepublish',  filename='pl-republish.py'),
 ]
 ```
 
@@ -90,13 +90,13 @@ Furthermore, `m2s` has an object called `cf` which is loaded with configuration 
 
 ```python
 plugin_configs = {
-	"republish_topic" : "local/loca",
-	"name" : "JP Mens",
-	"size" : "xtralarge",
+    "republish_topic" : "local/loca",
+    "name" : "JP Mens",
+    "size" : "xtralarge",
 }
 ```
 
-The keys of the `plugin_configs` dict are loaded as attributes into the `cf` object. In other words, when your plugins are invoked, you can get my name as
+That variable's keys are loaded as attributes into the `cf` object. In other words, when your plugins are invoked, you can get my name as
 
 ```python
 m2s.cf.name
