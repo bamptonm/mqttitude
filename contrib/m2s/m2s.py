@@ -247,9 +247,16 @@ def processor():
 
         q_in.task_done()
 
+class M2SConfig(object):
+    def __init__(self, pluco):
+        if pluco is not None:
+            for k in pluco.keys():
+                setattr(self, k, pluco[k])
+
 class M2S(object):
-    def __init__(self, mqttc):
+    def __init__(self, mqttc, plugin_config):
         self.mqttc = mqttc
+        self.cf = M2SConfig(plugin_config)
 
     def publish(self, topic, payload, qos=0, retain=False):
         rc, mid = self.mqttc.publish(topic, payload, qos=qos, retain=retain)
@@ -264,7 +271,7 @@ def main():
     Connect to broker, launch daemon thread(s) and listen forever.
     """
 
-    m2s = M2S(mqtt)
+    m2s = M2S(mqtt, cf.get('plugin_configs'))
 
     if cf.get('data_plugins') is not None:
         load_plugins(cf.get('data_plugins'), m2s)

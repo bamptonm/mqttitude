@@ -39,3 +39,17 @@ data_plugins = [
         dict(column='weather',      filename='pl-weather.py'),
         dict(column='revgeo',       filename='pl-revgeo.py'),
 ]
+
+# The following configuration is made available to plugins through
+# the m2s object. A plugin can access
+#
+#	m2s.cf.replublish_topic   or
+#	m2s.cf.name
+#	etc.
+#
+# See pl-republish.py for an example which uses 'republish_topic'
+
+plugin_configs = {
+	"republish_topic" : "local/loca",
+	"name" : "JP Mens",
+}
