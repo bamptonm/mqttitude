@@ -253,6 +253,14 @@ class M2SConfig(object):
             for k in pluco.keys():
                 setattr(self, k, pluco[k])
 
+    def __setattr__(self, name, value):
+
+        if not hasattr(self, name):
+            object.__setattr__(self, name, value)
+        else:
+            raise TypeError("%r setting may not be modified" % self)
+
+
 class M2S(object):
     def __init__(self, mqttc, plugin_config):
         self.mqttc = mqttc
