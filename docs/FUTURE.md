@@ -5,29 +5,29 @@ Thoughts on possible future enhancements.
 ## Short term
 
 * Stability
-* Reliability [#38](https://github.com/binarybucks/mqttitude/issues/38) 
-* Battery consumption [#68](https://github.com/binarybucks/mqttitude/issues/68)
-* Ensure UI has `Credits` with URL to Web site [#41](https://github.com/binarybucks/mqttitude/issues/41)
+* ~~Reliability [#38](https://github.com/binarybucks/mqttitude/issues/38)~~
+* ~~Battery consumption [#68](https://github.com/binarybucks/mqttitude/issues/68)~~
+* ~~Ensure UI has `Credits` with URL to Web site [#41](https://github.com/binarybucks/mqttitude/issues/41)~~
 * Disable all location services (unload app) [#74](https://github.com/binarybucks/mqttitude/issues/74)
-* LWT [#55](https://github.com/binarybucks/mqttitude/issues/55)
+* ~~LWT [#55](https://github.com/binarybucks/mqttitude/issues/55)~~
 
 ## Mid-term
 
 * ~~Add "traffic light" [#73](https://github.com/binarybucks/mqttitude/issues/73)~~
-* Add live "info" pane to Apps [#47](https://github.com/binarybucks/mqttitude/issues/47)
+* ~~Add live "info" pane to Apps [#47](https://github.com/binarybucks/mqttitude/issues/47)~~
 * Remote-control [#71](https://github.com/binarybucks/mqttitude/issues/71)
 * Annotations.
   * Click on pin
   * Enter text string `"Restaurante La Comida; wonderful gambas al ajillo"`
-  * PUBlish with full `_location` and additional `"note" : "...."`
+  * PUBlish with full `_location` and additional `"note" : "...."` (see _waypoints_ below)
 * 2013-11-22: @mrose has some interesting things to say about Messages on iOS [#199](https://github.com/binarybucks/mqttitude/issues/199). In particular, screen real-estate should be better organized.
 
 
 ## Long-term
 
-* Add presence. Are my friends in the area?
-  * Needs friends/family on same broker
-  * Needs 'standardized' topic names (maybe with Twitter id in topic?)
+* ~~Add presence. Are my friends in the area?~~
+  * ~~Needs friends/family on same broker~~
+  * ~~Needs 'standardized' topic names (maybe with Twitter id in topic?)~~
 * Queue updates on device (with `tst` etc) to be PUBlished upon available connection
 * Corner-pegging [#94](https://github.com/binarybucks/mqttitude/issues/94)
 * Maybe add remote-control for enabling "move-mode" on iOS (https://github.com/binarybucks/mqttitude/issues/139)
