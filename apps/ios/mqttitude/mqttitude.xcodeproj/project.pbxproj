@@ -19,14 +19,6 @@
 		8484687C17FD785D0012FC18 /* FriendsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685817FD785D0012FC18 /* FriendsOn@2x.png */; };
 		8484687D17FD785D0012FC18 /* HybridOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685917FD785D0012FC18 /* HybridOn.png */; };
 		8484687E17FD785D0012FC18 /* HybridOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685A17FD785D0012FC18 /* HybridOn@2x.png */; };
-		8484687F17FD785D0012FC18 /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685B17FD785D0012FC18 /* icon_114x114.png */; };
-		8484688017FD785D0012FC18 /* icon_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685C17FD785D0012FC18 /* icon_120x120.png */; };
-		8484688117FD785D0012FC18 /* icon_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685D17FD785D0012FC18 /* icon_144x144.png */; };
-		8484688217FD785D0012FC18 /* icon_29x29.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685E17FD785D0012FC18 /* icon_29x29.png */; };
-		8484688317FD785D0012FC18 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685F17FD785D0012FC18 /* icon_57x57.png */; };
-		8484688417FD785D0012FC18 /* icon_58x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484686017FD785D0012FC18 /* icon_58x58.png */; };
-		8484688517FD785D0012FC18 /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484686117FD785D0012FC18 /* icon_72x72.png */; };
-		8484688617FD785D0012FC18 /* icon_80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484686217FD785D0012FC18 /* icon_80x80.png */; };
 		8484688717FD785D0012FC18 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 8484686317FD785D0012FC18 /* iTunesArtwork */; };
 		8484688817FD785D0012FC18 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484686417FD785D0012FC18 /* iTunesArtwork.png */; };
 		8484688917FD785D0012FC18 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 8484686517FD785D0012FC18 /* iTunesArtwork@2x */; };
@@ -84,6 +76,7 @@
 		84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5117BEF44F00E1333C /* MapKit.framework */; };
 		84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5317BEF45700E1333C /* CoreLocation.framework */; };
 		84D4D111181995E200C23EFC /* icon_mqtc_ipad320.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */; };
+		84D75588183FFD8A002613E2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84D75587183FFD8A002613E2 /* Images.xcassets */; };
 		84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -107,14 +100,6 @@
 		8484685817FD785D0012FC18 /* FriendsOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FriendsOn@2x.png"; sourceTree = "<group>"; };
 		8484685917FD785D0012FC18 /* HybridOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HybridOn.png; sourceTree = "<group>"; };
 		8484685A17FD785D0012FC18 /* HybridOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HybridOn@2x.png"; sourceTree = "<group>"; };
-		8484685B17FD785D0012FC18 /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x114.png; sourceTree = "<group>"; };
-		8484685C17FD785D0012FC18 /* icon_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_120x120.png; sourceTree = "<group>"; };
-		8484685D17FD785D0012FC18 /* icon_144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_144x144.png; sourceTree = "<group>"; };
-		8484685E17FD785D0012FC18 /* icon_29x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_29x29.png; sourceTree = "<group>"; };
-		8484685F17FD785D0012FC18 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
-		8484686017FD785D0012FC18 /* icon_58x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_58x58.png; sourceTree = "<group>"; };
-		8484686117FD785D0012FC18 /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_72x72.png; sourceTree = "<group>"; };
-		8484686217FD785D0012FC18 /* icon_80x80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_80x80.png; sourceTree = "<group>"; };
 		8484686317FD785D0012FC18 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		8484686417FD785D0012FC18 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		8484686517FD785D0012FC18 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
@@ -193,6 +178,7 @@
 		84CF9A5117BEF44F00E1333C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84CF9A5317BEF45700E1333C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mqtc_ipad320.png; sourceTree = "<group>"; };
+		84D75587183FFD8A002613E2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MQTTitude/Images.xcassets; sourceTree = "<group>"; };
 		84F93C0417C028690060E809 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -231,14 +217,6 @@
 				84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */,
 				848D74C51817053100E93B84 /* icon_mqtc_iphone.png */,
 				848D74C61817053100E93B84 /* icon_mqtc_iphone@2x.png */,
-				8484685B17FD785D0012FC18 /* icon_114x114.png */,
-				8484685C17FD785D0012FC18 /* icon_120x120.png */,
-				8484685D17FD785D0012FC18 /* icon_144x144.png */,
-				8484685E17FD785D0012FC18 /* icon_29x29.png */,
-				8484685F17FD785D0012FC18 /* icon_57x57.png */,
-				8484686017FD785D0012FC18 /* icon_58x58.png */,
-				8484686117FD785D0012FC18 /* icon_72x72.png */,
-				8484686217FD785D0012FC18 /* icon_80x80.png */,
 				8484686317FD785D0012FC18 /* iTunesArtwork */,
 				8484686417FD785D0012FC18 /* iTunesArtwork.png */,
 				8484686517FD785D0012FC18 /* iTunesArtwork@2x */,
@@ -306,6 +284,7 @@
 		84CF99FC17BEED5B00E1333C = {
 			isa = PBXGroup;
 			children = (
+				84D75587183FFD8A002613E2 /* Images.xcassets */,
 				848468BA17FD7A740012FC18 /* mqtt */,
 				8484689E17FD7A100012FC18 /* coredata */,
 				846597C217F6631100BEA7A8 /* MQTTitude.entitlements */,
@@ -447,22 +426,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				8484688D17FD785D0012FC18 /* LocationOff@2x.png in Resources */,
+				84D75588183FFD8A002613E2 /* Images.xcassets in Resources */,
 				8484687C17FD785D0012FC18 /* FriendsOn@2x.png in Resources */,
 				8484689017FD785D0012FC18 /* move.png in Resources */,
 				848D74C71817053100E93B84 /* icon_mqtc_ipad64.png in Resources */,
-				8484688117FD785D0012FC18 /* icon_144x144.png in Resources */,
 				848468B717FD7A3F0012FC18 /* Default-568h@2x.png in Resources */,
 				8484689517FD785D0012FC18 /* SatelliteOff@2x.png in Resources */,
 				8484688817FD785D0012FC18 /* iTunesArtwork.png in Resources */,
 				84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */,
 				8484689617FD785D0012FC18 /* SatelliteOn.png in Resources */,
 				848468B917FD7A3F0012FC18 /* Default@2x.png in Resources */,
-				8484688517FD785D0012FC18 /* icon_72x72.png in Resources */,
 				8484689917FD785D0012FC18 /* UserTrackingFollow@2x.png in Resources */,
-				8484688217FD785D0012FC18 /* icon_29x29.png in Resources */,
-				8484688617FD785D0012FC18 /* icon_80x80.png in Resources */,
-				8484687F17FD785D0012FC18 /* icon_114x114.png in Resources */,
-				8484688417FD785D0012FC18 /* icon_58x58.png in Resources */,
 				8484689C17FD785D0012FC18 /* UserTrackingNone.png in Resources */,
 				8484688B17FD785D0012FC18 /* Location.gpx in Resources */,
 				8484688717FD785D0012FC18 /* iTunesArtwork in Resources */,
@@ -481,13 +455,11 @@
 				8484689B17FD785D0012FC18 /* UserTrackingFollowWithHeading@2x.png in Resources */,
 				8484689317FD785D0012FC18 /* Pin@2x.png in Resources */,
 				8484687A17FD785D0012FC18 /* connection.png in Resources */,
-				8484688317FD785D0012FC18 /* icon_57x57.png in Resources */,
 				84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */,
 				8484688C17FD785D0012FC18 /* LocationOff.png in Resources */,
 				8484689417FD785D0012FC18 /* SatelliteOff.png in Resources */,
 				8484689217FD785D0012FC18 /* Pin.png in Resources */,
 				8484687B17FD785D0012FC18 /* FriendsOn.png in Resources */,
-				8484688017FD785D0012FC18 /* icon_120x120.png in Resources */,
 				8484689817FD785D0012FC18 /* UserTrackingFollow.png in Resources */,
 				8484687D17FD785D0012FC18 /* HybridOn.png in Resources */,
 				848468B817FD7A3F0012FC18 /* Default.png in Resources */,
@@ -604,12 +576,14 @@
 		84CF9A2C17BEED5B00E1333C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = MQTTitude/MQTTitude.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
-				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/mqttitude/mqttitude-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -621,12 +595,14 @@
 		84CF9A2D17BEED5B00E1333C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = MQTTitude/MQTTitude.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
-				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/mqttitude/mqttitude-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

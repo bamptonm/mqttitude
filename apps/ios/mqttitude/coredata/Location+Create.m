@@ -103,10 +103,10 @@
 }
 - (NSString *)locationText
 {
-    return [NSString stringWithFormat:@"+-%.0fm %@",
-            [self.accuracy floatValue],
+    return [NSString stringWithFormat:@"%@ (±%.0fm)",
             (self.placemark) ? self.placemark :
-            [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude]];
+            [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude],
+            [self.accuracy floatValue]];
 }
 
 - (CLLocationCoordinate2D)coordinate
