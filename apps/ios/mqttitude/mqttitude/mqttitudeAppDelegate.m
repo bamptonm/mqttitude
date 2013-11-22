@@ -28,6 +28,10 @@
 #define MAX_OWN_LOCATIONS 100
 #define MAX_OTHER_LOCATIONS 1
 
+#undef REMOTE_NOTIFICATIONS
+#undef REMOTE_COMMANDS
+#undef BATTERY_MONITORING
+
 @implementation mqttitudeAppDelegate
 
 #pragma ApplicationDelegate
@@ -124,16 +128,72 @@
         }
         
     }
+    
+    /*
+     * MQTT connection
+     */
         
     self.connection = [[Connection alloc] init];
     self.connection.delegate = self;
     
     [self connect];
+  
+#ifdef REMOTE_NOTIFICATIONS
+    /*
+     * Remote Notifications
+     */
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
+#endif
     
+#ifdef BATTERY_MONITORING
+    
+    // Register for battery level and state change notifications.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(batteryLevelChanged:)
+                                                 name:UIDeviceBatteryLevelDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(batteryStateChanged:)
+                                                 name:UIDeviceBatteryStateDidChangeNotification object:nil];
+    
+    
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:TRUE];
+#endif
+
     return YES;
 }
+
+#ifdef BATTERY_MONITORING
+- (void)batteryLevelChanged:(NSNotification *)notification
+{
+#ifdef DEBUG
+    NSLog(@"App batteryLevelChanged %f", [UIDevice currentDevice].batteryLevel);
+#endif
+
+    // No, we do not want to switch off location monitoring when battery gets low
+}
+
+- (void)batteryStateChanged:(NSNotification *)notification
+{
+#ifdef DEBUG
+    const NSDictionary *states = @{
+                                   @(UIDeviceBatteryStateUnknown): @"unknown",
+                                   @(UIDeviceBatteryStateUnplugged): @"unplugged",
+                                   @(UIDeviceBatteryStateCharging): @"charging",
+                                   @(UIDeviceBatteryStateFull): @"full"
+                                   };
+    
+    NSLog(@"App batteryLevelChanged %@ (%d)", states[@([UIDevice currentDevice].batteryState)], [UIDevice currentDevice].batteryState);
+#endif
+
+    if ([UIDevice currentDevice].batteryState == UIDeviceBatteryStateCharging) {
+        // will we get the notification when monitoring is off?
+        [self notification:[NSString stringWithFormat:@"MQTTitude batteryLevelChanged %@ (%d)", states[@([UIDevice currentDevice].batteryState)], [UIDevice currentDevice].batteryState]];
+
+    }
+}
+#endif
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
@@ -335,6 +395,7 @@
     NSLog(@"App applicationWillTerminate");
 #endif
     [[NSUserDefaults standardUserDefaults] synchronize];
+    [self notification:@"MQTTitude terminated. Tap to restart"];
 }
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification {
@@ -433,10 +494,10 @@
     NSLog(@"App handleMessage %@ %@)", topic, [Connection dataToString:data]);
 #endif
 
-    NSString *message = [NSString stringWithFormat:@"%@: %@", topic, [Connection dataToString:data]];
-    
     if ([topic isEqualToString:[self theGeneralTopic]]) {
         // received own data
+        
+#ifdef REMOTE_COMMAND
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"listento"]]) {
         // received command
         NSString *message = [Connection dataToString:data];
@@ -449,8 +510,9 @@
         } else if ([message isEqualToString:@"publishMoveMode"]) {
             self.monitoring = 2;
         } else {
+            
 #ifdef DEBUG
-            NSLog(@"App unknown command %@)", message);
+            NSLog(@"App unknown command %@: %@", topic, [Connection dataToString:data]);
 #endif
             NSString *message = @"MQTTitude received an unknown command";
             [self alert:message];
@@ -460,6 +522,8 @@
         NSLog(@"App received message %@)", message);
 #endif
         [self notification:message];
+#endif
+        
     } else {
         // received other data
         NSString *deviceName = topic;
@@ -790,7 +854,7 @@
     return [self jsonToData:jsonObject];
 }
 
-#pragma Remote Notifications
+#ifdef REMOTE_NOTIFICATIONS
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
@@ -834,6 +898,7 @@
                           qos:1
                        retain:YES];
 }
+#endif 
 
 #pragma construct topic names
 

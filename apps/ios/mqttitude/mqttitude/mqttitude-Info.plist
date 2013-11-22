@@ -69,7 +69,11 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>1.2</string>
+=======
+	<string>5.2</string>
+>>>>>>> IOS-5.2
 	<key>LSApplicationCategoryType</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
