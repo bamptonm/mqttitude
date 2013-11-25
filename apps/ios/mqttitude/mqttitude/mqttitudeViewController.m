@@ -235,6 +235,19 @@
             [segue.destinationViewController performSelector:@selector(setConnection:) withObject:delegate.connection];
         }
     }
+    
+    /*
+     * segue for location detail view
+     */
+    
+    if ([segue.identifier isEqualToString:@"showDetail:"]) {
+        if ([segue.destinationViewController respondsToSelector:@selector(setLocation:)]) {
+            MKAnnotationView *view = (MKAnnotationView *)sender;
+            Location *location  = (Location *)view.annotation;
+            [segue.destinationViewController performSelector:@selector(setLocation:) withObject:location];
+        }
+    }
+    
 }
 
 #pragma centeredRect
@@ -302,6 +315,7 @@
     } else {
         if ([annotation isKindOfClass:[Location class]]) {
             Location *location = (Location *)annotation;
+            
             mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
 
             if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
@@ -315,6 +329,8 @@
                 } else {
                     pinAnnotationView.pinColor = MKPinAnnotationColorPurple;
                 }
+                pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+                
                 return pinAnnotationView;
             } else {
                 Friend *friend = location.belongsTo;
@@ -337,6 +353,9 @@
                     friendAnnotationView.personImage = [UIImage imageWithData:[friend image]];
                     friendAnnotationView.circleColor = color;
                     [friendAnnotationView setNeedsDisplay];
+                    
+                    friendAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+                    
                     return friendAnnotationView;
                 } else {
                     MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_OTHER];
@@ -346,6 +365,9 @@
                         MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_OTHER];
                         pinAnnotationView.pinColor = MKPinAnnotationColorGreen;
                         pinAnnotationView.canShowCallout = YES;
+                        
+                        pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+                        
                         return pinAnnotationView;
                     }
                 }
@@ -372,6 +394,7 @@
 #ifdef DEBUG
     NSLog(@"calloutAccessoryControlTapped");
 #endif
+    [self performSegueWithIdentifier:@"showDetail:" sender:view];
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate

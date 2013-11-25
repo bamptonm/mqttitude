@@ -47,11 +47,6 @@
                                                                                              timeStyle:NSDateFormatterMediumStyle];
     cell.detailTextLabel.text = [location locationText];
     
-    if ([location.automatic boolValue]) {
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    } else {
-        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-    }
     cell.imageView.image = location.belongsTo.image ? [UIImage imageWithData:[location.belongsTo image]] : [UIImage imageNamed:@"icon_57x57"];
     
     return cell;

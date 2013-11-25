@@ -10,6 +10,7 @@
 #import "Friend+Create.h"
 
 @interface mqttitudeEditLocationTVC ()
+@property (weak, nonatomic) IBOutlet UITableViewCell *remarkCell;
 @property (weak, nonatomic) IBOutlet UITextField *UItimestamp;
 @property (weak, nonatomic) IBOutlet UITextField *UIcoordinate;
 @property (weak, nonatomic) IBOutlet UITextView *UIplace;
@@ -28,18 +29,31 @@
 {
     [super viewWillAppear:animated];
     
-    self.title = [self.location.belongsTo name] ? [self.location.belongsTo name] : self.location.belongsTo.topic;
+    self.title = [self.location nameText];
     
-    self.UIcoordinate.text = [NSString stringWithFormat:@"%f,%f", [self.location.latitude doubleValue] , [self.location.longitude doubleValue]];
-    self.UItimestamp.text = [NSDateFormatter localizedStringFromDate:self.location.timestamp
-                                                           dateStyle:NSDateFormatterShortStyle
-                                                           timeStyle:NSDateFormatterMediumStyle];
+    self.UIcoordinate.text = [self.location coordinateText];
+    
+    self.UItimestamp.text = [self.location timestampText];
+    
     self.UIplace.text = self.location.placemark;
     self.UIremark.text = self.location.remark;
-}
+    }
 
 - (IBAction)remarkchanged:(UITextField *)sender {
     self.location.remark = sender.text;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0) {
+        if ([self.location.automatic boolValue]) {
+            return 0;
+        } else {
+            return 1;
+        }
+    } else {
+        return 3;
+    }
 }
 
 @end

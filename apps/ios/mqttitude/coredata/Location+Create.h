@@ -24,5 +24,6 @@
 - (NSString *)nameText;
 - (NSString *)timestampText;
 - (NSString *)locationText;
+- (NSString *)coordinateText;
 
 @end

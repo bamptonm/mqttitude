@@ -109,6 +109,14 @@
             [self.accuracy floatValue]];
 }
 
+- (NSString *)coordinateText
+{
+    return [NSString stringWithFormat:@"%f,%f (±%.0fm)",
+            self.coordinate.latitude,
+            self.coordinate.longitude,
+            [self.accuracy floatValue]];
+}
+
 - (CLLocationCoordinate2D)coordinate
 {
     CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
