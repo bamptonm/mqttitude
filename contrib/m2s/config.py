@@ -1,5 +1,7 @@
 
-CONFIG='settings.py'
+import os
+
+CONFIG=os.getenv('M2SCONFIG', 'settings.py')
 
 class Config(object):
     def __init__(self, filename=CONFIG):

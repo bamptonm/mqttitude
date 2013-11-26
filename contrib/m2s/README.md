@@ -35,6 +35,7 @@ This is part of the MQTTitude back-end. This program subscribes to a configured 
 
 1. Copy `settings.py.sample` to `settings.py` and edit. Note that this must be valid Python code
 2. Pay particular attention to the _data_plugins_, which you can write yourself. 
+3. If you want to place `settings.py` in a different path, set `$M2SCONFIG` to the path to `settings.py`.
 
 ### Data Plugins
 
