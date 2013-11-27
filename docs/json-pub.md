@@ -4,20 +4,24 @@ This location object is published by the mobile apps and delivered by the backen
 
 ```json
 {
-    "_type": "location",	// (a) (i)
-    "lat": "xx.xxxxxx", 	// (a) (i)
-    "lon": "y.yyyyyy", 		// (a) (i)
-    "tst": "1376715317",	// (a) (i)
-    "acc": "75m",		// (a) (i)
-    "batt": "nn",		// 
+    "_type": "location",        // (a) (i)
+    "lat"  : "xx.xxxxxx",       // (a) (i)
+    "lon"  : "y.yyyyyy",        // (a) (i)
+    "tst"  : "1376715317",      // (a) (i)
+    "acc"  : "75",              // (a) (i)
+    "batt" : "nn",              // (a) (i)
 }
 ```
 
 * `lat` is latitude as decimal, represented as a string
 * `lon` is longitude as decimal, represented as a string
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
-* `acc` is accuracy if available
-* `batt` is the device's battery level in percent (0 through 100) (not yet available)
+* `acc` is accuracy, in metres, with no unit. `[1]` (See: #211)
+* `batt` is the device's battery level in percent (0 through 100) (iPhone: 5.3, Android 0.4)
+
+1. `acc` is a radius of uncertainty for the location, measured in metres.  The
+    location’s _lat_ / _lon_ identify the center of the circle, and this value
+    indicates the radius of that circle.
 
 ## LWT
 
