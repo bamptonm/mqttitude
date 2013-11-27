@@ -17,7 +17,7 @@ This location object is published by the mobile apps and delivered by the backen
 * `lon` is longitude as decimal, represented as a string
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
 * `acc` is accuracy if available
-* `batt` is the device's battery level (not yet available)
+* `batt` is the device's battery level in percent (0 through 100) (not yet available)
 
 ## LWT
 
