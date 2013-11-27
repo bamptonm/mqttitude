@@ -30,7 +30,7 @@
 
 #undef REMOTE_NOTIFICATIONS
 #undef REMOTE_COMMANDS
-#undef BATTERY_MONITORING
+#define BATTERY_MONITORING
 
 @implementation mqttitudeAppDelegate
 
@@ -124,9 +124,7 @@
             self.manager.delegate = self;
             
             self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
-             
         }
-        
     }
     
     /*
@@ -186,12 +184,6 @@
     
     NSLog(@"App batteryLevelChanged %@ (%d)", states[@([UIDevice currentDevice].batteryState)], [UIDevice currentDevice].batteryState);
 #endif
-
-    if ([UIDevice currentDevice].batteryState == UIDeviceBatteryStateCharging) {
-        // will we get the notification when monitoring is off?
-        [self notification:[NSString stringWithFormat:@"MQTTitude batteryLevelChanged %@ (%d)", states[@([UIDevice currentDevice].batteryState)], [UIDevice currentDevice].batteryState]];
-
-    }
 }
 #endif
 
@@ -848,7 +840,11 @@
                                  @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
                                  @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
                                  @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
-                                 @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
+                                 @"acc": [NSString stringWithFormat:@"%.0f", location.horizontalAccuracy],
+#ifdef BATTERY_MONITORING
+                                 @"batt": [NSString stringWithFormat:@"%.0f", [UIDevice currentDevice].batteryLevel != -1.0 ?
+                                 [UIDevice currentDevice].batteryLevel * 100.0 : -1.0],
+#endif
                                  @"_type": [NSString stringWithFormat:@"%@", @"location"]
                                  };
     return [self jsonToData:jsonObject];
@@ -898,7 +894,7 @@
                           qos:1
                        retain:YES];
 }
-#endif 
+#endif // REMOTE_NOTIFICATIONS
 
 #pragma construct topic names
 
