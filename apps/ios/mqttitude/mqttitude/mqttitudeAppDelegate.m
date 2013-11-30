@@ -526,12 +526,22 @@
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (dictionary) {
             if ([dictionary[@"_type"] isEqualToString:@"location"]) {
-                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([dictionary[@"lat"] floatValue], [dictionary[@"lon"] floatValue]);
+                NSLog(@"App json received lat:%f lon:%f alt:%f acc:%f vac:%f tst:%f",
+                      [dictionary[@"lat"] doubleValue],
+                      [dictionary[@"lon"] doubleValue],
+                      [dictionary[@"alt"] doubleValue],
+                      [dictionary[@"acc"] doubleValue],
+                      [dictionary[@"vac"] doubleValue],
+                      [dictionary[@"tst"] doubleValue]
+                      );
+
+                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([dictionary[@"lat"] doubleValue], [dictionary[@"lon"] doubleValue]);
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
-                                                                     altitude:[dictionary[@"alt"] floatValue]
-                                                           horizontalAccuracy:[dictionary[@"acc"] floatValue]
-                                                             verticalAccuracy:[dictionary[@"vac"] floatValue]
-                                                                    timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] floatValue]]];
+                                                                     altitude:[dictionary[@"alt"] doubleValue]
+                                                           horizontalAccuracy:[dictionary[@"acc"] doubleValue]
+                                                             verticalAccuracy:[dictionary[@"vac"] doubleValue]
+                                                                    timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] doubleValue]]];
+                NSLog(@"App location received %@", location);
                 Location *newLocation = [Location locationWithTopic:deviceName
                                                           timestamp:location.timestamp
                                                          coordinate:location.coordinate

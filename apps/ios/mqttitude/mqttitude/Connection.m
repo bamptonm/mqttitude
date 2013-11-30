@@ -15,7 +15,7 @@
 @property (nonatomic) NSInteger state;
 
 @property (strong, nonatomic) NSTimer *reconnectTimer;
-@property (nonatomic) float reconnectTime;
+@property (nonatomic) double reconnectTime;
 @property (nonatomic) BOOL reconnectFlag;
 
 @property (strong, nonatomic) MQTTSession *session;
