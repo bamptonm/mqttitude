@@ -378,6 +378,13 @@
     }
 }
 
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
+{
+    MKCircleView *view = [[MKCircleView alloc] initWithCircle:overlay];
+    view.fillColor = [UIColor colorWithRed:0.3 green:0.0 blue:0.3 alpha:0.5];
+    return view;
+}
+
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
 #ifdef DEBUG
@@ -420,6 +427,16 @@
 #endif
     }
     [self.mapView addAnnotations:[Location allLocationsInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]];
+    
+    NSArray *overlays = [Location allOverlaysInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    [self.mapView addOverlays:overlays];
+
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+    for (Location *location in overlays) {
+        if (location.region) {
+            [delegate.manager startMonitoringForRegion:location.region];
+        }
+    }
 }
 
 - (void)setFrc:(NSFetchedResultsController *)newfrc
@@ -440,12 +457,9 @@
 #ifdef DEBUG
             NSLog(@"[%@ %@] reset to nil", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 #endif
-            [self.mapView addAnnotations:[Location allLocationsInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]];
         }
     }
 }
-
-
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -472,7 +486,6 @@
     }
 }
 
-
 - (void)controller:(NSFetchedResultsController *)controller
    didChangeObject:(id)anObject
 	   atIndexPath:(NSIndexPath *)indexPath
@@ -481,19 +494,54 @@
 {
     if (!self.suspendAutomaticTrackingOfChangesInManagedObjectContext)
     {
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+        Location *location = (Location *)anObject;
+        
         switch(type)
         {
             case NSFetchedResultsChangeInsert:
-                [self.mapView addAnnotation:anObject];
+                [self.mapView addAnnotation:location];
+                [self.mapView addOverlay:location];
+                if (location.region) {
+                    [delegate.manager startMonitoringForRegion:location.region];
+                }
+                
                 break;
                 
             case NSFetchedResultsChangeDelete:
-                [self.mapView removeAnnotation:anObject];
+                [self.mapView removeAnnotation:location];
+                [self.mapView removeOverlay:location];
+                for (CLRegion *region in delegate.manager.monitoredRegions) {
+                    if (region.center.latitude == location.coordinate.latitude &&
+                        region.center.longitude == location.coordinate.longitude) {
+#ifdef DEBUG
+                        NSLog(@"stopMonitoringForRegion %@ %.0f", region.identifier, region.radius);
+#endif
+                        [delegate.manager stopMonitoringForRegion:region];
+                    }
+                }
+
                 break;
                 
             case NSFetchedResultsChangeUpdate:
-                [self.mapView removeAnnotation:anObject];
-                [self.mapView addAnnotation:anObject];
+                [self.mapView removeAnnotation:location];
+                [self.mapView removeOverlay:location];
+                for (CLRegion *region in delegate.manager.monitoredRegions) {
+                    if (region.center.latitude == location.coordinate.latitude &&
+                        region.center.longitude == location.coordinate.longitude) {
+#ifdef DEBUG
+                        NSLog(@"stopMonitoringForRegion %@ %.0f", region.identifier, region.radius);
+#endif
+                        [delegate.manager stopMonitoringForRegion:region];
+                    }
+                }
+                
+                [self.mapView addAnnotation:location];
+                [self.mapView addOverlay:location];
+                if (location.region) {
+                    [delegate.manager startMonitoringForRegion:location.region];
+                }
+
                 break;
                 
             case NSFetchedResultsChangeMove:

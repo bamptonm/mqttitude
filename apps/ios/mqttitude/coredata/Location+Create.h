@@ -10,14 +10,17 @@
 #import <MapKit/MapKit.h>
 
 
-@interface Location (Create) <MKAnnotation>
+@interface Location (Create) <MKAnnotation, MKOverlay>
 + (Location *)locationWithTopic:(NSString *)topic
                       timestamp:(NSDate *)timestamp
                      coordinate:(CLLocationCoordinate2D)coordinate
                        accuracy:(CLLocationAccuracy)accuracy
                       automatic:(BOOL)automatic
+                         remark:(NSString *)remark
+                         radius:(CLLocationDistance)radius
      inManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)allLocationsInManagedObjectContext:(NSManagedObjectContext *)context;
++ (NSArray *)allOverlaysInManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)allLocationsWithFriend:(Friend *)friend inManagedObjectContext:(NSManagedObjectContext *)context;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 - (void) getReverseGeoCode;
@@ -25,5 +28,7 @@
 - (NSString *)timestampText;
 - (NSString *)locationText;
 - (NSString *)coordinateText;
-
+- (NSString *)radiusText;
+- (CLRegion *)region;
+- (CLLocationDistance)radius;
 @end

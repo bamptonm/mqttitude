@@ -11,5 +11,6 @@
 
 @interface mqttitudeEditLocationTVC : UITableViewController
 @property (strong, nonatomic) Location *location;
+@property (strong, nonatomic) MKMapView *mapView;
 
 @end

@@ -16,6 +16,8 @@
                      coordinate:(CLLocationCoordinate2D)coordinate
                        accuracy:(CLLocationAccuracy)accuracy
                       automatic:(BOOL)automatic
+                      remark:(NSString *)remark
+                      radius:(CLLocationDistance)radius
          inManagedObjectContext:(NSManagedObjectContext *)context;
 {
     Location *location = nil;
@@ -38,7 +40,7 @@
             location = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:context];
             
             location.belongsTo = friend;
-            location.timestamp = [NSDate dateWithTimeInterval:[matches count] / 1000 sinceDate:timestamp];
+            location.timestamp = timestamp;
             [location setCoordinate:coordinate];
             location.accuracy = @(accuracy);
             location.automatic = @(automatic);
@@ -55,6 +57,18 @@
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO]];
     
+    NSError *error = nil;
+    
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    return matches;
+}
+
++ (NSArray *)allOverlaysInManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    request.predicate = [NSPredicate predicateWithFormat:@"automatic = 0"];
+
     NSError *error = nil;
     
     NSArray *matches = [context executeFetchRequest:request error:&error];
@@ -117,6 +131,11 @@
             [self.accuracy doubleValue]];
 }
 
+- (NSString *)radiusText
+{
+    return [NSString stringWithFormat:@"%.0f", self.radius];
+}
+
 - (CLLocationCoordinate2D)coordinate
 {
     CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
@@ -153,6 +172,27 @@
              }
          }];
     }
+}
+
+- (CLRegion *)region
+{
+    CLRegion *region = nil;
+    if (![self.automatic boolValue] && self.remark && self.radius > 0) {
+        region = [[CLRegion alloc] initCircularRegionWithCenter:self.coordinate
+                                                         radius:self.radius
+                                                     identifier:self.remark];
+    }
+    return region;
+}
+
+- (MKMapRect)boundingMapRect
+{
+    return [MKCircle circleWithCenterCoordinate:self.coordinate radius:self.radius].boundingMapRect;
+}
+
+- (CLLocationDistance)radius
+{
+    return [self.regionradius doubleValue];
 }
 
 @end

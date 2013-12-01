@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		84004E65180DF24800C831E3 /* mqttitudeCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 84004E64180DF24800C831E3 /* mqttitudeCoreData.m */; };
 		8414726A17C9E5F900F76EAB /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8414726917C9E5F900F76EAB /* Connection.m */; };
+		84228E16184B9C410032DCFD /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 84228E15184B9C410032DCFD /* Location.m */; };
 		8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8440549417F4EFF300455E26 /* CoreData.framework */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
 		846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */; };
@@ -44,7 +45,6 @@
 		8484689D17FD785D0012FC18 /* UserTrackingNone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484687917FD785D0012FC18 /* UserTrackingNone@2x.png */; };
 		848468AD17FD7A100012FC18 /* Friend+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468A017FD7A100012FC18 /* Friend+Create.m */; };
 		848468AF17FD7A100012FC18 /* Location+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468A417FD7A100012FC18 /* Location+Create.m */; };
-		848468B017FD7A100012FC18 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468A617FD7A100012FC18 /* Location.m */; };
 		848468B117FD7A100012FC18 /* MQTTitude.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 848468A717FD7A100012FC18 /* MQTTitude.xcdatamodeld */; };
 		848468B217FD7A100012FC18 /* Publication+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468AA17FD7A100012FC18 /* Publication+Create.m */; };
 		848468B317FD7A100012FC18 /* Publication.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468AC17FD7A100012FC18 /* Publication.m */; };
@@ -85,7 +85,10 @@
 		84004E64180DF24800C831E3 /* mqttitudeCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeCoreData.m; sourceTree = "<group>"; };
 		8414726817C9E5F900F76EAB /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		8414726917C9E5F900F76EAB /* Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connection.m; sourceTree = "<group>"; };
+		841D891C184B9057009498E6 /* MQTTitude 5.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MQTTitude 5.3.xcdatamodel"; sourceTree = "<group>"; };
 		8421367A1807F730000E8C24 /* MQTTitude 4.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MQTTitude 4.3.xcdatamodel"; sourceTree = "<group>"; };
+		84228E14184B9C410032DCFD /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		84228E15184B9C410032DCFD /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		8440549417F4EFF300455E26 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		846597C217F6631100BEA7A8 /* MQTTitude.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MQTTitude.entitlements; path = MQTTitude/MQTTitude.entitlements; sourceTree = "<group>"; };
@@ -127,8 +130,6 @@
 		848468A017FD7A100012FC18 /* Friend+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Friend+Create.m"; sourceTree = "<group>"; };
 		848468A317FD7A100012FC18 /* Location+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Location+Create.h"; sourceTree = "<group>"; };
 		848468A417FD7A100012FC18 /* Location+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Location+Create.m"; sourceTree = "<group>"; };
-		848468A517FD7A100012FC18 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		848468A617FD7A100012FC18 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		848468A817FD7A100012FC18 /* MQTTitude.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MQTTitude.xcdatamodel; sourceTree = "<group>"; };
 		848468A917FD7A100012FC18 /* Publication+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Publication+Create.h"; sourceTree = "<group>"; };
 		848468AA17FD7A100012FC18 /* Publication+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Publication+Create.m"; sourceTree = "<group>"; };
@@ -251,11 +252,11 @@
 				848468A017FD7A100012FC18 /* Friend+Create.m */,
 				848468A317FD7A100012FC18 /* Location+Create.h */,
 				848468A417FD7A100012FC18 /* Location+Create.m */,
-				848468A517FD7A100012FC18 /* Location.h */,
-				848468A617FD7A100012FC18 /* Location.m */,
 				84CDE36B1810454700717359 /* Friend.h */,
 				84CDE36C1810454800717359 /* Friend.m */,
 				848468A717FD7A100012FC18 /* MQTTitude.xcdatamodeld */,
+				84228E14184B9C410032DCFD /* Location.h */,
+				84228E15184B9C410032DCFD /* Location.m */,
 				848468A917FD7A100012FC18 /* Publication+Create.h */,
 				848468AA17FD7A100012FC18 /* Publication+Create.m */,
 				848468AB17FD7A100012FC18 /* Publication.h */,
@@ -492,10 +493,10 @@
 				848468C817FD7A740012FC18 /* MQTTSession.m in Sources */,
 				848468C717FD7A740012FC18 /* MQTTMessage.m in Sources */,
 				846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */,
-				848468B017FD7A100012FC18 /* Location.m in Sources */,
 				84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */,
 				848468C617FD7A740012FC18 /* MQTTEncoder.m in Sources */,
 				848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */,
+				84228E16184B9C410032DCFD /* Location.m in Sources */,
 				848468AF17FD7A100012FC18 /* Location+Create.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -639,10 +640,11 @@
 			isa = XCVersionGroup;
 			children = (
 				84CDE36A1810442100717359 /* MQTTitude 5.1.xcdatamodel */,
+				841D891C184B9057009498E6 /* MQTTitude 5.3.xcdatamodel */,
 				8421367A1807F730000E8C24 /* MQTTitude 4.3.xcdatamodel */,
 				848468A817FD7A100012FC18 /* MQTTitude.xcdatamodel */,
 			);
-			currentVersion = 84CDE36A1810442100717359 /* MQTTitude 5.1.xcdatamodel */;
+			currentVersion = 841D891C184B9057009498E6 /* MQTTitude 5.3.xcdatamodel */;
 			path = MQTTitude.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

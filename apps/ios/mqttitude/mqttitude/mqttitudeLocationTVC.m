@@ -24,12 +24,13 @@
     if (friend && friend.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
         
-        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO]];
+        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"automatic" ascending:YES],
+                                    [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO]];
         request.predicate = [NSPredicate predicateWithFormat:@"belongsTo = %@", friend];
 
         self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
                                                                             managedObjectContext:friend.managedObjectContext
-                                                                              sectionNameKeyPath:nil
+                                                                              sectionNameKeyPath:@"automatic"
                                                                                        cacheName:nil];
     } else {
         self.fetchedResultsController = nil;
@@ -42,9 +43,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"location"];
     
     Location *location = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = location.remark ? location.remark : [NSDateFormatter localizedStringFromDate:location.timestamp
-                                                                                             dateStyle:NSDateFormatterShortStyle
-                                                                                             timeStyle:NSDateFormatterMediumStyle];
+    cell.textLabel.text = location.remark ?
+    [NSString stringWithFormat:@"%@ %@", location.remark, location.radiusText] :
+    [NSDateFormatter localizedStringFromDate:location.timestamp
+                                   dateStyle:NSDateFormatterShortStyle
+                                   timeStyle:NSDateFormatterMediumStyle];
     cell.detailTextLabel.text = [location locationText];
     
     cell.imageView.image = location.belongsTo.image ? [UIImage imageWithData:[location.belongsTo image]] : [UIImage imageNamed:@"icon_57x57"];
@@ -72,6 +75,29 @@
             self.selectedLocation = location;
         }
 
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if ([self numberOfSectionsInTableView:tableView] > 1) {
+        return section ? @"auto" : @"manual";
+    } else {
+        return nil;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    return index;
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    if ([self numberOfSectionsInTableView:tableView] > 1) {
+        return @[@"m", @"a"];
+    } else {
+        return nil;
     }
 }
 

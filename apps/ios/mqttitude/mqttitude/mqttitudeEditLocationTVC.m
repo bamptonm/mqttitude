@@ -8,6 +8,7 @@
 
 #import "mqttitudeEditLocationTVC.h"
 #import "Friend+Create.h"
+#import "mqttitudeAppDelegate.h"
 
 @interface mqttitudeEditLocationTVC ()
 @property (weak, nonatomic) IBOutlet UITableViewCell *remarkCell;
@@ -15,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIcoordinate;
 @property (weak, nonatomic) IBOutlet UITextView *UIplace;
 @property (weak, nonatomic) IBOutlet UITextField *UIremark;
+@property (weak, nonatomic) IBOutlet UITextField *UIradius;
 
 @end
 
@@ -37,10 +39,14 @@
     
     self.UIplace.text = self.location.placemark;
     self.UIremark.text = self.location.remark;
+    self.UIradius.text = [self.location radiusText];
     }
 
 - (IBAction)remarkchanged:(UITextField *)sender {
     self.location.remark = sender.text;
+}
+- (IBAction)radiuschanged:(UITextField *)sender {
+    self.location.regionradius = @([sender.text doubleValue]);
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -49,7 +55,7 @@
         if ([self.location.automatic boolValue]) {
             return 0;
         } else {
-            return 1;
+            return 2;
         }
     } else {
         return 3;

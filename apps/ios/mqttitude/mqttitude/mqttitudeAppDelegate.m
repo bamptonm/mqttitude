@@ -124,6 +124,10 @@
             self.manager.delegate = self;
             
             self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
+            
+            for (CLRegion *region in self.manager.monitoredRegions) {
+                [self.manager stopMonitoringForRegion:region];
+            }
         }
     }
     
@@ -392,10 +396,10 @@
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification {
 #ifdef DEBUG
-    NSLog(@"App didReceiveLocalNotification");
+    NSLog(@"App didReceiveLocalNotification %@", notification.alertBody);
 #endif
 
-    [self disappearingAlert:notification.alertBody];
+    // [self disappearingAlert:notification.alertBody];
 }
 
 #pragma CLLocationManagerDelegate
@@ -428,9 +432,50 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
 #ifdef DEBUG
-    NSLog(@"App didFailWithError %@", error);
+    NSLog(@"App locationManager:didFailWithError %@", error);
 #endif
-    NSString *message = [NSString stringWithFormat:@"App didFailWithError %@", error];
+    NSString *message = [NSString stringWithFormat:@"App locationManager:didFailWithError %@", error];
+    [self alert:message];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+{
+#ifdef DEBUG
+    NSLog(@"App didEnterRegion %@", region);
+#endif
+    NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
+    [self disappearingAlert:message];
+
+    [self publishLocation:[self.manager location] automatic:TRUE];
+
+}
+
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
+{
+#ifdef DEBUG
+    NSLog(@"App didExitRegion %@", region);
+#endif
+
+    NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
+    [self disappearingAlert:message];
+
+    [self publishLocation:[self.manager location] automatic:TRUE];
+
+}
+
+- (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
+{
+#ifdef DEBUG
+    NSLog(@"App didStartMonitoringForRegion %@", region);
+#endif
+}
+
+- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
+{
+#ifdef DEBUG
+    NSLog(@"App monitoringDidFailForRegion %@ %@", region, error);
+#endif
+    NSString *message = [NSString stringWithFormat:@"App monitoringDidFailForRegion %@ %@", region, error];
     [self alert:message];
 }
 
@@ -547,6 +592,8 @@
                                                          coordinate:location.coordinate
                                                            accuracy:location.horizontalAccuracy
                                                           automatic:TRUE
+                                                             remark:nil
+                                                             radius:0
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
             } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
@@ -684,6 +731,8 @@
                                              coordinate:location.coordinate
                                                accuracy:location.horizontalAccuracy
                                               automatic:automatic
+                                                 remark:nil
+                                                 radius:0
                                  inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
 
     NSData *data = [self encodeLocationData:location];
