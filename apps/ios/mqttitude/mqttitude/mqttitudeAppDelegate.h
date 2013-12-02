@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "Connection.h"
+#import "Location+Create.h"
 
 @interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate>
 
@@ -19,7 +20,7 @@
 
 - (void)switchOff;
 - (void)sendNow;
-- (void)sendWayPoint;
+- (void)sendWayPoint:(Location *)location;
 - (void)reconnect;
 - (void)connectionOff;
 

@@ -510,7 +510,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     <connections>
-                                                        <action selector="remarkchanged:" destination="m9c-8c-Xj9" eventType="editingChanged" id="pvj-59-uTc"/>
+                                                        <action selector="remarkchanged:" destination="m9c-8c-Xj9" eventType="editingDidEnd" id="GDe-t7-SY1"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -549,7 +549,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad"/>
                                                     <connections>
-                                                        <action selector="radiuschanged:" destination="m9c-8c-Xj9" eventType="editingChanged" id="MYm-GF-Eow"/>
+                                                        <action selector="radiuschanged:" destination="m9c-8c-Xj9" eventType="editingDidEnd" id="uq8-Uy-eii"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>

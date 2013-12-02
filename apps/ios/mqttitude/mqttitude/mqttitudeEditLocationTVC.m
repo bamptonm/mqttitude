@@ -43,10 +43,14 @@
     }
 
 - (IBAction)remarkchanged:(UITextField *)sender {
-    self.location.remark = sender.text;
+    if (![sender.text isEqualToString:self.location.remark]) {
+        self.location.remark = sender.text;
+    }
 }
 - (IBAction)radiuschanged:(UITextField *)sender {
-    self.location.regionradius = @([sender.text doubleValue]);
+    if ([sender.text doubleValue] != [self.location.regionradius doubleValue]) {
+        self.location.regionradius = @([sender.text doubleValue]);
+    }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

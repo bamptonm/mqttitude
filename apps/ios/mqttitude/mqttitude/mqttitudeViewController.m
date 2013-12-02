@@ -329,6 +329,7 @@
                 } else {
                     pinAnnotationView.pinColor = MKPinAnnotationColorPurple;
                 }
+                pinAnnotationView.animatesDrop = YES;
                 pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
                 
                 return pinAnnotationView;
@@ -437,7 +438,7 @@
             [delegate.manager startMonitoringForRegion:location.region];
         }
         if (location.remark) {
-            
+            [delegate sendWayPoint:location];
         }
     }
 }
@@ -508,7 +509,9 @@
                 if (location.region) {
                     [delegate.manager startMonitoringForRegion:location.region];
                 }
-                
+                if (location.remark) {
+                    [delegate sendWayPoint:location];
+                }
                 break;
                 
             case NSFetchedResultsChangeDelete:
@@ -543,6 +546,9 @@
                 [self.mapView addOverlay:location];
                 if (location.region) {
                     [delegate.manager startMonitoringForRegion:location.region];
+                }
+                if (location.remark) {
+                    [delegate sendWayPoint:location];
                 }
 
                 break;

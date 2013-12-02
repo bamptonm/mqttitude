@@ -44,6 +44,8 @@
             [location setCoordinate:coordinate];
             location.accuracy = @(accuracy);
             location.automatic = @(automatic);
+            location.remark = remark;
+            location.regionradius = @(radius);
         } else {
             location = [matches lastObject];
         }
@@ -94,7 +96,7 @@
 }
 
 - (NSString *)title {
-    return [NSString stringWithFormat:@"%@", [self nameText]];
+    return [NSString stringWithFormat:@"%@ %@", [self nameText], self.remark ? self.remark : @""];
 }
 
 - (NSString *)subtitle {

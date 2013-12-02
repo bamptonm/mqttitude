@@ -424,7 +424,7 @@
          **/
         
         if ([location.timestamp compare:self.locationServiceStarted] != NSOrderedAscending ) {
-            [self publishLocation:location automatic:YES];
+            [self publishLocation:location automatic:YES comment:nil];
         }
     }
 }
@@ -446,7 +446,7 @@
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE];
+    [self publishLocation:[self.manager location] automatic:TRUE comment:message];
 
 }
 
@@ -459,7 +459,7 @@
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE];
+    [self publishLocation:[self.manager location] automatic:TRUE comment:message];
 
 }
 
@@ -539,7 +539,7 @@
         // received command
         NSString *message = [Connection dataToString:data];
         if ([message isEqualToString:@"publishNow"]) {
-            [self publishLocation:self.manager.location automatic:YES];
+            [self publishLocation:self.manager.location automatic:YES comment:@"by remote command"];
         } else if ([message isEqualToString:@"publishNever"]) {
             self.monitoring = 0;
         } else if ([message isEqualToString:@"publishNormal"]) {
@@ -570,29 +570,29 @@
         NSError *error;
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (dictionary) {
-            if ([dictionary[@"_type"] isEqualToString:@"location"]) {
-                NSLog(@"App json received lat:%f lon:%f alt:%f acc:%f vac:%f tst:%f",
+            if ([dictionary[@"_type"] isEqualToString:@"location"] ||
+                [dictionary[@"_type"] isEqualToString:@"waypoint"]) {
+                NSLog(@"App json received lat:%f lon:%f acc:%f tst:%f note:%@",
                       [dictionary[@"lat"] doubleValue],
                       [dictionary[@"lon"] doubleValue],
-                      [dictionary[@"alt"] doubleValue],
                       [dictionary[@"acc"] doubleValue],
-                      [dictionary[@"vac"] doubleValue],
-                      [dictionary[@"tst"] doubleValue]
+                      [dictionary[@"tst"] doubleValue],
+                      dictionary[@"note"]
                       );
 
                 CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([dictionary[@"lat"] doubleValue], [dictionary[@"lon"] doubleValue]);
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
-                                                                     altitude:[dictionary[@"alt"] doubleValue]
+                                                                     altitude:0
                                                            horizontalAccuracy:[dictionary[@"acc"] doubleValue]
-                                                             verticalAccuracy:[dictionary[@"vac"] doubleValue]
+                                                             verticalAccuracy:-1
                                                                     timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] doubleValue]]];
                 NSLog(@"App location received %@", location);
                 Location *newLocation = [Location locationWithTopic:deviceName
                                                           timestamp:location.timestamp
                                                          coordinate:location.coordinate
                                                            accuracy:location.horizontalAccuracy
-                                                          automatic:TRUE
-                                                             remark:nil
+                                                          automatic:[dictionary[@"_type"] isEqualToString:@"location"]? TRUE : FALSE
+                                                             remark:dictionary[@"note"]
                                                              radius:0
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
@@ -661,7 +661,7 @@
     NSLog(@"App sendNow");
 #endif
 
-    [self publishLocation:[self.manager location] automatic:FALSE];
+    [self publishLocation:[self.manager location] automatic:FALSE comment:@"on request"];
 }
 - (void)connectionOff
 {
@@ -711,7 +711,7 @@
 #ifdef DEBUG
     NSLog(@"App activityTimer");
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE];
+    [self publishLocation:[self.manager location] automatic:TRUE comment:@"by timer"];
 }
 
 - (void)reconnect
@@ -724,7 +724,7 @@
     [self connect];
 }
 
-- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic
+- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic comment:(NSString *)comment
 {
     Location *newLocation = [Location locationWithTopic:[self theGeneralTopic]
                                               timestamp:[NSDate date]
@@ -734,8 +734,8 @@
                                                  remark:nil
                                                  radius:0
                                  inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
-
-    NSData *data = [self encodeLocationData:newLocation];
+    
+    NSData *data = [self encodeLocationData:newLocation type:@"location" comment:comment];
     
     NSInteger msgID = [self.connection sendData:data
                                           topic:[self theGeneralTopic]
@@ -746,7 +746,7 @@
         NSString *message = [NSString stringWithFormat:@"Location %@",
                              (msgID == -1) ? @"queued" : @"sent"];
         [self notification:message];
-
+        
     }
     
     [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
@@ -768,6 +768,22 @@
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         [runLoop addTimer:self.disconnectTimer
                   forMode:NSDefaultRunLoopMode];
+    }
+}
+- (void)sendWayPoint:(Location *)location
+{
+    NSData *data = [self encodeLocationData:location type:@"waypoint" comment:nil];
+    
+    NSInteger msgID = [self.connection sendData:data
+                                          topic:[self theGeneralTopic]
+                                            qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
+                                         retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+    
+    if (msgID <= 0) {
+        NSString *message = [NSString stringWithFormat:@"Waypoint %@",
+                             (msgID == -1) ? @"queued" : @"sent"];
+        [self notification:message];
+        
     }
 }
 
@@ -893,17 +909,20 @@
 }
 
 
-- (NSData *)encodeLocationData:(Location *)location
+- (NSData *)encodeLocationData:(Location *)location type:(NSString *)type comment:(NSString *)comment
 {
-    NSDictionary *jsonObject = @{
+    NSMutableDictionary *jsonObject = [@{
                                  @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
                                  @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
                                  @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
                                  @"acc": [NSString stringWithFormat:@"%.0f", [location.accuracy doubleValue]],
-                                 @"_type": [NSString stringWithFormat:@"%@", @"location"]
-                                 };
+                                 @"_type": [NSString stringWithFormat:@"%@", type]
+                                 } mutableCopy];
     if (location.remark) {
-        [jsonObject setValue:location.remark forKey:@"note"];
+        [jsonObject setValue:[NSString stringWithFormat:@"%@", location.remark] forKey:@"note"];
+    }
+    if (comment) {
+        [jsonObject setValue:[NSString stringWithFormat:@"%@", comment] forKey:@"comment"];
     }
     
 #ifdef BATTERY_MONITORING
@@ -929,7 +948,7 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveRemoteNotification %@", userInfo);
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE];
+    [self publishLocation:[self.manager location] automatic:TRUE comment:@"by remote notification"];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
@@ -937,7 +956,7 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveRemoteNotification fetchCompletionHandler %@", userInfo);
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE];
+    [self publishLocation:[self.manager location] automatic:TRUE comment:@"by remote notification"];
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
