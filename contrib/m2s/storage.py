@@ -1,6 +1,6 @@
 
 import logging
-from dbschema import Location
+from dbschema import Location, mysql_db
 
 def storage(topic, item):
     """
@@ -15,6 +15,12 @@ def storage(topic, item):
     logging.debug("---- in storage: %s" % topic)
 
     item['tst'] = item['date_string']           # replace for database
+
+    # Attempt to connect if not already connected. Takes care of MySQL 2006
+    try:
+        mysql_db.connect()
+    except Exception, e:
+        logging.info("Cannot connect to database: %s" % (str(e)))
 
     try:
         loca = Location(**item)
