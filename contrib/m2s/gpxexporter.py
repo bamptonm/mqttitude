@@ -72,11 +72,13 @@ def main(argv):
     trackpoints = []
     waypoints = []
 
-    for l in Location.select().where(
+    query = Location.select().where(
                 (Location.username == username) & 
                 (Location.device == device) &
                 (Location.tst.between(from_date, to_date))
-                ):
+                )
+    query = query.order_by(Location.tst.asc())
+    for l in query:
     
         dbid    = l.id
         topic   = l.topic
