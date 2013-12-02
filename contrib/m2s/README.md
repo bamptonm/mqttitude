@@ -219,6 +219,8 @@ The resulting GPX file can be uploaded to, say, [GPS Visualizer](http://www.gpsv
 
 ![gps visualizer](assets/gpx-demo.jpg)
 
+Waypoints are added to the GPX if the database columns `weather` and `revgeo` are not NULL. (We populate these with the `m2s` plugins.)
+
 ### Requirements
 
 * Mosquitto (Python)
