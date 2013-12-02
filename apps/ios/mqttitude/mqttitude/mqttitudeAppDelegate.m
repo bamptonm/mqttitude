@@ -444,7 +444,7 @@
     NSLog(@"App didEnterRegion %@", region);
 #endif
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
-    [self disappearingAlert:message];
+    [self notification:message];
 
     [self publishLocation:[self.manager location] automatic:TRUE];
 
@@ -457,7 +457,7 @@
 #endif
 
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
-    [self disappearingAlert:message];
+    [self notification:message];
 
     [self publishLocation:[self.manager location] automatic:TRUE];
 
@@ -735,7 +735,7 @@
                                                  radius:0
                                  inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
 
-    NSData *data = [self encodeLocationData:location];
+    NSData *data = [self encodeLocationData:newLocation];
     
     NSInteger msgID = [self.connection sendData:data
                                           topic:[self theGeneralTopic]
@@ -893,19 +893,24 @@
 }
 
 
-- (NSData *)encodeLocationData:(CLLocation *)location
+- (NSData *)encodeLocationData:(Location *)location
 {
     NSDictionary *jsonObject = @{
                                  @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
                                  @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
                                  @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
-                                 @"acc": [NSString stringWithFormat:@"%.0f", location.horizontalAccuracy],
-#ifdef BATTERY_MONITORING
-                                 @"batt": [NSString stringWithFormat:@"%.0f", [UIDevice currentDevice].batteryLevel != -1.0 ?
-                                 [UIDevice currentDevice].batteryLevel * 100.0 : -1.0],
-#endif
+                                 @"acc": [NSString stringWithFormat:@"%.0f", [location.accuracy doubleValue]],
                                  @"_type": [NSString stringWithFormat:@"%@", @"location"]
                                  };
+    if (location.remark) {
+        [jsonObject setValue:location.remark forKey:@"note"];
+    }
+    
+#ifdef BATTERY_MONITORING
+    [jsonObject setValue:[NSString stringWithFormat:@"%.0f", [UIDevice currentDevice].batteryLevel != -1.0 ?
+                          [UIDevice currentDevice].batteryLevel * 100.0 : -1.0] forKey:@"batt"];
+#endif
+
     return [self jsonToData:jsonObject];
 }
 

@@ -19,6 +19,7 @@
 
 - (void)switchOff;
 - (void)sendNow;
+- (void)sendWayPoint;
 - (void)reconnect;
 - (void)connectionOff;
 

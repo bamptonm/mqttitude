@@ -436,6 +436,9 @@
         if (location.region) {
             [delegate.manager startMonitoringForRegion:location.region];
         }
+        if (location.remark) {
+            
+        }
     }
 }
 
