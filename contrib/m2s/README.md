@@ -207,7 +207,21 @@ curl 'http://api.openweathermap.org/data/2.5/weather?lat=48.858334&lon=2.295134'
 }
 ```
 
+### gpxexporter
+
+The `gpxexporter` utility can be used to export data saved to the database by `m2s` into [GPX] format. The command expects a _username_ and a _device_ as well as optional _from_ and _to_ dates (with timestamps in UTC if you want to narrow the data down to a particular time).
+
+```
+gpxexporter.py -u jpm -d iphone -f 2013-11-29T12:30 -t 2013-11-29T15:00
+```
+
+The resulting GPX file can be uploaded to, say, [GPS Visualizer](http://www.gpsvisualizer.com/) for viewing.
+
+![gps visualizer](assets/gpx-demo.jpg)
+
 ### Requirements
 
 * Mosquitto (Python)
 * [PeeWee](http://peewee.readthedocs.org/en/latest/). You don't have to install this; we've got a copy of `peewee.py` in this repository, but remove our copy if you have PeeWee.
+
+  [gpx]: http://en.wikipedia.org/wiki/GPS_eXchange_Format
