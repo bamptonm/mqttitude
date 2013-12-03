@@ -381,8 +381,15 @@
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
 {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     MKCircleView *view = [[MKCircleView alloc] initWithCircle:overlay];
-    view.fillColor = [UIColor colorWithRed:0.3 green:0.0 blue:0.3 alpha:0.5];
+    
+    Location *location = (Location *)overlay;
+    if ([location.region containsCoordinate:[delegate.manager location].coordinate]) {
+        view.fillColor = [UIColor colorWithRed:1.0 green:0.5 blue:0.5 alpha:0.5];
+    } else {
+        view.fillColor = [UIColor colorWithRed:0.5 green:0.5 blue:1.0 alpha:0.5];
+    }
     return view;
 }
 
@@ -427,19 +434,20 @@
         NSLog(@"[%@ %@] no NSFetchedResultsController (yet?)", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 #endif
     }
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+
     [self.mapView addAnnotations:[Location allLocationsInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]];
     
-    NSArray *overlays = [Location allOverlaysInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    NSArray *overlays = [Location allRegionsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     [self.mapView addOverlays:overlays];
-
-    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+    
     for (Location *location in overlays) {
-        if (location.region) {
-            [delegate.manager startMonitoringForRegion:location.region];
-        }
-        if (location.remark) {
-            [delegate sendWayPoint:location];
-        }
+        [delegate.manager startMonitoringForRegion:location.region];
+    }
+
+    NSArray *waypoints = [Location allSharedWaypointsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    for (Location *location in waypoints) {
+        [delegate sendWayPoint:location];
     }
 }
 
@@ -509,7 +517,7 @@
                 if (location.region) {
                     [delegate.manager startMonitoringForRegion:location.region];
                 }
-                if (location.remark) {
+                if ([location sharedWaypoint]) {
                     [delegate sendWayPoint:location];
                 }
                 break;
@@ -547,7 +555,7 @@
                 if (location.region) {
                     [delegate.manager startMonitoringForRegion:location.region];
                 }
-                if (location.remark) {
+                if ([location sharedWaypoint]) {
                     [delegate sendWayPoint:location];
                 }
 

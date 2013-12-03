@@ -18,6 +18,7 @@
                       automatic:(BOOL)automatic
                       remark:(NSString *)remark
                       radius:(CLLocationDistance)radius
+                          share:(BOOL)share
          inManagedObjectContext:(NSManagedObjectContext *)context;
 {
     Location *location = nil;
@@ -38,17 +39,17 @@
         if (![matches count]) {
             //create new location
             location = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:context];
-            
-            location.belongsTo = friend;
-            location.timestamp = timestamp;
-            [location setCoordinate:coordinate];
-            location.accuracy = @(accuracy);
-            location.automatic = @(automatic);
-            location.remark = remark;
-            location.regionradius = @(radius);
         } else {
             location = [matches lastObject];
         }
+        location.belongsTo = friend;
+        location.timestamp = timestamp;
+        [location setCoordinate:coordinate];
+        location.accuracy = @(accuracy);
+        location.automatic = @(automatic);
+        location.remark = remark;
+        location.regionradius = @(radius);
+        location.share = @(share);
     }
     
     return location;
@@ -66,11 +67,13 @@
     return matches;
 }
 
-+ (NSArray *)allOverlaysInManagedObjectContext:(NSManagedObjectContext *)context
++ (NSArray *)allRegionsOfTopic:(NSString *)topic inManagedObjectContext:(NSManagedObjectContext *)context
 {
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
-    request.predicate = [NSPredicate predicateWithFormat:@"automatic = 0"];
+    Friend *friend = [Friend friendWithTopic:topic inManagedObjectContext:context];
 
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    request.predicate = [NSPredicate predicateWithFormat:@"belongsTo = %@ AND automatic = FALSE AND regionradius > 0 AND remark != NIL", friend];
+    
     NSError *error = nil;
     
     NSArray *matches = [context executeFetchRequest:request error:&error];
@@ -78,11 +81,25 @@
     return matches;
 }
 
-+ (NSArray *)allLocationsWithFriend:(Friend *)friend inManagedObjectContext:(NSManagedObjectContext *)context
++ (NSArray *)allSharedWaypointsOfTopic:(NSString *)topic inManagedObjectContext:(NSManagedObjectContext *)context
+{
+    Friend *friend = [Friend friendWithTopic:topic inManagedObjectContext:context];
+
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    request.predicate = [NSPredicate predicateWithFormat:@"belongsTo = %@ AND automatic = FALSE AND share = TRUE AND remark != NIL ", friend];
+    
+    NSError *error = nil;
+    
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    return matches;
+}
+
++ (NSArray *)allAutomaticLocationsWithFriend:(Friend *)friend inManagedObjectContext:(NSManagedObjectContext *)context
 {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO]];
-    request.predicate = [NSPredicate predicateWithFormat:@"belongsTo = %@ AND automatic = 1", friend];
+    request.predicate = [NSPredicate predicateWithFormat:@"belongsTo = %@ AND automatic = TRUE", friend];
 
     NSError *error = nil;
     
@@ -185,6 +202,15 @@
                                                      identifier:self.remark];
     }
     return region;
+}
+
+- (BOOL)sharedWaypoint
+{
+    if (self.remark && [self.share boolValue]) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 - (MKMapRect)boundingMapRect

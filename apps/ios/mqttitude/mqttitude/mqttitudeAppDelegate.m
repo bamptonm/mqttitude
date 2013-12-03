@@ -424,7 +424,7 @@
          **/
         
         if ([location.timestamp compare:self.locationServiceStarted] != NSOrderedAscending ) {
-            [self publishLocation:location automatic:YES comment:nil];
+            [self publishLocation:location automatic:YES addon:nil];
         }
     }
 }
@@ -446,8 +446,7 @@
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE comment:message];
-
+    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"enter": region.identifier}];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
@@ -459,7 +458,7 @@
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE comment:message];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"leave": region.identifier}];
 
 }
 
@@ -591,9 +590,10 @@
                                                           timestamp:location.timestamp
                                                          coordinate:location.coordinate
                                                            accuracy:location.horizontalAccuracy
-                                                          automatic:[dictionary[@"_type"] isEqualToString:@"location"]? TRUE : FALSE
+                                                          automatic:[dictionary[@"_type"] isEqualToString:@"location"] ? TRUE : FALSE
                                                              remark:dictionary[@"note"]
                                                              radius:0
+                                                              share:NO
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
             } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
@@ -619,7 +619,7 @@
 #ifdef DEBUG
     NSLog(@"App messageDelivered %ld", (long)msgID);
 #endif
-    NSString *message = [NSString stringWithFormat:@"Location delivered id=%ld", (long)msgID];
+    NSString *message = [NSString stringWithFormat:@"Message delivered id=%ld", (long)msgID];
     [self notification:message];
 }
 
@@ -661,7 +661,7 @@
     NSLog(@"App sendNow");
 #endif
 
-    [self publishLocation:[self.manager location] automatic:FALSE comment:@"on request"];
+    [self publishLocation:[self.manager location] automatic:FALSE addon:nil];
 }
 - (void)connectionOff
 {
@@ -711,7 +711,7 @@
 #ifdef DEBUG
     NSLog(@"App activityTimer");
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE comment:@"by timer"];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:nil];
 }
 
 - (void)reconnect
@@ -724,7 +724,7 @@
     [self connect];
 }
 
-- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic comment:(NSString *)comment
+- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon
 {
     Location *newLocation = [Location locationWithTopic:[self theGeneralTopic]
                                               timestamp:[NSDate date]
@@ -733,9 +733,10 @@
                                               automatic:automatic
                                                  remark:nil
                                                  radius:0
+                                                  share:NO
                                  inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     
-    NSData *data = [self encodeLocationData:newLocation type:@"location" comment:comment];
+    NSData *data = [self encodeLocationData:newLocation type:@"location" addon:addon];
     
     NSInteger msgID = [self.connection sendData:data
                                           topic:[self theGeneralTopic]
@@ -772,7 +773,7 @@
 }
 - (void)sendWayPoint:(Location *)location
 {
-    NSData *data = [self encodeLocationData:location type:@"waypoint" comment:nil];
+    NSData *data = [self encodeLocationData:location type:@"waypoint" addon:nil];
     
     NSInteger msgID = [self.connection sendData:data
                                           topic:[self theGeneralTopic]
@@ -789,7 +790,7 @@
 
 - (void)limitLocationsWith:(Friend *)friend toMaximum:(NSInteger)max
 {
-    NSArray *allLocations = [Location allLocationsWithFriend:friend inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    NSArray *allLocations = [Location allAutomaticLocationsWithFriend:friend inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
 #ifdef DEBUG
     NSLog(@"App count Locations %d", [allLocations count]);
 #endif
@@ -909,7 +910,7 @@
 }
 
 
-- (NSData *)encodeLocationData:(Location *)location type:(NSString *)type comment:(NSString *)comment
+- (NSData *)encodeLocationData:(Location *)location type:(NSString *)type addon:(NSDictionary *)addon
 {
     NSMutableDictionary *jsonObject = [@{
                                  @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
@@ -921,8 +922,8 @@
     if (location.remark) {
         [jsonObject setValue:[NSString stringWithFormat:@"%@", location.remark] forKey:@"note"];
     }
-    if (comment) {
-        [jsonObject setValue:[NSString stringWithFormat:@"%@", comment] forKey:@"comment"];
+    if (addon) {
+        [jsonObject addEntriesFromDictionary:addon];
     }
     
 #ifdef BATTERY_MONITORING

@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *UIplace;
 @property (weak, nonatomic) IBOutlet UITextField *UIremark;
 @property (weak, nonatomic) IBOutlet UITextField *UIradius;
+@property (weak, nonatomic) IBOutlet UISwitch *UIshare;
 
 @end
 
@@ -40,7 +41,12 @@
     self.UIplace.text = self.location.placemark;
     self.UIremark.text = self.location.remark;
     self.UIradius.text = [self.location radiusText];
-    }
+    self.UIshare.on = [self.location.share boolValue];
+}
+
+- (IBAction)sharechanged:(UISwitch *)sender {
+    self.location.share = @(sender.on);
+}
 
 - (IBAction)remarkchanged:(UITextField *)sender {
     if (![sender.text isEqualToString:self.location.remark]) {
@@ -59,7 +65,7 @@
         if ([self.location.automatic boolValue]) {
             return 0;
         } else {
-            return 2;
+            return 3;
         }
     } else {
         return 3;

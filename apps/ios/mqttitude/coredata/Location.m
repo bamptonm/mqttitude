@@ -2,7 +2,7 @@
 //  Location.m
 //  mqttitude
 //
-//  Created by Christoph Krey on 01.12.13.
+//  Created by Christoph Krey on 02.12.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
@@ -17,9 +17,10 @@
 @dynamic latitude;
 @dynamic longitude;
 @dynamic placemark;
+@dynamic regionradius;
 @dynamic remark;
 @dynamic timestamp;
-@dynamic regionradius;
+@dynamic share;
 @dynamic belongsTo;
 
 @end

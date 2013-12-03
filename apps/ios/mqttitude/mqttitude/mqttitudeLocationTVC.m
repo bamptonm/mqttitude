@@ -41,13 +41,29 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"location"];
-    
     Location *location = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = location.remark ?
-    [NSString stringWithFormat:@"%@ %@", location.remark, location.radiusText] :
-    [NSDateFormatter localizedStringFromDate:location.timestamp
-                                   dateStyle:NSDateFormatterShortStyle
-                                   timeStyle:NSDateFormatterMediumStyle];
+    
+    UIFont *fontBold = [UIFont boldSystemFontOfSize:[UIFont systemFontSize] + 2];
+    NSDictionary *attributesBold = [NSDictionary dictionaryWithObject:fontBold
+                                                               forKey:NSFontAttributeName];
+    
+    NSMutableAttributedString *as = [[NSMutableAttributedString alloc]
+                                     initWithString:location.remark ? location.remark : [NSDateFormatter localizedStringFromDate:location.timestamp
+                                                                                                                       dateStyle:NSDateFormatterShortStyle
+                                                                                                                       timeStyle:NSDateFormatterMediumStyle]
+                                     attributes:attributesBold];
+
+    if (![location.automatic boolValue]) {
+        UIFont *fontLight = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+        NSDictionary *attributesLight = [NSDictionary dictionaryWithObject:fontLight
+                                                                    forKey:NSFontAttributeName];
+        
+        [as appendAttributedString:[[NSAttributedString alloc]
+                                    initWithString:[NSString stringWithFormat:@": %@ %@", location.regionradius, [location.share boolValue] ? @"✔︎" : @"✘"]
+                                    attributes:attributesLight]];
+    }
+    cell.textLabel.attributedText = as;
+    
     cell.detailTextLabel.text = [location locationText];
     
     cell.imageView.image = location.belongsTo.image ? [UIImage imageWithData:[location.belongsTo image]] : [UIImage imageNamed:@"icon_57x57"];
@@ -81,7 +97,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if ([self numberOfSectionsInTableView:tableView] > 1) {
-        return section ? @"auto" : @"manual";
+        return section ? @"Location Updates" : @"Waypoints and Regions";
     } else {
         return nil;
     }
@@ -95,7 +111,7 @@
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
     if ([self numberOfSectionsInTableView:tableView] > 1) {
-        return @[@"m", @"a"];
+        return @[@"W", @"L"];
     } else {
         return nil;
     }
