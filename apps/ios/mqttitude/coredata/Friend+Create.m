@@ -122,16 +122,12 @@
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ab_preference"]) {
         record = recordWithTopic((__bridge CFStringRef)(self.topic));
-#ifdef DEBUG
-        NSLog(@"Friend ABRecordRef by topic =  %p", record);
-#endif
+        //NSLog(@"Friend ABRecordRef by topic =  %p", record);
     } else {
         if ([self.abRecordId intValue] != kABRecordInvalidID) {
             record = ABAddressBookGetPersonWithRecordID([Friend theABRef],
                                                               [self.abRecordId intValue]);
-#ifdef DEBUG
-            NSLog(@"Friend ABRecordRef by abRecordID =  %p", record);
-#endif
+            //NSLog(@"Friend ABRecordRef by abRecordID =  %p", record);
         }
     }
     

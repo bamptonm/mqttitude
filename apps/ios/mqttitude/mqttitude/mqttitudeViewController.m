@@ -337,10 +337,15 @@
                 Friend *friend = location.belongsTo;
                 if (friend && [friend image]) {
                     UIColor *color;
-                    if ([location.timestamp compare:[NSDate dateWithTimeIntervalSinceNow:OLD_TIME]] == NSOrderedAscending) {
-                        color = [UIColor redColor];
+                    
+                    if ([location.automatic boolValue]) {
+                        if ([location.timestamp compare:[NSDate dateWithTimeIntervalSinceNow:OLD_TIME]] == NSOrderedAscending) {
+                            color = [UIColor redColor];
+                        } else {
+                            color = [UIColor greenColor];
+                        }
                     } else {
-                        color = [UIColor greenColor];
+                        color = [UIColor blueColor];
                     }
 
                     MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_PICTURE];
@@ -386,9 +391,9 @@
     
     Location *location = (Location *)overlay;
     if ([location.region containsCoordinate:[delegate.manager location].coordinate]) {
-        view.fillColor = [UIColor colorWithRed:1.0 green:0.5 blue:0.5 alpha:0.5];
+        view.fillColor = [UIColor colorWithRed:1.0 green:0.5 blue:0.5 alpha:0.333];
     } else {
-        view.fillColor = [UIColor colorWithRed:0.5 green:0.5 blue:1.0 alpha:0.5];
+        view.fillColor = [UIColor colorWithRed:0.5 green:0.5 blue:1.0 alpha:0.333];
     }
     return view;
 }
@@ -445,10 +450,14 @@
         [delegate.manager startMonitoringForRegion:location.region];
     }
 
+    /*
+     * don't send all waypoints on startup
+     *
     NSArray *waypoints = [Location allSharedWaypointsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     for (Location *location in waypoints) {
         [delegate sendWayPoint:location];
     }
+     */
 }
 
 - (void)setFrc:(NSFetchedResultsController *)newfrc

@@ -23,6 +23,7 @@
 - (void)sendWayPoint:(Location *)location;
 - (void)reconnect;
 - (void)connectionOff;
+- (void)saveContext;
 
 - (NSString *)theGeneralTopic;
 - (NSString *)theWillTopic;

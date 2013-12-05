@@ -139,9 +139,7 @@
         [self.buffer appendData:[msg data]];
     }
 
-#ifdef DEBUG
-    NSLog(@"MQTTEncoder buffer to write (%d)=%@", self.buffer.length, [self.buffer description]);
-#endif
+    //NSLog(@"MQTTEncoder buffer to write (%d)=%@", self.buffer.length, [self.buffer description]);
     
     n = [self.stream write:[self.buffer bytes] maxLength:[self.buffer length]];
     if (n == -1) {

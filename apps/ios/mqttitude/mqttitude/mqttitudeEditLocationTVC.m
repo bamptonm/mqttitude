@@ -61,8 +61,10 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+    
     if (section == 0) {
-        if ([self.location.automatic boolValue]) {
+        if ([self.location.automatic boolValue] || ![self.location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
             return 0;
         } else {
             return 3;

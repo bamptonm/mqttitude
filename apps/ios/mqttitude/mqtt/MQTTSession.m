@@ -174,16 +174,6 @@
     NSLog(@"MQTTSession closeInternal");
 #endif 
     
-    /*
-    if (self.encoder) {
-        [self.encoder close];
-        self.encoder = nil;
-    }
-    if (self.decoder) {
-        [self.decoder close];
-        self.decoder = nil;
-    }
-    */
     if (self.keepAliveTimer) {
         [self.keepAliveTimer invalidate];
         self.keepAliveTimer = nil;
