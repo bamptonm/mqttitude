@@ -150,7 +150,7 @@ def on_message(mosq, userdata, msg):
 
     _type = data.get("_type", 'unknown')
 
-    if _type != 'location':
+    if _type != 'location' and type != 'waypoint':
         print "Skipping _type=%s" % _type
         return
 
@@ -181,6 +181,9 @@ def on_message(mosq, userdata, msg):
         'lon'           : lon,
         'tst'           : tst,
         'acc'           : data.get('acc', None),
+        'batt'          : data.get('batt', None),
+        'waypoint'      : data.get('desc', None),   # 'desc' is reserved SQL word; rename
+        'event'         : data.get('event', None),
         'date_string'   :  time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(int(tst))),
     }
 

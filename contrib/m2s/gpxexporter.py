@@ -87,7 +87,8 @@ def main(argv):
         dt      = l.tst
         weather = l.weather
         revgeo  = l.revgeo
-    
+        desc    = l.waypoint
+
         tp = Element('trkpt')
         tp.set('lat', lat)
         tp.set('lon', lon)
@@ -96,7 +97,7 @@ def main(argv):
         tp.append(Comment(u'#%s %s' % (dbid, topic)))
         trackpoints.append(tp)
     
-        if weather is not None and revgeo is not None:
+        if (weather is not None and revgeo is not None) or (desc is not None):
     
             wpt = Element('wpt')
             wpt.set('lat', lat)
@@ -104,7 +105,10 @@ def main(argv):
             wpt_name = SubElement(wpt, 'name')
             wpt_name.text = u'%s' % (dt.isoformat()[:19]+'Z')
             wpt_desc = SubElement(wpt, 'desc')
-            wpt_desc.text = u'(%s) %s' % (weather, revgeo)
+            if desc is not None:
+                wpt_desc.text = u'%s' % (desc)
+            else:
+                wpt_desc.text = u'(%s) %s' % (weather, revgeo)
     
             waypoints.append(wpt)
     
