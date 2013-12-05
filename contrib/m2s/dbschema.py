@@ -24,6 +24,8 @@ class Location(MySQLModel):
     lon             = CharField(null=False)
     tst             = DateTimeField(default=datetime.datetime.now, index=True)
     acc             = CharField(null=True)
+    batt            = CharField(null=True)
+    waypoint        = BlobField(null=True)  # desc in JSON, but desc is reserved SQL word
     # optional: full JSON of item including all data from plugins
     json            = TextField(null=True)
     # the following fields must be correlated to settings.py (plugin columns)
