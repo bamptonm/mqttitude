@@ -19,7 +19,7 @@ import getopt
 
 
 def print_usage():
-    print "gpxexporter -u username -d device -f fromdate -t todate -T title"
+    print "gpxexporter -u username -d device -f fromdate -t todate -T title [-X]"
 
 def main(argv):
     from_date = '2013-11-24'
@@ -27,10 +27,11 @@ def main(argv):
     username = None
     device = None
     title = 'My Trip'
+    xcode = False
 
     try:
-        opts, args = getopt.getopt(argv, "f:t:u:d:T:",
-            ["from", "to", "username", "device", 'Title' ])
+        opts, args = getopt.getopt(argv, "f:t:u:d:T:X",
+            ["from", "to", "username", "device", 'Title', 'Xcode' ])
     except getopt.GetoptError as e:
         print_usage()
         sys.exit(2)
@@ -46,6 +47,8 @@ def main(argv):
             to_date = arg
         if opt in ('-T', '--title'):
             title = arg
+        if opt in ('-X', '--Xcode'):
+            xcode = True
 
     if username is None:
         print "You must provide a username"
@@ -60,14 +63,15 @@ def main(argv):
     root.set('xmlns', "http://www.topografix.com/GPX/1/0")
     root.append(Comment('Hi JP'))
 
-    track = Element('trk')
-    track_name = SubElement(track, 'name')
-    track_name.text = title
-    track_desc = SubElement(track, 'desc')
-    track_desc.text = "Length: xxx km or so"
+    if not xcode:
+        track = Element('trk')
+        track_name = SubElement(track, 'name')
+        track_name.text = title
+        track_desc = SubElement(track, 'desc')
+        track_desc.text = "Length: xxx km or so"
 
-    segment = Element('trkseg')
-    track.append(segment)
+        segment = Element('trkseg')
+        track.append(segment)
 
     trackpoints = []
     waypoints = []
@@ -97,25 +101,34 @@ def main(argv):
         tp.append(Comment(u'#%s %s' % (dbid, topic)))
         trackpoints.append(tp)
     
-        if (weather is not None and revgeo is not None) or (desc is not None):
-    
+        if xcode:
             wpt = Element('wpt')
             wpt.set('lat', lat)
             wpt.set('lon', lon)
-            wpt_name = SubElement(wpt, 'name')
-            wpt_name.text = u'%s' % (dt.isoformat()[:19]+'Z')
-            wpt_desc = SubElement(wpt, 'desc')
-            if desc is not None:
-                wpt_desc.text = u'%s' % (desc)
-            else:
-                wpt_desc.text = u'(%s) %s' % (weather, revgeo)
-    
             waypoints.append(wpt)
+
+        else:
+            if (weather is not None and revgeo is not None) or (desc is not None):
+    
+                wpt = Element('wpt')
+                wpt.set('lat', lat)
+                wpt.set('lon', lon)
+                wpt_name = SubElement(wpt, 'name')
+                wpt_name.text = u'%s' % (dt.isoformat()[:19]+'Z')
+                wpt_desc = SubElement(wpt, 'desc')
+                if desc is not None:
+                    wpt_desc.text = u'%s' % (desc)
+                else:
+                    wpt_desc.text = u'(%s) %s' % (weather, revgeo)
+    
+                waypoints.append(wpt)
     
     
     root.extend(waypoints)
-    root.append(track)
-    segment.extend(trackpoints)
+
+    if not xcode:
+        root.append(track)
+        segment.extend(trackpoints)
     
     print prettify(root)
     
