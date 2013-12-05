@@ -10,6 +10,8 @@ This location object is published by the mobile apps and delivered by the backen
     "tst"  : "1376715317",      // (a) (i)
     "acc"  : "75",              // (a) (i)
     "batt" : "nn",              // (a) (i)
+    "desc" : "xxxx",		// (a)
+    "event" : "xxxx",		// (a)
 }
 ```
 
@@ -18,6 +20,8 @@ This location object is published by the mobile apps and delivered by the backen
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
 * `acc` is accuracy, in metres, with no unit. `[1]` (See: #211)
 * `batt` is the device's battery level in percent (0 through 100) (iPhone: 5.3, Android 0.4)
+* `desc` is the description of a waypoint (iOS app version >= 5.3)
+* `event` is either `"enter"` or `"leave"` and tells if app is entering or leaving geofence (iOS version >= 5.3, see #209)
 
 1. `acc` is a radius of uncertainty for the location, measured in metres.  The
     location’s _lat_ / _lon_ identify the center of the circle, and this value
@@ -47,3 +51,18 @@ The iPhone app sends out a _deviceToken_ object at initial connection to the bro
     "tst": "1383818459"
 }
 ```
+
+## Waypoint
+
+Waypoints (currently in iOS app version >= 5.3) are published as Location objects
+(i.e. with elements `tst`, `acc`, `lon`, `lat`, and `batt`)
+and the following additional JSON attributes:
+
+```json
+{
+    "_type" : "waypoint",
+    "desc"  : "UTF-8 text entered on device",
+    ...
+}
+```
+
