@@ -42,7 +42,6 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"location"];
     Location *location = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    [location getReverseGeoCode];
     
     UIFont *fontBold = [UIFont boldSystemFontOfSize:[UIFont systemFontSize] + 2];
     NSDictionary *attributesBold = [NSDictionary dictionaryWithObject:fontBold

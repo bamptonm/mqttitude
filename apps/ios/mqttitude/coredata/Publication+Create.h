@@ -22,4 +22,6 @@
 
 + (NSInteger)countPublications:(NSManagedObjectContext *)context;
 + (void)cleanPublications:(NSManagedObjectContext *)context;
++ (NSArray *)unacknowledgedPublications:(NSManagedObjectContext *)context;
+
 @end

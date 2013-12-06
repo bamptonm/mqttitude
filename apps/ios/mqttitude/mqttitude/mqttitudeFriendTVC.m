@@ -25,12 +25,13 @@
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
     
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"topic" ascending:YES]];
+    request.includesSubentities = YES;
     
     if ([mqttitudeCoreData theManagedObjectContext]) {
-    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                        managedObjectContext:[mqttitudeCoreData theManagedObjectContext]
-                                                                          sectionNameKeyPath:nil
-                                                                                   cacheName:nil];
+        self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                            managedObjectContext:[mqttitudeCoreData theManagedObjectContext]
+                                                                              sectionNameKeyPath:nil
+                                                                                       cacheName:nil];
     }
 }
 
@@ -41,24 +42,11 @@
     Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = friend.name ? friend.name : friend.topic;
     
-    Location *newestLocation = [self newestLocation:friend];
-    [newestLocation getReverseGeoCode];
+    Location *location = [self newestLocation:friend];
     
-    cell.detailTextLabel.text = newestLocation ? [newestLocation subtitle] : @"???";
+    cell.detailTextLabel.text = location ? [location subtitle] : @"???";
     
     cell.imageView.image = friend.image ? [UIImage imageWithData:friend.image] : [UIImage imageNamed:@"icon_57x57"];
-    
-    /*
-     * I take this out so the user can check the last enty timestamp
-     *
-     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
-     
-     if ([friend.topic isEqualToString:[delegate theGeneralTopic]]) {
-        [cell setAccessoryType:UITableViewCellAccessoryDetailButton];
-    } else {
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
-    }
-     */
     
     return cell;
 }
@@ -72,14 +60,14 @@
     }
     
     if (indexPath) {
+        Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
         if ([segue.identifier isEqualToString:@"setFriend:"]) {
-            Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
             if ([segue.destinationViewController respondsToSelector:@selector(setFriend:)]) {
                 [segue.destinationViewController performSelector:@selector(setFriend:) withObject:friend];
             }
         }
         if ([segue.identifier isEqualToString:@"setCenter:"]) {
-            Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
             self.selectedLocation = [self newestLocation:friend];
         }
     }

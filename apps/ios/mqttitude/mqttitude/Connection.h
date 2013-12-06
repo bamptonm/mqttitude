@@ -24,7 +24,7 @@ enum state {
 
 - (void)showState:(NSInteger)state;
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic;
-- (void)messageDelivered:(NSInteger)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data;
+- (void)messageDelivered:(UInt16)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data;
 - (void)fifoChanged:(NSManagedObjectContext *)context;
 
 @end
@@ -49,7 +49,7 @@ enum state {
    willRetainFlag:(BOOL)willRetainFlag
      withClientId:(NSString *)clientId;
 
-- (NSInteger)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
+- (long)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
 - (void)subscribe:(NSString *)topic qos:(NSInteger)qos;
 - (void)unsubscribe:(NSString *)topic;
 - (void)disconnect;

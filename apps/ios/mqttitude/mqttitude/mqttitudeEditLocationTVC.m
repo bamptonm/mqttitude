@@ -28,6 +28,11 @@
     _location = location;
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.location removeObserver:self forKeyPath:@"placemark"];
+}
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -37,8 +42,11 @@
     self.UIcoordinate.text = [self.location coordinateText];
     
     self.UItimestamp.text = [self.location timestampText];
-    
+
+    [self.location addObserver:self forKeyPath:@"placemark" options:NSKeyValueObservingOptionNew context:nil];
+    [self.location getReverseGeoCode];
     self.UIplace.text = self.location.placemark;
+    
     self.UIremark.text = self.location.remark;
     self.UIradius.text = [self.location radiusText];
     self.UIshare.on = [self.location.share boolValue];
@@ -72,6 +80,11 @@
     } else {
         return 3;
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    self.UIplace.text = self.location.placemark;
 }
 
 @end

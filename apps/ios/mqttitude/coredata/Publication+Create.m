@@ -104,4 +104,21 @@
     }
 }
 
++ (NSArray *)unacknowledgedPublications:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Publication"];
+    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES]];
+    request.predicate = [NSPredicate predicateWithFormat:@"msgID > 0"];
+    
+    NSError *error = nil;
+    
+    NSArray *publications = [context executeFetchRequest:request error:&error];
+#ifdef DEBUG
+    for (Publication *publication in publications) {
+        NSLog(@"Publication %u %@", [publication.msgID intValue], publication);
+    }
+#endif
+    return publications;
+}
+
 @end

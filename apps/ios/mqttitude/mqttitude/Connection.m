@@ -42,98 +42,6 @@
 #define RECONNECT_TIMER 1.0
 #define RECONNECT_TIMER_MAX 64.0
 
-/*
- * Connection represents the MQTT connection in the MQTTitude context - state Matrix w.i.p
- *
- * Current State        Event           Action              Next State
- * ---------------------------------------------------------------------------
- *
- * Starting             connectTo:                          Connecting
- *                      sendData:       store & connect     Connecting
- *                      subscribe:
- *                      unsubscribe:
- *                      disconnect:
- *                      Connected
- *                      Received
- *                      Closed
- *                      Error
- *                      Timer
- *                      <auto>
- *
- * Connecting           connectTo:
- *                      sendData:       store
- *                      subscribe:
- *                      unsubscribe:
- *                      disconnect:
- *                      Connected       -                   Connected
- *                      Received
- *                      Closed          -                   Closed
- *                      Error           -                   Error
- *                      Timer
- *                      <auto>
- *
- * Connected            connectTo:
- *                      sendData:       send
- *                      subscribe:
- *                      unsubscribe:
- *                      disconnect:     disc                Closing
- *                      Connected
- *                      Received
- *                      Closed
- *                      Error                               Error
- *                      Timer
- *                      <auto>
- *
- * Closing              connectTo:                          Connecting
- *                      sendData:       store & connect     Connecting
- *                      subscribe:
- *                      unsubscribe:
- *                      disconnect:
- *                      Connected
- *                      Received
- *                      Closed          -                   Closed
- *                      Error
- *                      Timer
- *                      <auto>
- *
- * Closed               connectTo:
- *                      sendData:
- *                      subscribe:
- *                      unsubscribe:
- *                      disconnect:
- *                      Connected
- *                      Received
- *                      Closed
- *                      Error
- *                      Timer
- *                      <auto>          -                   Starting
- *
- * Error                connectTo:
- *                      sendData:
- *                      subscribe:
- *                      unsubscribe:
- *                      disconnect:
- *                      Connected
- *                      Received
- *                      Closed
- *                      Error
- *                      Timer           reconnect           Connecting
- *                      <auto>
- *
- * ---------------------------------------------------------------------------
- *
- * Connection implements a fifo queue to store messages if the connection is not in Connected state
- *
- * - if sendData is called and status is not connected, data is stored in fifo queue and a connect attempt to the last connection is made
- *
- * Connection automatically reconnects after error using an increasing reconnect timer of 1, 2, 4, ..., 64 seconds
- *
- * Connection records the timestamps of the last successful connect, the last close, the last error and the last error code
- *
- * Connection provides a class method dataToString (missing in IOS)
- *
- */
-
 @implementation Connection
 
 - (id)init
@@ -202,7 +110,7 @@
     [self connectToInternal];
 }
 
-- (NSInteger)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
+- (long)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
 {
 #ifdef DEBUG
     NSLog(@"Connection sendData:%@ %@ q%d r%d", topic, [Connection dataToString:data], qos, retainFlag);
@@ -229,9 +137,14 @@
                                          onTopic:topic
                                           retain:retainFlag
                                              qos:qos];
-        
         if (msgID) {
-            [Publication publicationWithTimestamp:[NSDate date] msgID:@(msgID) topic:topic data:data qos:@(qos) retainFlag:@(retainFlag) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+            [Publication publicationWithTimestamp:[NSDate date]
+                                            msgID:[NSNumber numberWithUnsignedInt:msgID]
+                                            topic:topic
+                                             data:data
+                                              qos:@(qos)
+                                       retainFlag:@(retainFlag)
+                           inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
             [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
         }
         return msgID;
@@ -292,12 +205,25 @@
             self.lastErrorCode = nil;
 
             self.state = state_connected;
-            if (self.lastClean || !self.reconnectFlag) {
-                [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
-                [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
-                                       atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
+            if (!self.reconnectFlag) {
+                if (self.lastClean) {
+                    [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
+                    [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
+                    
+                    [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
+                                           atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
+                } else {
+                    NSArray *publications = [Publication unacknowledgedPublications:[mqttitudeCoreData theManagedObjectContext]];
+                    for (Publication *publication in publications) {
+                        /*
+                         * if there are some unacknowledged send messages, re-send them
+                         */
+                        [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
+                        [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
+                    }
+                }
+                self.reconnectFlag = TRUE;
             }
-            self.reconnectFlag = TRUE;
             
             Publication *publication;
             while ((publication = [Publication publicationWithmsgID:@(-1) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]])) {
@@ -342,7 +268,7 @@
 
 - (void)messageDelivered:(MQTTSession *)session msgID:(UInt16)msgID
 {
-    Publication *publication = [Publication publicationWithmsgID:@(msgID) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    Publication *publication = [Publication publicationWithmsgID:[NSNumber numberWithUnsignedInt:msgID] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     if (publication) {
         [self.delegate messageDelivered:msgID timestamp:publication.timestamp topic:publication.topic data:publication.data];
         [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];

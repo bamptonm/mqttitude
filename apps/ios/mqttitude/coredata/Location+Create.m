@@ -182,12 +182,14 @@
         CLLocation *location = [[CLLocation alloc] initWithCoordinate:self.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0 timestamp:0];
         [geocoder reverseGeocodeLocation:location completionHandler:
          ^(NSArray *placemarks, NSError *error) {
-             if ([placemarks count] > 0) {
-                 CLPlacemark *placemark = placemarks[0];
-                 self.placemark = ABCreateStringWithAddressDictionary (placemark.addressDictionary, TRUE);
-                 self.placemark = [self.placemark stringByReplacingOccurrencesOfString:@"\n" withString:@", "];
-             } else {
-                 self.placemark = nil;
+             if (!self.isDeleted) {
+                 if ([placemarks count] > 0) {
+                     CLPlacemark *placemark = placemarks[0];
+                     self.placemark = ABCreateStringWithAddressDictionary (placemark.addressDictionary, TRUE);
+                     self.placemark = [self.placemark stringByReplacingOccurrencesOfString:@"\n" withString:@", "];
+                 } else {
+                     self.placemark = nil;
+                 }
              }
          }];
     }

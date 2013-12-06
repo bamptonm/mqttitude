@@ -168,15 +168,20 @@
 
 - (void)saveContext
 {
-    NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = [mqttitudeCoreData theManagedObjectContext];
     if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            NSString *message = [NSString stringWithFormat:@"App CoreData unresolved error %@, %@", error, [error userInfo]];
+        if ([managedObjectContext hasChanges]) {
+            NSError *error = nil;
 #ifdef DEBUG
-            NSLog(@"%@", message);
+            NSLog(@"App save context");
 #endif
-            [self alert:message];
+            if (![managedObjectContext save:&error]) {
+                NSString *message = [NSString stringWithFormat:@"App CoreData unresolved error %@, %@", error, [error userInfo]];
+#ifdef DEBUG
+                NSLog(@"%@", message);
+#endif
+                [self alert:[message substringToIndex:128]];
+            }
         }
     }
 }
@@ -624,11 +629,9 @@
                                                               share:NO
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
-                [self saveContext];
             } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
                 Friend *friend = [Friend friendWithTopic:deviceName inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 friend.device = dictionary[@"deviceToken"];
-                [self saveContext];
             } else {
 #ifdef DEBUG
                 NSLog(@"App received unknown record type %@)", dictionary[@"_type"]);
@@ -644,9 +647,9 @@
     }
 }
 
-- (void)messageDelivered:(NSInteger)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data
+- (void)messageDelivered:(UInt16)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data
 {
-    NSString *message = [NSString stringWithFormat:@"Message delivered id=%ld", (long)msgID];
+    NSString *message = [NSString stringWithFormat:@"Message delivered id=%u", msgID];
     [self notification:message];
 }
 
@@ -664,7 +667,6 @@
         receiver = self.window.rootViewController;
     }
     [receiver performSelector:@selector(fifoChanged:) withObject:@(count)];
-    [self saveContext];
 }
 
 #pragma actions
@@ -764,10 +766,10 @@
     
     NSData *data = [self encodeLocationData:newLocation type:@"location" addon:addon];
     
-    NSInteger msgID = [self.connection sendData:data
-                                          topic:[self theGeneralTopic]
-                                            qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
-                                         retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+    long msgID = [self.connection sendData:data
+                                       topic:[self theGeneralTopic]
+                                         qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
+                                      retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
     
     if (msgID <= 0) {
         NSString *message = [NSString stringWithFormat:@"Location %@",
@@ -802,7 +804,7 @@
 {
     NSData *data = [self encodeLocationData:location type:@"waypoint" addon:nil];
     
-    NSInteger msgID = [self.connection sendData:data
+    long msgID = [self.connection sendData:data
                                           topic:[self theGeneralTopic]
                                             qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
                                          retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];

@@ -404,9 +404,13 @@
     NSLog(@"didSelectAnnotationView");
 #endif
 
+    /*
+     * trigger reverse geocoding only when looking at details
+     *
     if ([view.annotation respondsToSelector:@selector(getReverseGeoCode)]) {
         [view.annotation performSelector:@selector(getReverseGeoCode)];
     }
+     */
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control

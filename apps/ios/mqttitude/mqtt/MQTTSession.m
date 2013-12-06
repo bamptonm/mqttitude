@@ -217,7 +217,7 @@
                 case MQTTSessionStatusConnecting:
                     break;
                 case MQTTSessionStatusConnected:
-                    if ([self.queue count] > 0) {
+                    while ([self.queue count] > 0) {
                         MQTTMessage *msg = [self.queue objectAtIndex:0];
                         [self.queue removeObjectAtIndex:0];
                         [self.encoder encodeMessage:msg];
