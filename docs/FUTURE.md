@@ -30,7 +30,6 @@ Thoughts on possible future enhancements.
   * ~~Needs 'standardized' topic names (maybe with Twitter id in topic?)~~
 * Queue updates on device (with `tst` etc) to be PUBlished upon available connection
 * Corner-pegging [#94](https://github.com/binarybucks/mqttitude/issues/94)
-* Maybe add remote-control for enabling "move-mode" on iOS (https://github.com/binarybucks/mqttitude/issues/139)
 
 ## Very-long term, a.k.a. "Neat ideas"
 
@@ -40,4 +39,9 @@ Thoughts on possible future enhancements.
 #### Waypoints
 
 JPM added 2013-11-22: We currently have "Annotations" on iOS (see above). I'd like to be able to have an annotation PUBlished to the broker so that m2s (or other processors) can pick it up. I propose the following payload: `{ "_type": "_waypoint", "tst":"xx", "lat":"<current>", "lon":<current>", "text":"utf-8 text" }`
+
+#### Remote control
+
+* Maybe add remote-control for enabling "move-mode" on iOS (https://github.com/binarybucks/mqttitude/issues/139)
+* Interesting idea in [#227](https://github.com/binarybucks/mqttitude/issues/227): device can change mode (e.g. _silent_, _airplane mode_, etc.) depending on location and by listening to a remote-control topic with which it is instructed to switch modes.
 
