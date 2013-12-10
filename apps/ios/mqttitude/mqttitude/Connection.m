@@ -163,6 +163,10 @@
     } else {
         self.state = state_starting;
         NSLog(@"Connection not connected, can't close");
+        if (self.reconnectTimer) {
+            [self.reconnectTimer invalidate];
+            self.reconnectTimer = nil;
+        }
     }
 }
 

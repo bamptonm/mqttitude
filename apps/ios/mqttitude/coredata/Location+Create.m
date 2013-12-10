@@ -27,7 +27,7 @@
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO]];
-    request.predicate = [NSPredicate predicateWithFormat:@"timestamp = %@ AND belongsTo = %@", timestamp, friend];
+    request.predicate = [NSPredicate predicateWithFormat:@"timestamp = %@ AND belongsTo = %@ AND automatic = %@", timestamp, friend, @(automatic)];
 
     NSError *error = nil;
     
@@ -113,7 +113,7 @@
 }
 
 - (NSString *)title {
-    return [NSString stringWithFormat:@"%@ %@", [self nameText], self.remark ? self.remark : @""];
+    return [NSString stringWithFormat:@"%@ %@", [self nameText], (![self.automatic boolValue] && self.remark ) ? self.remark : @""];
 }
 
 - (NSString *)subtitle {

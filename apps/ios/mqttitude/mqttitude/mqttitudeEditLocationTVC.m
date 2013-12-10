@@ -50,6 +50,17 @@
     self.UIremark.text = self.location.remark;
     self.UIradius.text = [self.location radiusText];
     self.UIshare.on = [self.location.share boolValue];
+    
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+    if (![self.location.automatic boolValue] && [self.location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+        self.UIremark.enabled = TRUE;
+        self.UIradius.enabled = TRUE;
+        self.UIshare.enabled = TRUE;
+    } else {
+        self.UIremark.enabled = FALSE;
+        self.UIradius.enabled = FALSE;
+        self.UIshare.enabled = FALSE;
+    }
 }
 
 - (IBAction)sharechanged:(UISwitch *)sender {
@@ -64,21 +75,6 @@
 - (IBAction)radiuschanged:(UITextField *)sender {
     if ([sender.text doubleValue] != [self.location.regionradius doubleValue]) {
         self.location.regionradius = @([sender.text doubleValue]);
-    }
-}
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
-    
-    if (section == 0) {
-        if ([self.location.automatic boolValue] || ![self.location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
-            return 0;
-        } else {
-            return 3;
-        }
-    } else {
-        return 3;
     }
 }
 

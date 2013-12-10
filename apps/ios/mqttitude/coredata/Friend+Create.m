@@ -45,12 +45,11 @@
 #endif
                 } else {
                     isGranted = NO;
-                    CFRelease(ab);
-                    ab = nil;
                 }
             });
         } else {
-            [Friend error:[NSString stringWithFormat:@"ABAddressBookRequestAccessWithCompletion not successfull"]];
+            //Error message should have appeared once
+            //[Friend error:[NSString stringWithFormat:@"ABAddressBookRequestAccessWithCompletion not successfull"]];
         }
         
     }

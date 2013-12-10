@@ -48,9 +48,10 @@
                                                                forKey:NSFontAttributeName];
     
     NSMutableAttributedString *as = [[NSMutableAttributedString alloc]
-                                     initWithString:location.remark ? location.remark : [NSDateFormatter localizedStringFromDate:location.timestamp
-                                                                                                                       dateStyle:NSDateFormatterShortStyle
-                                                                                                                       timeStyle:NSDateFormatterMediumStyle]
+                                     initWithString:(![location.automatic boolValue] && location.remark) ? location.remark :
+                                     [NSDateFormatter localizedStringFromDate:location.timestamp
+                                                                    dateStyle:NSDateFormatterShortStyle
+                                                                    timeStyle:NSDateFormatterMediumStyle]
                                      attributes:attributesBold];
 
     if (![location.automatic boolValue]) {
