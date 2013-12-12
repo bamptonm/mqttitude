@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# JPMens
+# Simulate a trip through the Sauerland (Germany) for testing m2s
 
 import time
 import json
