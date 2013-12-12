@@ -43,11 +43,12 @@ ones, or user provided ones that require a lock screen password to be set)
 
 ## iOS
 
-* Runs on iPhones running IOS >=6.1 (3GS, 4, 4S, 5) and iPads running IOS >=6.1 as an iPhone app. Not tested on iPods yet.
+* Runs on iPhones running IOS >=6.1 (3GS, 4, 4S, 5, ...) and iPads running IOS >=6.1 as an iPhone app. Not tested on iPods yet.
 * UI is IOS7 compliant
 
 * Monitors "significant location changes" as define by Apple Inc (about 5 minutes AND 
-  "significant location changes" (>500m)) or as described in Move Mode below.
+  "significant location changes" (>500m)) or as described in Move Mode below. In addition version >= 5.3 supports
+  region monitoring (aka geo fences).
 
 * publishes this locations via MQTT to the configured server while in foreground and background.
 
@@ -78,7 +79,6 @@ Configuration is done via the system settings app.
 * Shows a button to center the map on the current location and follow the current user location
 
 * Shows a button to zoom out until all marked locations of user and friends are displayed.
-* Shows a button to exit the app. If not exited, the app continues in the background.
 
 * Connection indicator light shows current status of the MQTT server connection
   The server connection is established automatically when a new location shall be published.
@@ -99,14 +99,8 @@ A user now switch to Move Mode by tapping the little wooden locomotive. In Move 
 
 The Application supports background-mode
 * "significant location changes" are automatically published to the MQTT server
-* If connected the listens to 
-	* commands published by the server on topic <my topic>/listento. commands defined are
-		* `publish`: app publishes current location immediately to the server
-		* ...
-	* published locations of other devices and displays the last location published per device on it's map
-* app shows an application badge indicating the number of received location updates since the app went into background mode
+* app shows an application badge indicating the number of sent location updates since the app went into background mode
 * app shows notifications (in notification center) when publishing the user's location
-* 
 
 ### UI buttons
 
@@ -137,12 +131,11 @@ Deleting locations or all locations of a friend is done by left-swipe on the ent
 
 Q. As regards the friends list: when is reverse geo-coding done?
 
-Reverse geo-coding is done
+Reverse geo-coding is done when displaying/editing location details by either
+* tapping the info button of a location callout on the map or
+* navigating via friends/locations/...
 
-* when you click on a pin on the map
-* for the latest location if you go to the friends list
-
-No geo-coding is done automatically in the background
+No geo-coding is done automatically in the background to limit mobile data usage.
 
 ### Friendly faces
 
@@ -161,6 +154,24 @@ The entry will be marked with a relationship to the current friend's topic name.
 
 Beginning with iPhone app version 5.1, there's now a switch in Expert Mode settings titled _Update Address Book". If this is _on_, the app uses related names from the address book to identify topics and updates address book as described above. If the switch is _off_, the app maintains an internal reference to the address book record and doesn't modify the address book.
 
+
+### Region Monitoring and Waypoints
+
+For all manually published locations, a description, a region radius and a share flag can be edited.
+
+Setting the description of a location helps you to remember places.
+
+If a description is entered and the share flag set, the location is published to the MQTT broker as a `waypoint` once.
+Waypoints shared by other users are displayed on the map and are visible in the Friends/Locations... table.
+
+If the description is non-empty and a radius > 0 (meters) is set, the app starts monitoring the circular region around the coordinate. A region may be 'waypoint'.
+The regions are shown on the map as blue-ish circles. If the device is within a region, the corresponding circle turns red-ish.
+Everytime the devices enters or leaves a monitored region, an additional location message is published to the MQTT broker.
+
+Use cases:
+* Define a `home` region to insure that the device publishes a new location when coming home or leaving home even if you do not move more than 500m.
+* Share your favorite places with your friends ("Best Sushi in Town").
+* Keep a private note ("Parked Car here").
 
 
 ### Settings
