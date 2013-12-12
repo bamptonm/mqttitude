@@ -228,6 +228,6 @@ Waypoints are added to the GPX if the database columns `weather` and `revgeo` ar
 ### Requirements
 
 * Mosquitto (Python)
-* [PeeWee](http://peewee.readthedocs.org/en/latest/). You don't have to install this; we've got a copy of `peewee.py` in this repository, but remove our copy if you have PeeWee.
+* [PeeWee](http://peewee.readthedocs.org/en/latest/). If you have PeeWee's requirements installed, use the bundled `peewee.py`, otherwise remove that and install PeeWee.
 
   [gpx]: http://en.wikipedia.org/wiki/GPS_eXchange_Format
