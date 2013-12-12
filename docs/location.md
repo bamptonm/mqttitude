@@ -14,6 +14,8 @@ IOS offers 3 modes of location publication
 * MANUAL mode
 * SIGNIFICANT LOCATION CHANGE mode
 * MOVE mode
+and the independent
+* REGION monitoring (aka Geo Fences)
 
 ### MOVE mode 
 
@@ -43,6 +45,15 @@ Examples:
 
 The app doens't monitor location changes in MANUAL mode while in background. The user has to press the location
 button to publish the current location.
+
+### REGION monitoring
+
+The app user may mark a previously manually published location as a region and specify a monitoring radius in meters.
+The app will publish the location additionally everytime the device leaves or enters one of the regions.
+
+Region monitoring is not related to one of the location publication modes and works independently. It is switched on when a region is setup with description and radius. To switch region monitoring off, all regions have to be deleted or unmarked (by setting radius to 0).
+
+Regions are shown on the map display in transparent blue or red circles. Red indicates the device is is within the region.
 
 ~                                                                                                                                                                                        
 ~                                                                                                                                                                                        
