@@ -16,6 +16,7 @@ from dbschema import Location
 from datetime import datetime
 from dateutil import tz
 import getopt
+from math import radians, cos, sin, asin, sqrt
 
 
 def print_usage():
@@ -75,6 +76,10 @@ def main(argv):
 
     trackpoints = []
     waypoints = []
+    lat1 = None
+    lon1 = None
+    lat2 = None
+    lon2 = None
 
     query = Location.select().where(
                 (Location.username == username) & 
@@ -92,6 +97,14 @@ def main(argv):
         weather = l.weather
         revgeo  = l.revgeo
         desc    = l.waypoint
+
+        # First point
+        if lat1 is None:
+            lat1 = lat
+            lon1 = lon
+
+        lat2 = lat
+        lon2 = lon
 
         tp = Element('trkpt')
         tp.set('lat', lat)
@@ -130,12 +143,52 @@ def main(argv):
         root.append(track)
         segment.extend(trackpoints)
     
+
+    distance = haversine(lat1, lon1, lat2, lon2)
+    track_desc.text = "Distance: %.2f" % distance
+
     print prettify(root)
     
     #tree = ET.ElementTree(root)
     #tree.write('p.xml',
     #    xml_declaration=True, encoding='utf-8',
     #    method="xml")
+
+
+def haversine(lat1, lon1, lat2, lon2, unit='k'):
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    Returns float km
+    Based on: http://stackoverflow.com/questions/4913349/
+    See also: http://www.movable-type.co.uk/scripts/latlong.html
+    """
+
+    # We typically pass strings. Convert.
+    lat1 = float(lat1)
+    lon1 = float(lon1)
+    lat2 = float(lat2)
+    lon2 = float(lon2)
+
+    # convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+
+    # 6371 km is the radius of the Earth
+    # or 3959 miles
+
+    if unit == 'm':
+        radius = 3959
+    else:
+        radius = 6371
+
+    distance = radius * c
+    return distance
 
 if __name__ == '__main__':
     main(sys.argv[1:])
