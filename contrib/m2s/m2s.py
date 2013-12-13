@@ -150,8 +150,8 @@ def on_message(mosq, userdata, msg):
 
     _type = data.get("_type", 'unknown')
 
-    if _type != 'location' and type != 'waypoint':
-        print "Skipping _type=%s" % _type
+    if _type != 'location' and _type != 'waypoint':
+        logging.info("Skipping unhandled _type=%s" % (_type))
         return
 
     lat = data.get('lat')
