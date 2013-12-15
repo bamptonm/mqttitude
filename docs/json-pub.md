@@ -62,6 +62,7 @@ and the following additional JSON attributes:
 {
     "_type" : "waypoint",
     "desc"  : "UTF-8 text entered on device",
+    "rad"   : "<radius in metres specified by user>",
     ...
 }
 ```
