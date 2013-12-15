@@ -11,6 +11,7 @@
 #import "Friend+Create.h"
 
 @implementation Location (Create)
+
 + (Location *)locationWithTopic:(NSString *)topic
                       timestamp:(NSDate *)timestamp
                      coordinate:(CLLocationCoordinate2D)coordinate
@@ -39,8 +40,10 @@
         if (![matches count]) {
             //create new location
             location = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:context];
+            location.justcreated = @(TRUE);
         } else {
             location = [matches lastObject];
+            location.justcreated = @(TRUE);
         }
         location.belongsTo = friend;
         location.timestamp = timestamp;

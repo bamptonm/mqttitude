@@ -25,7 +25,7 @@
 #define BACKGROUND_DISCONNECT_AFTER 8.0
 #define DISMISS_AFTER 1.0
 
-#define MAX_OWN_LOCATIONS 100
+#define MAX_OWN_LOCATIONS 50
 #define MAX_OTHER_LOCATIONS 1
 
 #undef REMOTE_NOTIFICATIONS
@@ -625,7 +625,7 @@
                                                            accuracy:location.horizontalAccuracy
                                                           automatic:[dictionary[@"_type"] isEqualToString:@"location"] ? TRUE : FALSE
                                                              remark:dictionary[@"desc"]
-                                                             radius:0
+                                                             radius:[dictionary[@"rad"] doubleValue]
                                                               share:NO
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
@@ -945,6 +945,10 @@
                                  } mutableCopy];
     if (location.remark) {
         [jsonObject setValue:[NSString stringWithFormat:@"%@", location.remark] forKey:@"desc"];
+    }
+    double rad = [location.regionradius doubleValue];
+    if (rad > 0) {
+        [jsonObject setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
     }
     if (addon) {
         [jsonObject addEntriesFromDictionary:addon];

@@ -55,7 +55,6 @@ enum {
                       willRetain:(BOOL)willRetainFlag;
 
 + (id)pingreqMessage;
-/* CK added disconnect */
 + (id)disconnectMessage;
 + (id)subscribeMessageWithMessageId:(UInt16)msgId
                               topic:(NSString*)topic

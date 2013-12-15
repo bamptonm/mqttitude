@@ -207,37 +207,43 @@
         case MQTTSessionEventConnected:
         {
             self.lastErrorCode = nil;
-
             self.state = state_connected;
-            if (!self.reconnectFlag) {
-                if (self.lastClean) {
-                    [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
+            
+            /*
+             * if there are some unacknowledged send messages in non-clean-session-mode, re-send them
+             */
+
+            if (self.lastClean) {
+                [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
+                [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
+            } else {
+                NSArray *publications = [Publication unacknowledgedPublications:[mqttitudeCoreData theManagedObjectContext]];
+                for (Publication *publication in publications) {
+                    [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
                     [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-                    
-                    [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
-                                           atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
-                } else {
-                    NSArray *publications = [Publication unacknowledgedPublications:[mqttitudeCoreData theManagedObjectContext]];
-                    for (Publication *publication in publications) {
-                        /*
-                         * if there are some unacknowledged send messages, re-send them
-                         */
-                        [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
-                        [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-                    }
                 }
-                self.reconnectFlag = TRUE;
             }
             
+            /*
+             * if there are some queued send messages never sent before, send them
+             */
             Publication *publication;
             while ((publication = [Publication publicationWithmsgID:@(-1) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]])) {
-                /*
-                 * if there are some queued send messages, send them
-                 */
+                
                 [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
                 [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];
                 [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
             }
+            
+            /*
+             * if clean-session is set or if it's the first time we connect in non-clean-session-mode, subscribe to topic
+             */
+            if (self.lastClean || !self.reconnectFlag) {
+                [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
+                                       atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
+                self.reconnectFlag = TRUE;
+            }
+
             break;
         }
         case MQTTSessionEventConnectionClosed:

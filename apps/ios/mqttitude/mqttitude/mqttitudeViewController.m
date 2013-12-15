@@ -329,7 +329,11 @@
                 } else {
                     pinAnnotationView.pinColor = MKPinAnnotationColorPurple;
                 }
-                pinAnnotationView.animatesDrop = YES;
+                
+                if (!location.justcreated || [location.justcreated boolValue]) {
+                    pinAnnotationView.animatesDrop = YES;
+                    location.justcreated = @(FALSE);
+                }
                 pinAnnotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
                 
                 return pinAnnotationView;
