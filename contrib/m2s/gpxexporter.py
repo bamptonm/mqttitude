@@ -27,7 +27,7 @@ def main(argv):
     to_date = '2013-11-28'
     username = None
     device = None
-    title = 'My Trip'
+    title = None
     xcode = False
 
     try:
@@ -57,6 +57,9 @@ def main(argv):
     if device is None:
         print "You must provide a device name"
         sys.exit(2)
+
+    if title is None:
+        title = "Trip %s to %s" % (from_date, to_date)
     
     root = ET.Element('gpx')
     root.set('version', '1.0')
