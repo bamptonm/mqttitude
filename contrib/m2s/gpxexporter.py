@@ -144,8 +144,11 @@ def main(argv):
         segment.extend(trackpoints)
     
 
-    distance = haversine(lat1, lon1, lat2, lon2)
-    track_desc.text = "Distance: %.2f" % distance
+    try:
+        distance = haversine(lat1, lon1, lat2, lon2)
+        track_desc.text = "Distance: %.2f" % distance
+    except:
+        track_desc.text = "Distance unknown"
 
     print prettify(root)
     
