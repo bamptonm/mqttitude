@@ -116,6 +116,8 @@
     NSLog(@"Connection sendData:%@ %@ q%d r%d", topic, [Connection dataToString:data], qos, retainFlag);
 #endif
 
+    long longMsgID = -1;
+    
     if (self.state != state_connected) {
 #ifdef DEBUG
         NSLog(@"Connection intoFifo");
@@ -128,7 +130,6 @@
                        inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
         [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
         [self connectToLast];
-        return -1;
     } else {
 #ifdef DEBUG
         NSLog(@"Connection send");
@@ -147,8 +148,12 @@
                            inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
             [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
         }
-        return msgID;
+        longMsgID = msgID;
     }
+    if ([self.delegate respondsToSelector:@selector(saveContext)]) {
+        [self.delegate performSelector:@selector(saveContext)];
+    }
+    return longMsgID;
 }
 
 - (void)disconnect
@@ -284,6 +289,9 @@
         [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];
     }
     [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
+    if ([self.delegate respondsToSelector:@selector(saveContext)]) {
+        [self.delegate performSelector:@selector(saveContext)];
+    }
 }
 
 /*
@@ -299,6 +307,9 @@
     NSLog(@"Connection received %@ %@", topic, [Connection dataToString:data]);
 #endif
     [self.delegate handleMessage:data onTopic:topic];
+    if ([self.delegate respondsToSelector:@selector(saveContext)]) {
+        [self.delegate performSelector:@selector(saveContext)];
+    }
 }
 
 #pragma internal helpers

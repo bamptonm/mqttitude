@@ -19,6 +19,11 @@
                    inManagedObjectContext:(NSManagedObjectContext *)context
 
 {
+    
+#ifdef DEBUG
+    NSLog(@"publicationWithTimestamp %@ %f", msgID, [timestamp timeIntervalSince1970]);
+#endif
+
     Publication *publication = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Publication"];
@@ -29,6 +34,10 @@
     
     NSArray *matches = [context executeFetchRequest:request error:&error];
     
+#ifdef DEBUG
+    NSLog(@"publicationWithTimestamp count %d", [matches count]);
+#endif
+
     if (!matches || [matches count] > 1) {
         // handle error
     } else if (![matches count]) {
@@ -54,6 +63,10 @@
                inManagedObjectContext:(NSManagedObjectContext *)context
 
 {
+#ifdef DEBUG
+    NSLog(@"publicationWithmsgID %@", msgID);
+#endif
+
     Publication *publication = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Publication"];
@@ -64,6 +77,10 @@
     
     NSArray *matches = [context executeFetchRequest:request error:&error];
     
+#ifdef DEBUG
+    NSLog(@"publicationWithmsgID count %d", [matches count]);
+#endif
+
     if (matches && [matches count]) {
         publication = [matches lastObject];
     }
@@ -84,6 +101,13 @@
     
     if (matches) {
         count = [matches count];
+#ifdef DEBUG
+        NSLog(@"countPublications count %d", [matches count]);
+        for (Publication *publication in matches) {
+            NSLog(@"countPublications %d %@", [publication.msgID intValue], publication.timestamp);
+        }
+#endif
+
     }
     
     return count;
@@ -115,7 +139,7 @@
     NSArray *publications = [context executeFetchRequest:request error:&error];
 #ifdef DEBUG
     for (Publication *publication in publications) {
-        NSLog(@"Publication %u %@", [publication.msgID intValue], publication);
+        NSLog(@"Publication %u %@", [publication.msgID intValue], publication.timestamp);
     }
 #endif
     return publications;

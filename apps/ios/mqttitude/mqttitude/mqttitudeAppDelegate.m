@@ -645,6 +645,7 @@
             // data other than json _type location is silently ignored
         }
     }
+    [self saveContext];
 }
 
 - (void)messageDelivered:(UInt16)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data

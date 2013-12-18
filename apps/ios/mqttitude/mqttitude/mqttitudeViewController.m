@@ -454,18 +454,6 @@
     NSArray *overlays = [Location allRegionsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     [self.mapView addOverlays:overlays];
     
-    for (Location *location in overlays) {
-        [delegate.manager startMonitoringForRegion:location.region];
-    }
-
-    /*
-     * don't send all waypoints on startup
-     *
-    NSArray *waypoints = [Location allSharedWaypointsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
-    for (Location *location in waypoints) {
-        [delegate sendWayPoint:location];
-    }
-     */
 }
 
 - (void)setFrc:(NSFetchedResultsController *)newfrc

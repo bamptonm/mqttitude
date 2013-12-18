@@ -101,7 +101,7 @@
 		846597D517F78E8600BEA7A8 /* mqttitudeLocationTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeLocationTVC.h; sourceTree = "<group>"; };
 		846597D617F78E8600BEA7A8 /* mqttitudeLocationTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeLocationTVC.m; sourceTree = "<group>"; };
 		8470846F185BD219001FC819 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
-		84708471185BD296001FC819 /* MQTTitude 5.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MQTTitude 5.4.xcdatamodel"; sourceTree = "<group>"; };
+		84708471185BD296001FC819 /* MQTTitude 5.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MQTTitude 5.4.xcdatamodel"; sourceTree = "<group>"; };
 		84708475185BD7D6001FC819 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		84708476185BD7D6001FC819 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		8484685617FD785D0012FC18 /* connection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connection.png; sourceTree = "<group>"; };
