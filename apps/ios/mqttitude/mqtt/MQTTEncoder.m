@@ -42,8 +42,16 @@
 }
 
 - (void)stream:(NSStream*)sender handleEvent:(NSStreamEvent)eventCode {
-    if(self.stream == nil)
+#ifdef DEBUG
+    NSLog(@"MQTTEncoder handleEvent 0x%02x", eventCode);
+#endif
+
+    if(self.stream == nil) {
+#ifdef DEBUG
+        NSLog(@"MQTTEncoder self.stream == nil");
+#endif
         return;
+    }
     assert(sender == self.stream);
     switch (eventCode) {
         case NSStreamEventOpenCompleted:
@@ -88,7 +96,7 @@
             break;
         default:
 #ifdef DEBUG
-            NSLog(@"MQTTEncoder unhandled event code 0x%02xv", eventCode);
+            NSLog(@"MQTTEncoder unhandled event code 0x%02x", eventCode);
 #endif
             break;
     }

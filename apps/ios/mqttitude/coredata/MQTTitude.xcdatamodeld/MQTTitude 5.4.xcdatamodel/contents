@@ -19,17 +19,8 @@
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="belongsTo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="hasLocations" inverseEntity="Friend" syncable="YES"/>
     </entity>
-    <entity name="Publication" representedClassName="Publication" syncable="YES">
-        <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="msgID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="qos" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="retainFlag" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="topic" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <elements>
         <element name="Friend" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Location" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Publication" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

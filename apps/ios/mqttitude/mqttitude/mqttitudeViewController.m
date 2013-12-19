@@ -23,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *mapModeButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *friendsButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
+@property (weak, nonatomic) IBOutlet UIProgressView *progress;
 
 @property (strong, nonatomic) NSFetchedResultsController *frc;
 @property (nonatomic) BOOL suspendAutomaticTrackingOfChangesInManagedObjectContext;
@@ -292,13 +292,9 @@
     }
 }
 
-- (void)fifoChanged:(NSNumber *)count
+- (void)totalBuffered:(NSUInteger)count
 {
-    if ([count integerValue]) {
-        [self.activity startAnimating];
-    } else {
-        [self.activity stopAnimating];
-    }
+    [self.progress setProgress:1.0 / (count + 1) animated:YES];
 }
 
 #pragma MKMapViewDelegate

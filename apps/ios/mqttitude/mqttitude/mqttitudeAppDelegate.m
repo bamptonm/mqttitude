@@ -515,19 +515,6 @@
 
 - (void)showState:(NSInteger)state
 {
-#ifdef DEBUG
-    const NSDictionary *states = @{
-                                   @(state_starting): @"starting",
-                                   @(state_connecting): @"connecting",
-                                   @(state_error): @"error",
-                                   @(state_connected): @"connected",
-                                   @(state_closing): @"closing",
-                                   @(state_closed): @"closed"
-                                   };
-    
-    NSLog(@"App showState %@ (%d)", states[@(state)], state);
-#endif
-
     id<ConnectionDelegate> cd;
     
     if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
@@ -559,10 +546,6 @@
 
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic
 {
-#ifdef DEBUG
-    NSLog(@"App handleMessage %@ %@)", topic, [Connection dataToString:data]);
-#endif
-
     if ([topic isEqualToString:[self theGeneralTopic]]) {
         // received own data
         
@@ -648,26 +631,26 @@
     [self saveContext];
 }
 
-- (void)messageDelivered:(UInt16)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data
+- (void)messageDelivered:(UInt16)msgID
 {
     NSString *message = [NSString stringWithFormat:@"Message delivered id=%u", msgID];
     [self notification:message];
 }
 
-- (void)fifoChanged:(NSManagedObjectContext *)context
+- (void)totalBuffered:(NSUInteger)count
 {
-    NSInteger count = [Publication countPublications:context];
-    id receiver;
+    id<ConnectionDelegate> cd;
     
     if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
         UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
-        if ([nc.topViewController respondsToSelector:@selector(fifoChanged:)]) {
-            receiver = nc.topViewController;
+        if ([nc.topViewController respondsToSelector:@selector(totalBuffered:)]) {
+            cd = (id<ConnectionDelegate>)nc.topViewController;
         }
-    } else if ([self.window.rootViewController respondsToSelector:@selector(fifoChanged:)]) {
-        receiver = self.window.rootViewController;
+    } else if ([self.window.rootViewController respondsToSelector:@selector(totalBuffered:)]) {
+        cd = (id<ConnectionDelegate>)self.window.rootViewController;
     }
-    [receiver performSelector:@selector(fifoChanged:) withObject:@(count)];
+    [cd totalBuffered:count];
+
 }
 
 #pragma actions

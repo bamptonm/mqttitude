@@ -7,7 +7,6 @@
 //
 
 #import "Connection.h"
-#import "Publication+Create.h"
 #import "mqttitudeCoreData.h"
 
 @interface Connection()
@@ -20,20 +19,19 @@
 
 @property (strong, nonatomic) MQTTSession *session;
 
-@property (strong, nonatomic) NSString *lastClientId;
-@property (strong, nonatomic) NSString *lastHost;
-@property (nonatomic) NSInteger lastPort;
-@property (nonatomic) BOOL lastTls;
-@property (nonatomic) BOOL lastAuth;
-@property (strong, nonatomic) NSString *lastUser;
-@property (strong, nonatomic) NSString *lastPass;
-
-@property (strong, nonatomic) NSData *lastWill;
-@property (strong, nonatomic) NSString *lastWillTopic;
-@property (nonatomic) BOOL lastClean;
-@property (nonatomic) BOOL lastWillRetainFlag;
-@property (nonatomic) NSInteger lastKeepalive;
-@property (nonatomic) NSInteger lastWillQos;
+@property (strong, nonatomic) NSString *host;
+@property (nonatomic) NSInteger port;
+@property (nonatomic) BOOL tls;
+@property (nonatomic) NSInteger keepalive;
+@property (nonatomic) BOOL clean;
+@property (nonatomic) BOOL auth;
+@property (strong, nonatomic) NSString *user;
+@property (strong, nonatomic) NSString *pass;
+@property (strong, nonatomic) NSString *willTopic;
+@property (strong, nonatomic) NSData *will;
+@property (nonatomic) NSInteger willQos;
+@property (nonatomic) BOOL willRetainFlag;
+@property (strong, nonatomic) NSString *clientId;
 
 @property (nonatomic, readwrite) NSError *lastErrorCode;
 
@@ -90,70 +88,66 @@
           );
 #endif
 
-    self.lastHost = host;
-    self.lastPort = port;
-    self.lastTls = tls;
-    self.lastKeepalive = keepalive;
-    self.lastClean = clean;
-    self.lastAuth = auth;
-    self.lastUser = user;
-    self.lastPass = pass;
-    self.lastWillTopic = willTopic;
-    self.lastWill = will;
-    self.lastWillQos = willQos;
-    self.lastWillRetainFlag = willRetainFlag;
-    self.lastClientId = clientId;
-    
-    self.reconnectTime = RECONNECT_TIMER;
-    self.reconnectFlag = FALSE;
-    
+    if (!self.session ||
+        ![host isEqualToString:self.host] ||
+        port != self.port ||
+        tls != self.tls ||
+        keepalive != self.keepalive ||
+        clean != self.clean ||
+        auth != self.auth ||
+        ![user isEqualToString:self.user] ||
+        ![pass isEqualToString:self.pass] ||
+        ![willTopic isEqualToString:self.willTopic] ||
+        //![will isEqualToData:self.will] ||
+        willQos != self.willQos ||
+        willRetainFlag != self.willRetainFlag ||
+        ![clientId isEqualToString:self.clientId]) {
+        self.host = host;
+        self.port = port;
+        self.tls = tls;
+        self.keepalive = keepalive;
+        self.clean = clean;
+        self.auth = auth;
+        self.user = user;
+        self.pass = pass;
+        self.willTopic = willTopic;
+        self.will = will;
+        self.willQos = willQos;
+        self.willRetainFlag = willRetainFlag;
+        self.clientId = clientId;
+        
+        self.session = [[MQTTSession alloc] initWithClientId:clientId
+                                                    userName:auth ? user : @""
+                                                    password:auth ? pass : @""
+                                                   keepAlive:keepalive
+                                                cleanSession:clean
+                                                   willTopic:willTopic
+                                                     willMsg:will
+                                                     willQoS:willQos
+                                              willRetainFlag:willRetainFlag
+                                                     runLoop:[NSRunLoop currentRunLoop]
+                                                     forMode:NSDefaultRunLoopMode];
+        [self.session setDelegate:self];
+        self.reconnectTime = RECONNECT_TIMER;
+        self.reconnectFlag = FALSE;
+    }
     [self connectToInternal];
 }
 
-- (long)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
+- (UInt16)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag
 {
 #ifdef DEBUG
     NSLog(@"Connection sendData:%@ %@ q%d r%d", topic, [Connection dataToString:data], qos, retainFlag);
 #endif
-
-    long longMsgID = -1;
     
     if (self.state != state_connected) {
-#ifdef DEBUG
-        NSLog(@"Connection intoFifo");
-#endif
-        [Publication publicationWithTimestamp:[NSDate date]
-                                        msgID:@(-1)
-                                        topic:topic
-                                         data:data qos:@(qos)
-                                   retainFlag:@(retainFlag)
-                       inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
-        [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
         [self connectToLast];
-    } else {
-#ifdef DEBUG
-        NSLog(@"Connection send");
-#endif
-        UInt16 msgID = [self.session publishData:data
-                                         onTopic:topic
-                                          retain:retainFlag
-                                             qos:qos];
-        if (msgID) {
-            [Publication publicationWithTimestamp:[NSDate date]
-                                            msgID:[NSNumber numberWithUnsignedInt:msgID]
-                                            topic:topic
-                                             data:data
-                                              qos:@(qos)
-                                       retainFlag:@(retainFlag)
-                           inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
-            [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-        }
-        longMsgID = msgID;
     }
-    if ([self.delegate respondsToSelector:@selector(saveContext)]) {
-        [self.delegate performSelector:@selector(saveContext)];
-    }
-    return longMsgID;
+    UInt16 msgId = [self.session publishData:data
+                                     onTopic:topic
+                                      retain:retainFlag
+                                         qos:qos];
+    return msgId;
 }
 
 - (void)disconnect
@@ -193,7 +187,7 @@
     [self.session unsubscribeTopic:topic];
 }
 
-#pragma mark - MQtt Callback methods
+#pragma mark - MQTT Callback methods
 
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode error:(NSError *)error
 {
@@ -215,35 +209,9 @@
             self.state = state_connected;
             
             /*
-             * if there are some unacknowledged send messages in non-clean-session-mode, re-send them
-             */
-
-            if (self.lastClean) {
-                [Publication cleanPublications:[mqttitudeCoreData theManagedObjectContext]];
-                [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-            } else {
-                NSArray *publications = [Publication unacknowledgedPublications:[mqttitudeCoreData theManagedObjectContext]];
-                for (Publication *publication in publications) {
-                    [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
-                    [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-                }
-            }
-            
-            /*
-             * if there are some queued send messages never sent before, send them
-             */
-            Publication *publication;
-            while ((publication = [Publication publicationWithmsgID:@(-1) inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]])) {
-                
-                [self sendData:publication.data topic:publication.topic qos:[publication.qos integerValue] retain:[publication.retainFlag boolValue]];
-                [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];
-                [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-            }
-            
-            /*
              * if clean-session is set or if it's the first time we connect in non-clean-session-mode, subscribe to topic
              */
-            if (self.lastClean || !self.reconnectFlag) {
+            if (self.clean || !self.reconnectFlag) {
                 [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
                                        atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
                 self.reconnectFlag = TRUE;
@@ -283,15 +251,7 @@
 
 - (void)messageDelivered:(MQTTSession *)session msgID:(UInt16)msgID
 {
-    Publication *publication = [Publication publicationWithmsgID:[NSNumber numberWithUnsignedInt:msgID] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
-    if (publication) {
-        [self.delegate messageDelivered:msgID timestamp:publication.timestamp topic:publication.topic data:publication.data];
-        [[mqttitudeCoreData theManagedObjectContext] deleteObject:publication];
-    }
-    [self.delegate fifoChanged:[mqttitudeCoreData theManagedObjectContext]];
-    if ([self.delegate respondsToSelector:@selector(saveContext)]) {
-        [self.delegate performSelector:@selector(saveContext)];
-    }
+    [self.delegate messageDelivered:msgID];
 }
 
 /*
@@ -312,28 +272,23 @@
     }
 }
 
+- (void)buffered:(MQTTSession *)session queued:(NSUInteger)queued flowingIn:(NSUInteger)flowingIn flowingOut:(NSUInteger)flowingOut
+{
+#ifdef DEBUG
+    NSLog(@"Connection buffered q%u i%u o%u", queued, flowingIn, flowingOut);
+#endif
+    [self.delegate totalBuffered:queued + flowingIn + flowingOut];
+}
+
 #pragma internal helpers
 
 - (void)connectToInternal
 {
     if (self.state == state_starting) {
         self.state = state_connecting;
-                
-        self.session = [[MQTTSession alloc] initWithClientId:self.lastClientId
-                                                    userName:self.lastAuth ? self.lastUser : @""
-                                                    password:self.lastAuth ? self.lastPass : @""
-                                                   keepAlive:self.lastKeepalive
-                                                cleanSession:self.lastClean
-                                                   willTopic:self.lastWillTopic
-                                                     willMsg:self.lastWill
-                                                     willQoS:self.lastWillQos
-                                              willRetainFlag:self.lastWillRetainFlag
-                                                     runLoop:[NSRunLoop currentRunLoop]
-                                                     forMode:NSDefaultRunLoopMode];
-        [self.session setDelegate:self];
-        [self.session connectToHost:self.lastHost
-                               port:self.lastPort
-                           usingSSL:self.lastTls];
+        [self.session connectToHost:self.host
+                               port:self.port
+                           usingSSL:self.tls];
     } else {
         NSLog(@"Connection not starting, can't connect");
     }
@@ -342,9 +297,9 @@
 - (NSString *)url
 {
     return [NSString stringWithFormat:@"%@%@:%d",
-            self.lastAuth ? [NSString stringWithFormat:@"%@@", self.lastUser] : @"",
-            self.lastHost,
-            self.lastPort
+            self.auth ? [NSString stringWithFormat:@"%@@", self.user] : @"",
+            self.host,
+            self.port
             ];
 }
 

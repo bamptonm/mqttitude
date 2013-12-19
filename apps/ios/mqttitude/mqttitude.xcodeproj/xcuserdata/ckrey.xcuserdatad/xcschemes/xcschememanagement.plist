@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>MQTTitude-Utility.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>mqttitude.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +18,16 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>84CF9A0417BEED5B00E1333C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>84FD6F221861FB3A00270297</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>84FD6F481861FB3A00270297</key>
 		<dict>
 			<key>primary</key>
 			<true/>

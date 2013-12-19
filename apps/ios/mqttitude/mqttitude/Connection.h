@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "MQTTSession.h"
-#import "Publication+Create.h"
-
 
 @protocol ConnectionDelegate <NSObject>
 
@@ -24,8 +22,8 @@ enum state {
 
 - (void)showState:(NSInteger)state;
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic;
-- (void)messageDelivered:(UInt16)msgID timestamp:(NSDate *)timestamp topic:(NSString *)topic data:(NSData *)data;
-- (void)fifoChanged:(NSManagedObjectContext *)context;
+- (void)messageDelivered:(UInt16)msgID;
+- (void)totalBuffered:(NSUInteger)count;
 
 @end
 
@@ -49,7 +47,7 @@ enum state {
    willRetainFlag:(BOOL)willRetainFlag
      withClientId:(NSString *)clientId;
 
-- (long)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
+- (UInt16)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
 - (void)subscribe:(NSString *)topic qos:(NSInteger)qos;
 - (void)unsubscribe:(NSString *)topic;
 - (void)disconnect;

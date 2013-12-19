@@ -21,10 +21,18 @@
 
 @property (nonatomic) MQTTSessionStatus status;
 @property (strong, nonatomic) NSString *clientId;
+@property (strong, nonatomic) NSString *userName;
+@property (strong, nonatomic) NSString *password;
 @property (nonatomic) UInt16 keepAliveInterval;
-@property (strong, nonatomic) MQTTMessage *connectMessage;
+@property (nonatomic) BOOL cleanSessionFlag;
+@property (strong, nonatomic) NSString *willTopic;
+@property (strong, nonatomic) NSData *willMsg;
+@property (nonatomic) UInt8 willQoS;
+@property (nonatomic) BOOL willRetailFlag;
 @property (strong, nonatomic) NSRunLoop *runLoop;
 @property (strong, nonatomic) NSString *runLoopMode;
+
+@property (strong, nonatomic) MQTTMessage *connectMessage;
 @property (strong, nonatomic) NSTimer *keepAliveTimer;
 @property (strong, nonatomic) MQTTEncoder *encoder;
 @property (strong, nonatomic) MQTTDecoder *decoder;
@@ -53,7 +61,14 @@
     self = [super init];
     
     self.clientId = clientId;
+    self.userName = userName;
+    self.password = password;
     self.keepAliveInterval = keepAliveInterval;
+    self.cleanSessionFlag = cleanSessionFlag;
+    self.willTopic = willTopic;
+    self.willMsg = willMsg;
+    self.willQoS = willQoS;
+    self.willRetailFlag = willRetainFlag;
     self.runLoop = runLoop;
     self.runLoopMode = runLoopMode;
    
@@ -62,6 +77,11 @@
     self.txFlows = [[NSMutableDictionary alloc] init];
     self.rxFlows = [[NSMutableDictionary alloc] init];
     
+    [self.delegate buffered:self
+                     queued:[self.queue count]
+                  flowingIn:[self.rxFlows count]
+                 flowingOut:[self.txFlows count]];
+
     self.connectMessage = [MQTTMessage connectMessageWithClientId:clientId
                                                          userName:userName
                                                          password:password
@@ -71,8 +91,6 @@
                                                           willMsg:willMsg
                                                           willQoS:willQoS
                                                        willRetain:willRetainFlag];
-
-
     return self;
 }
 
@@ -149,6 +167,10 @@
         flow.msg = msg;
         flow.deadline = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT];
         [self.txFlows setObject:flow forKey:[NSNumber numberWithUnsignedInt:msgId]];
+        [self.delegate buffered:self
+                         queued:[self.queue count]
+                      flowingIn:[self.rxFlows count]
+                     flowingOut:[self.txFlows count]];
     }
     [self send:msg];
     
@@ -217,9 +239,13 @@
                 case MQTTSessionStatusConnecting:
                     break;
                 case MQTTSessionStatusConnected:
-                    while ([self.queue count] > 0) {
+                    if ([self.queue count] > 0) {
                         MQTTMessage *msg = [self.queue objectAtIndex:0];
                         [self.queue removeObjectAtIndex:0];
+                        [self.delegate buffered:self
+                                         queued:[self.queue count]
+                                      flowingIn:[self.rxFlows count]
+                                     flowingOut:[self.txFlows count]];
                         [self.encoder encodeMessage:msg];
                     }
                     break;
@@ -382,6 +408,10 @@
             NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                 data, @"data", topic, @"topic", nil];
             [self.rxFlows setObject:dict forKey:[NSNumber numberWithUnsignedInt:msgId]];
+            [self.delegate buffered:self
+                             queued:[self.queue count]
+                          flowingIn:[self.rxFlows count]
+                         flowingOut:[self.txFlows count]];
             [self send:[MQTTMessage pubrecMessageWithMessageId:msgId]];
         }
     }
@@ -407,6 +437,10 @@
     }
 
     [self.txFlows removeObjectForKey:msgId];
+    [self.delegate buffered:self
+                     queued:[self.queue count]
+                  flowingIn:[self.rxFlows count]
+                 flowingOut:[self.txFlows count]];
     [self.delegate messageDelivered:self msgID:[msgId unsignedIntValue]];
 }
 
@@ -451,6 +485,10 @@
                              data:[dict valueForKey:@"data"]
                           onTopic:[dict valueForKey:@"topic"]];
         [self.rxFlows removeObjectForKey:msgId];
+        [self.delegate buffered:self
+                         queued:[self.queue count]
+                      flowingIn:[self.rxFlows count]
+                     flowingOut:[self.txFlows count]];
     }
     [self send:[MQTTMessage pubcompMessageWithMessageId:[msgId unsignedIntegerValue]]];
 }
@@ -470,6 +508,10 @@
     }
 
     [self.txFlows removeObjectForKey:msgId];
+    [self.delegate buffered:self
+                     queued:[self.queue count]
+                  flowingIn:[self.rxFlows count]
+                 flowingOut:[self.txFlows count]];
     [self.delegate messageDelivered:self msgID:[msgId unsignedIntValue]];
 }
 
@@ -487,6 +529,10 @@
     }
     else {
         [self.queue addObject:msg];
+        [self.delegate buffered:self
+                         queued:[self.queue count]
+                      flowingIn:[self.rxFlows count]
+                     flowingOut:[self.txFlows count]];
     }
 }
 

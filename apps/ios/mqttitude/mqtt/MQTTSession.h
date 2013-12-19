@@ -41,6 +41,10 @@ typedef enum {
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode error:(NSError *)error;
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic;
 - (void)messageDelivered:(MQTTSession *)session msgID:(UInt16)msgID;
+- (void)buffered:(MQTTSession *)session
+          queued:(NSUInteger)queued
+       flowingIn:(NSUInteger)flowingIn
+      flowingOut:(NSUInteger)flowingOut;
 
 @end
 

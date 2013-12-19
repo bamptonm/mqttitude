@@ -55,22 +55,26 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HkV-NC-zTo">
-                                <rect key="frame" x="280" y="242" width="20" height="20"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.99999999999999989" translatesAutoresizingMaskIntoConstraints="NO" id="LBF-pt-IW9">
+                                <rect key="frame" x="0.0" y="457" width="320" height="3"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="3" id="zJ3-A8-ewA"/>
+                                </constraints>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="eED-yn-0ps" firstAttribute="leading" secondItem="XET-fL-22T" secondAttribute="leading" type="default" id="51n-AG-hoV"/>
-                            <constraint firstItem="XET-fL-22T" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="default" id="Bkf-cw-Qoj"/>
-                            <constraint firstAttribute="trailing" secondItem="XET-fL-22T" secondAttribute="trailing" type="default" id="Lp6-ed-uUS"/>
-                            <constraint firstAttribute="centerY" secondItem="HkV-NC-zTo" secondAttribute="centerY" type="user" id="Qeo-B3-4Xr"/>
-                            <constraint firstItem="eED-yn-0ps" firstAttribute="bottom" secondItem="XET-fL-22T" secondAttribute="bottom" type="default" id="UKM-gd-p7H"/>
-                            <constraint firstAttribute="trailing" secondItem="HkV-NC-zTo" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="dWN-53-yHt"/>
-                            <constraint firstItem="HkV-NC-zTo" firstAttribute="centerY" secondItem="eED-yn-0ps" secondAttribute="centerY" type="default" id="iSy-wg-CLp"/>
-                            <constraint firstItem="XET-fL-22T" firstAttribute="trailing" secondItem="eED-yn-0ps" secondAttribute="trailing" type="default" id="qsD-oz-gde"/>
+                            <constraint firstItem="LBF-pt-IW9" firstAttribute="leading" secondItem="XET-fL-22T" secondAttribute="leading" type="default" id="2ZW-dJ-0bj"/>
+                            <constraint firstItem="LBF-pt-IW9" firstAttribute="trailing" secondItem="XET-fL-22T" secondAttribute="trailing" type="default" id="6lh-mA-IlD"/>
+                            <constraint firstItem="XET-fL-22T" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="user" id="Bkf-cw-Qoj"/>
+                            <constraint firstAttribute="trailing" secondItem="XET-fL-22T" secondAttribute="trailing" type="user" id="Lp6-ed-uUS"/>
+                            <constraint firstItem="eED-yn-0ps" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="user" id="aG9-xU-0Hi"/>
+                            <constraint firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" type="user" id="ct9-Lz-J83"/>
+                            <constraint firstAttribute="bottom" secondItem="XET-fL-22T" secondAttribute="bottom" type="user" id="kgX-Pp-MqX"/>
+                            <constraint firstItem="LBF-pt-IW9" firstAttribute="bottom" secondItem="XET-fL-22T" secondAttribute="top" type="default" id="luo-WP-L9z"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" type="default" id="v1W-Ee-W9R"/>
+                            <constraint firstAttribute="trailing" secondItem="eED-yn-0ps" secondAttribute="trailing" type="user" id="v78-dh-01k"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -87,12 +91,12 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activity" destination="HkV-NC-zTo" id="GAC-cG-ZW8"/>
                         <outlet property="connectionButton" destination="mJP-Uf-uGD" id="LDS-dJ-5hR"/>
                         <outlet property="friendsButton" destination="OG2-Ko-DXh" id="Eg8-EM-tBC"/>
                         <outlet property="locationButton" destination="Yil-yv-Mgw" id="VF6-SA-Qeu"/>
                         <outlet property="mapModeButton" destination="WHg-de-nht" id="T1k-9F-NMO"/>
                         <outlet property="mapView" destination="eED-yn-0ps" id="ySD-3E-pwJ"/>
+                        <outlet property="progress" destination="LBF-pt-IW9" id="dwn-65-mbC"/>
                         <outlet property="toolbar" destination="XET-fL-22T" id="GVN-2n-mb5"/>
                         <segue destination="m9c-8c-Xj9" kind="push" identifier="showDetail:" id="Hb0-uO-VBI"/>
                     </connections>
