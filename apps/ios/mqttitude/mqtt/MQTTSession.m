@@ -308,6 +308,17 @@
                                                                          repeats:YES];
                             [self.runLoop addTimer:self.keepAliveTimer forMode:self.runLoopMode];
                             [self.delegate handleEvent:self event:MQTTSessionEventConnected error:nil];
+                            if ([self.queue count] > 0) {
+                                if (self.encoder.status == MQTTEncoderStatusReady) {
+                                    MQTTMessage *msg = [self.queue objectAtIndex:0];
+                                    [self.queue removeObjectAtIndex:0];
+                                    [self.delegate buffered:self
+                                                     queued:[self.queue count]
+                                                  flowingIn:[self.rxFlows count]
+                                                 flowingOut:[self.txFlows count]];
+                                    [self.encoder encodeMessage:msg];
+                                }
+                            }
                         }
                         else {
                             NSString *errorDescription;

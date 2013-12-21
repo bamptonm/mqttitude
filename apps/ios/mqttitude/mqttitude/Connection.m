@@ -275,6 +275,11 @@
 #ifdef DEBUG
     NSLog(@"Connection buffered q%u i%u o%u", queued, flowingIn, flowingOut);
 #endif
+    if ((queued + flowingIn + flowingOut) && self.state == state_connected) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = TRUE;
+    } else {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = FALSE;
+    }
     [self.delegate totalBuffered:queued ? queued : flowingOut ? flowingOut : flowingIn];
 }
 

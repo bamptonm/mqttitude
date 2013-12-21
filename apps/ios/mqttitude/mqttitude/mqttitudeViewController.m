@@ -292,7 +292,12 @@
 
 - (void)totalBuffered:(NSUInteger)count
 {
-    [self.progress setProgress:1.0 / (count + 1) animated:YES];
+    if (count) {
+        self.progress.hidden = FALSE;
+        [self.progress setProgress:1.0 / (count + 1) animated:YES];
+    } else {
+        self.progress.hidden = TRUE;
+    }
 }
 
 #pragma MKMapViewDelegate
