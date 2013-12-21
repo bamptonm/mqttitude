@@ -195,14 +195,15 @@
 #ifdef DEBUG
     NSLog(@"MQTTSession closeInternal");
 #endif 
-    
     if (self.keepAliveTimer) {
         [self.keepAliveTimer invalidate];
         self.keepAliveTimer = nil;
     }
+    
+    [self.encoder close];
+    [self.decoder close];
     self.status = MQTTSessionStatusClosed;
     [self.delegate handleEvent:self event:MQTTSessionEventConnectionClosed error:nil];
-
 }
 
 

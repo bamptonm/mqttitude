@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="HEo-wr-wj3">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
         <development version="4600" identifier="xcode"/>
@@ -55,25 +55,25 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.99999999999999989" translatesAutoresizingMaskIntoConstraints="NO" id="LBF-pt-IW9">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qjN-oP-uMc">
                                 <rect key="frame" x="0.0" y="457" width="320" height="3"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="3" id="zJ3-A8-ewA"/>
+                                    <constraint firstAttribute="height" constant="3" type="user" id="Kac-MI-Esl"/>
                                 </constraints>
                             </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="LBF-pt-IW9" firstAttribute="leading" secondItem="XET-fL-22T" secondAttribute="leading" type="default" id="2ZW-dJ-0bj"/>
-                            <constraint firstItem="LBF-pt-IW9" firstAttribute="trailing" secondItem="XET-fL-22T" secondAttribute="trailing" type="default" id="6lh-mA-IlD"/>
                             <constraint firstItem="XET-fL-22T" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="user" id="Bkf-cw-Qoj"/>
                             <constraint firstAttribute="trailing" secondItem="XET-fL-22T" secondAttribute="trailing" type="user" id="Lp6-ed-uUS"/>
+                            <constraint firstItem="XET-fL-22T" firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" type="user" id="LzI-Db-7rK"/>
                             <constraint firstItem="eED-yn-0ps" firstAttribute="leading" secondItem="ffw-DX-wWE" secondAttribute="leading" type="user" id="aG9-xU-0Hi"/>
-                            <constraint firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" type="user" id="ct9-Lz-J83"/>
-                            <constraint firstAttribute="bottom" secondItem="XET-fL-22T" secondAttribute="bottom" type="user" id="kgX-Pp-MqX"/>
-                            <constraint firstItem="LBF-pt-IW9" firstAttribute="bottom" secondItem="XET-fL-22T" secondAttribute="top" type="default" id="luo-WP-L9z"/>
-                            <constraint firstItem="eED-yn-0ps" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" type="default" id="v1W-Ee-W9R"/>
+                            <constraint firstAttribute="bottom" secondItem="eED-yn-0ps" secondAttribute="bottom" type="default" id="f6u-ZP-Sai"/>
+                            <constraint firstItem="qjN-oP-uMc" firstAttribute="bottom" secondItem="XET-fL-22T" secondAttribute="top" type="default" id="fJP-I1-VLR"/>
+                            <constraint firstItem="eED-yn-0ps" firstAttribute="top" secondItem="ffw-DX-wWE" secondAttribute="top" type="default" id="kSO-AH-0PD"/>
+                            <constraint firstItem="XET-fL-22T" firstAttribute="trailing" secondItem="qjN-oP-uMc" secondAttribute="trailing" type="default" id="lk4-E0-y3J"/>
+                            <constraint firstItem="XET-fL-22T" firstAttribute="leading" secondItem="qjN-oP-uMc" secondAttribute="leading" type="default" id="rRb-Xw-hhj"/>
                             <constraint firstAttribute="trailing" secondItem="eED-yn-0ps" secondAttribute="trailing" type="user" id="v78-dh-01k"/>
                         </constraints>
                     </view>
@@ -96,7 +96,7 @@
                         <outlet property="locationButton" destination="Yil-yv-Mgw" id="VF6-SA-Qeu"/>
                         <outlet property="mapModeButton" destination="WHg-de-nht" id="T1k-9F-NMO"/>
                         <outlet property="mapView" destination="eED-yn-0ps" id="ySD-3E-pwJ"/>
-                        <outlet property="progress" destination="LBF-pt-IW9" id="dwn-65-mbC"/>
+                        <outlet property="progress" destination="qjN-oP-uMc" id="7SF-Ak-6CU"/>
                         <outlet property="toolbar" destination="XET-fL-22T" id="GVN-2n-mb5"/>
                         <segue destination="m9c-8c-Xj9" kind="push" identifier="showDetail:" id="Hb0-uO-VBI"/>
                     </connections>
@@ -142,15 +142,15 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Last Error" id="KLQ-Dr-AAl">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="153" id="K7A-54-wOx">
-                                        <rect key="frame" x="0.0" y="88" width="320" height="153"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="131" id="K7A-54-wOx">
+                                        <rect key="frame" x="0.0" y="88" width="320" height="131"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="152"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLk-V9-E1v">
-                                                    <rect key="frame" x="20" y="0.0" width="280" height="152"/>
+                                                    <rect key="frame" x="20" y="0.0" width="280" height="130"/>
                                                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -170,7 +170,7 @@
                             <tableViewSection headerTitle="Effective Settings" id="7HG-RN-lXh">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8K7-ym-dsw">
-                                        <rect key="frame" x="0.0" y="263" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="241" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -205,7 +205,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="NsA-MT-Zml">
-                                        <rect key="frame" x="0.0" y="307" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="285" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -240,7 +240,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="XF5-TA-daq">
-                                        <rect key="frame" x="0.0" y="351" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="329" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -274,7 +274,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8VR-3f-FXr">
-                                        <rect key="frame" x="0.0" y="395" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="373" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>

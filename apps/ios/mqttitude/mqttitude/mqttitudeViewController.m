@@ -77,26 +77,14 @@
 
 #pragma UI actions
 
-- (IBAction)setCenter:(UIStoryboardSegue *)segue {
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(0, 0);
-    
-    if ([segue.sourceViewController isKindOfClass:[mqttitudeFriendTVC class]]) {
-        mqttitudeFriendTVC *friendTVC = (mqttitudeFriendTVC *)segue.sourceViewController;
-        coordinate = friendTVC.selectedLocation.coordinate;
-    }
-    if ([segue.sourceViewController isKindOfClass:[mqttitudeLocationTVC class]]) {
-        mqttitudeLocationTVC *locationTVC = (mqttitudeLocationTVC *)segue.sourceViewController;
-        coordinate = locationTVC.selectedLocation.coordinate;
-    }
-    
-    [self.mapView setVisibleMapRect:[self centeredRect:coordinate] animated:YES];
-    self.friends = 4; // this will set the move mode to follow when the map appeares again
-}
-
 - (IBAction)location:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     if (sender) {
         delegate.monitoring = (delegate.monitoring + 3 - 1) % 3;
+        NSArray *modeNames = @[@"Manual",
+                               @"Significant Changes",
+                               @"Move"];
+        [self disappearingActionSheet:[NSString stringWithFormat:@"Publish mode %@", modeNames[delegate.monitoring]] button:sender];
     }
     switch (delegate.monitoring) {
         case 2:
@@ -115,6 +103,7 @@
 - (IBAction)action:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
     [delegate sendNow];
+    [self disappearingActionSheet:@"Publish location now" button:sender];
 }
 
 - (IBAction)connection:(UIBarButtonItem *)sender {
@@ -122,6 +111,7 @@
     switch (delegate.connection.state) {
         case state_connected:
             [delegate connectionOff];
+            [self disappearingActionSheet:@"MQTT disconnect!" button:sender];
             break;
         case state_error:
         case state_starting:
@@ -129,6 +119,7 @@
         case state_closing:
         default:
             [delegate reconnect];
+            [self disappearingActionSheet:@"MQTT reconnect!" button:sender];
             break;
     }
 }
@@ -136,7 +127,13 @@
 - (IBAction)friends:(UIBarButtonItem *)sender {
     if (sender) {
         self.friends = (self.friends + 4 - 1) % 4;
+        NSArray *modeNames = @[@"centered",
+                               @"shows all friends",
+                               @"follows",
+                               @"follows with heading"];
+        [self disappearingActionSheet:[NSString stringWithFormat:@"Map %@", modeNames[self.friends]] button:sender];
     }
+    
     self.mapView.showsUserLocation = TRUE;
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     CLLocationCoordinate2D center = delegate.manager.location.coordinate;
@@ -183,12 +180,9 @@
             self.friendsButton.image = [UIImage imageNamed:@"FriendsOn.png"];
             break;
         case 0:
-            self.mapView.userTrackingMode = MKUserTrackingModeNone;
-            [self.mapView setVisibleMapRect:[self centeredRect:center] animated:YES];
-            self.friendsButton.image = [UIImage imageNamed:@"UserTrackingNone.png"];
-            break;
         default:
             self.mapView.userTrackingMode = MKUserTrackingModeNone;
+            [self.mapView setVisibleMapRect:[self centeredRect:center] animated:YES];
             self.friendsButton.image = [UIImage imageNamed:@"UserTrackingNone.png"];
             break;
     }
@@ -199,13 +193,16 @@
         switch (self.mapView.mapType) {
             case  MKMapTypeStandard:
                 self.mapView.mapType = MKMapTypeSatellite;
+                [self disappearingActionSheet:@"Map mode satellite" button:sender];
                 break;
             case MKMapTypeSatellite:
                 self.mapView.mapType = MKMapTypeHybrid;
+                [self disappearingActionSheet:@"Map mode hybrid" button:sender];
                 break;
             case MKMapTypeHybrid:
             default:
                 self.mapView.mapType = MKMapTypeStandard;
+                [self disappearingActionSheet:@"Map standard" button:sender];
                 break;
         }
     }
@@ -218,6 +215,7 @@
             break;
         case MKMapTypeHybrid:
             self.mapModeButton.image = [UIImage imageNamed:@"HybridOn.png"];
+
         default:
             break;
     }
@@ -588,7 +586,38 @@
     }
 }
 
+#pragma action sheet
 
+- (void)disappearingActionSheet:(NSString *)title button:(UIBarButtonItem *)button
+{
+    //[mqttitudeAlertView alert:title message:message dismissAfter:DISMISS_AFTER];
+#ifdef DEBUG
+    NSLog(@"App disappearingActionSheet %@", title);
+#endif
+    
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title
+                                                                 delegate:nil
+                                                        cancelButtonTitle:nil
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:nil];
+        actionSheet.delegate = self;
+        [actionSheet showFromBarButtonItem:button animated:YES];
+        [self performSelector:@selector(dismissActionSheetAfterDelay:) withObject:actionSheet afterDelay:0.75];
+    }
+}
 
+- (void)dismissActionSheetAfterDelay:(UIActionSheet *)actionSheet
+{
+    [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // this is a hack because otherwise the progress bar is grey after the actionsheet was displayed
+    float progress = self.progress.progress;
+    [self.progress setProgress:progress*0.9 animated:YES];
+    [self.progress setProgress:progress animated:YES];
+}
 
 @end

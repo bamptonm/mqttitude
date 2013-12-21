@@ -56,6 +56,7 @@
 		848468C717FD7A740012FC18 /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468C017FD7A740012FC18 /* MQTTMessage.m */; };
 		848468C817FD7A740012FC18 /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468C217FD7A740012FC18 /* MQTTSession.m */; };
 		848468C917FD7A740012FC18 /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468C417FD7A740012FC18 /* MQttTxFlow.m */; };
+		848477F81864BF2000CA0F81 /* mqttitudeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848477F71864BF2000CA0F81 /* mqttitudeAlertView.m */; };
 		848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036817E47ADC00152C26 /* AddressBook.framework */; };
 		848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036A17E4841500152C26 /* AddressBookUI.framework */; };
 		848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A037017E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m */; };
@@ -148,6 +149,8 @@
 		848468C217FD7A740012FC18 /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
 		848468C317FD7A740012FC18 /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
 		848468C417FD7A740012FC18 /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
+		848477F61864BF2000CA0F81 /* mqttitudeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAlertView.h; sourceTree = "<group>"; };
+		848477F71864BF2000CA0F81 /* mqttitudeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAlertView.m; sourceTree = "<group>"; };
 		848A036817E47ADC00152C26 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		848A036A17E4841500152C26 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		848A036F17E5BB9D00152C26 /* mqttitudeFriendAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeFriendAnnotationView.h; sourceTree = "<group>"; };
@@ -339,6 +342,8 @@
 				846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */,
 				84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */,
 				84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */,
+				848477F61864BF2000CA0F81 /* mqttitudeAlertView.h */,
+				848477F71864BF2000CA0F81 /* mqttitudeAlertView.m */,
 				8414726817C9E5F900F76EAB /* Connection.h */,
 				8414726917C9E5F900F76EAB /* Connection.m */,
 				84BDE18F17C7B11000C47B65 /* mqttitudeViewController.h */,
@@ -476,6 +481,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				848477F81864BF2000CA0F81 /* mqttitudeAlertView.m in Sources */,
 				846597D717F78E8600BEA7A8 /* mqttitudeLocationTVC.m in Sources */,
 				84B7B91117FB11AD0014049E /* mqttitudeEditLocationTVC.m in Sources */,
 				84CF9A1517BEED5B00E1333C /* main.m in Sources */,

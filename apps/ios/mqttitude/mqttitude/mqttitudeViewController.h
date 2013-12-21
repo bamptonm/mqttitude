@@ -13,6 +13,6 @@
 #import "MQTTSession.h"
 #import "Connection.h"
 
-@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
+@interface mqttitudeViewController : UIViewController <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 
 @end

@@ -116,6 +116,10 @@
         self.willRetainFlag = willRetainFlag;
         self.clientId = clientId;
         
+#ifdef DEBUG
+        NSLog(@"Connection new session");
+#endif
+
         self.session = [[MQTTSession alloc] initWithClientId:clientId
                                                     userName:auth ? user : @""
                                                     password:auth ? pass : @""
@@ -155,17 +159,12 @@
 #ifdef DEBUG
     NSLog(@"Connection disconnect:");
 #endif
+    self.state = state_closing;
+    [self.session close];
 
-    if (self.state == state_connected) {
-        self.state = state_closing;
-        [self.session close];
-    } else {
-        self.state = state_starting;
-        NSLog(@"Connection not connected, can't close");
-        if (self.reconnectTimer) {
-            [self.reconnectTimer invalidate];
-            self.reconnectTimer = nil;
-        }
+    if (self.reconnectTimer) {
+        [self.reconnectTimer invalidate];
+        self.reconnectTimer = nil;
     }
 }
 
@@ -174,7 +173,6 @@
 #ifdef DEBUG
     NSLog(@"Connection subscribe:%@ (%d)", topic, qos);
 #endif
-
     [self.session subscribeToTopic:topic atLevel:qos];
 }
 
@@ -277,7 +275,7 @@
 #ifdef DEBUG
     NSLog(@"Connection buffered q%u i%u o%u", queued, flowingIn, flowingOut);
 #endif
-    [self.delegate totalBuffered:queued + flowingIn + flowingOut];
+    [self.delegate totalBuffered:queued ? queued : flowingOut ? flowingOut : flowingIn];
 }
 
 #pragma internal helpers

@@ -10,6 +10,7 @@
 #import "mqttitudeCoreData.h"
 #import "Friend+Create.h"
 #import "Location+Create.h"
+#import "mqttitudeAlertView.h"
 
 @interface mqttitudeAppDelegate()
 @property (strong, nonatomic) NSTimer *disconnectTimer;
@@ -20,10 +21,11 @@
 @property (strong, nonatomic) NSDate *locationServiceStarted;
 @property (strong, nonatomic) NSString *processingMessage;
 
+- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon;
+
 @end
 
 #define BACKGROUND_DISCONNECT_AFTER 8.0
-#define DISMISS_AFTER 1.0
 
 #define MAX_OWN_LOCATIONS 50
 #define MAX_OTHER_LOCATIONS 1
@@ -106,7 +108,7 @@
                   self.coreData.documentState, [mqttitudeCoreData theManagedObjectContext]);
 #endif
             if (state & UIDocumentStateInConflict || state & UIDocumentStateSavingError) {
-                [self alert:[NSString stringWithFormat:@"App failed opening document documentState = 0x%02x", state]];
+                [mqttitudeAlertView alert:@"App Failure" message:[NSString stringWithFormat:@"Open document documentState = 0x%02x", state]];
                 break;
             }
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
@@ -176,11 +178,11 @@
             NSLog(@"App save context");
 #endif
             if (![managedObjectContext save:&error]) {
-                NSString *message = [NSString stringWithFormat:@"App CoreData unresolved error %@, %@", error, [error userInfo]];
+                NSString *message = [NSString stringWithFormat:@"CoreData unresolved error %@, %@", error, [error userInfo]];
 #ifdef DEBUG
                 NSLog(@"%@", message);
 #endif
-                [self alert:[message substringToIndex:128]];
+                [mqttitudeAlertView alert:@"App Failure" message:[message substringToIndex:128]];
             }
         }
     }
@@ -221,12 +223,12 @@
         NSError *error;
         NSInputStream *input = [NSInputStream inputStreamWithURL:url];
         if ([input streamError]) {
-            self.processingMessage = [NSString stringWithFormat:@"App error inputStreamWithURL %@ %@", [input streamError], url];
+            self.processingMessage = [NSString stringWithFormat:@"Error nputStreamWithURL %@ %@", [input streamError], url];
             return FALSE;
         }
         [input open];
         if ([input streamError]) {
-            self.processingMessage = [NSString stringWithFormat:@"App error open %@ %@", [input streamError], url];
+            self.processingMessage = [NSString stringWithFormat:@"Error open %@ %@", [input streamError], url];
             return FALSE;
         }
         
@@ -311,16 +313,16 @@
                 if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"ab_preference"];
                 
             } else {
-                self.processingMessage = [NSString stringWithFormat:@"App received invalid configuration file %@)", dictionary[@"_type"]];
+                self.processingMessage = [NSString stringWithFormat:@"Error invalid configuration file %@)", dictionary[@"_type"]];
                 return FALSE;
             }
         } else {
-            self.processingMessage = [NSString stringWithFormat:@"App received illegal json in configuration file %@)", error];
+            self.processingMessage = [NSString stringWithFormat:@"Error illegal json in configuration file %@)", error];
             return FALSE;
         }
         
         [[NSUserDefaults standardUserDefaults] synchronize];
-        self.processingMessage = [NSString stringWithFormat:@"App configuration file %@ successfully processed)", [url lastPathComponent]];
+        self.processingMessage = [NSString stringWithFormat:@"Configuration file %@ successfully processed)", [url lastPathComponent]];
         
     }
     
@@ -380,27 +382,27 @@
 #endif
     
     if (self.processingMessage) {
-        [self alert:self.processingMessage];
+        [mqttitudeAlertView alert:@"App File Processing" message:self.processingMessage];
         self.processingMessage = nil;
         [self reconnect];
     }
     
     if (self.coreData.documentState) {
-        NSString *message = [NSString stringWithFormat:@"Application error opening CoreData %@ 0x%02x",
+        NSString *message = [NSString stringWithFormat:@"Open CoreData %@ 0x%02x",
                              self.coreData.fileURL,
                              self.coreData.documentState];
-        [self alert:message];
+        [mqttitudeAlertView alert:@"App Failure" message:message];
     }
     if (![CLLocationManager significantLocationChangeMonitoringAvailable]) {
         NSString *message = @"No significant location change monitoring available";
-        [self alert:message];
+        [mqttitudeAlertView alert:@"App Failure" message:message];
     }
     if (![CLLocationManager locationServicesEnabled]) {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
         NSString *message = [NSString stringWithFormat:@"%@ %d",
-                             @"Application not authorized for CoreLocation",
+                             @"ANot authorized for CoreLocation",
                              status];
-        [self alert:message];
+        [mqttitudeAlertView alert:@"App Failure" message:message];
     }
 
 }
@@ -420,7 +422,6 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveLocalNotification %@", notification.alertBody);
 #endif
-
     // [self disappearingAlert:notification.alertBody];
 }
 
@@ -446,7 +447,7 @@
          **/
         
         if ([location.timestamp compare:self.locationServiceStarted] != NSOrderedAscending ) {
-            [self publishLocation:location automatic:YES addon:nil remark:nil];
+            [self publishLocation:location automatic:YES addon:nil];
         }
     }
 }
@@ -456,8 +457,8 @@
 #ifdef DEBUG
     NSLog(@"App locationManager:didFailWithError %@", error);
 #endif
-    NSString *message = [NSString stringWithFormat:@"App locationManager:didFailWithError %@", error];
-    [self alert:message];
+    NSString *message = [NSString stringWithFormat:@"didFailWithError %@", error];
+    [mqttitudeAlertView alert:@"App locationManager" message:message];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
@@ -468,7 +469,7 @@
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"event": @"enter"} remark:region.identifier];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"event": @"enter"}];
     
     for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
@@ -486,7 +487,7 @@
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"event": @"leave"} remark:region.identifier];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"event": @"leave"}];
     
     for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
@@ -507,8 +508,8 @@
 #ifdef DEBUG
     NSLog(@"App monitoringDidFailForRegion %@ %@", region, error);
 #endif
-    NSString *message = [NSString stringWithFormat:@"App monitoringDidFailForRegion %@ %@", region, error];
-    [self alert:message];
+    NSString *message = [NSString stringWithFormat:@"monitoringDidFailForRegion %@ %@", region, error];
+    [mqttitudeAlertView alert:@"App locationManager" message:message];
 }
 
 #pragma ConnectionDelegate
@@ -554,7 +555,7 @@
         // received command
         NSString *message = [Connection dataToString:data];
         if ([message isEqualToString:@"publishNow"]) {
-            [self publishLocation:self.manager.location automatic:YES comment:@"by remote command"];
+            [self publishLocation:self.manager.location automatic:YES a];
         } else if ([message isEqualToString:@"publishNever"]) {
             self.monitoring = 0;
         } else if ([message isEqualToString:@"publishNormal"]) {
@@ -673,7 +674,7 @@
     NSLog(@"App sendNow");
 #endif
 
-    [self publishLocation:[self.manager location] automatic:FALSE addon:nil remark:nil];
+    [self publishLocation:[self.manager location] automatic:FALSE addon:nil];
 }
 - (void)connectionOff
 {
@@ -723,7 +724,7 @@
 #ifdef DEBUG
     NSLog(@"App activityTimer");
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE addon:nil remark:nil];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:nil];
 }
 
 - (void)reconnect
@@ -736,14 +737,14 @@
     [self connect];
 }
 
-- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon remark:(NSString *)remark
+- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon
 {
     Location *newLocation = [Location locationWithTopic:[self theGeneralTopic]
                                               timestamp:[NSDate date]
                                              coordinate:location.coordinate
                                                accuracy:location.horizontalAccuracy
                                               automatic:automatic
-                                                 remark:remark
+                                                 remark:nil
                                                  radius:0
                                                   share:NO
                                  inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
@@ -814,50 +815,6 @@
 
 #pragma internal helpers
 
-- (void)disappearingAlert:(NSString *)message
-{
-    [self anyAlert:message dismissAfter:DISMISS_AFTER];
-}
-
-- (void)alert:(NSString *)message
-{
-    [self anyAlert:message dismissAfter:0];
-}
-
-- (void)anyAlert:(NSString *)message dismissAfter:(NSTimeInterval)interval
-{
-#ifdef DEBUG
-    NSLog(@"App alert %@", message);
-#endif
-
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        self.alertView = [[UIAlertView alloc] initWithTitle:[NSBundle mainBundle].infoDictionary[@"CFBundleName"]
-                                                    message:message
-                                                   delegate:self
-                                          cancelButtonTitle:interval ? nil : @"OK"
-                                          otherButtonTitles:nil];
-        self.alertView.delegate = self;
-        
-        [self.alertView show];
-        
-        if (interval) {
-            [self performSelector:@selector(dismissAfterDelay:) withObject:self.alertView afterDelay:interval];
-        }
-    }
-}
-
-- (void)dismissAfterDelay:(UIAlertView *)alertView
-{
-    [alertView dismissWithClickedButtonIndex:0 animated:YES];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-#ifdef DEBUG
-    NSLog(@"AlertView clickedButtonAtIndex %d", buttonIndex);
-#endif
-}
-
 - (void)notification:(NSString *)message
 {
 #ifdef DEBUG
@@ -908,11 +865,11 @@
         data = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 /* not pretty printed */ error:&error];
         if (!data) {
             NSString *message = [NSString stringWithFormat:@"Error %@ serializing JSON Object: %@", [error description], [jsonObject description]];
-            [self alert:message];
+            [mqttitudeAlertView alert:@"App Failure" message:message];
         }
     } else {
         NSString *message = [NSString stringWithFormat:@"No valid JSON Object: %@", [jsonObject description]];
-        [self alert:message];
+        [mqttitudeAlertView alert:@"App Failure" message:message];
     }
     return data;
 }
@@ -961,7 +918,7 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveRemoteNotification %@", userInfo);
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE comment:@"by remote notification"];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:nil];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
@@ -969,7 +926,7 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveRemoteNotification fetchCompletionHandler %@", userInfo);
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE comment:@"by remote notification"];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:nil];
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
