@@ -20,6 +20,7 @@
 @property (nonatomic)    UInt8    qos;
 @property (nonatomic)    BOOL     retainFlag;
 @property (nonatomic)    BOOL     dupFlag;
+@property (nonatomic)    UInt16   mid;
 
 enum {
     MQTTConnect = 1,

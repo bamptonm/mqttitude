@@ -125,6 +125,7 @@
                                                     password:auth ? pass : @""
                                                    keepAlive:keepalive
                                                 cleanSession:clean
+                                                        will:YES
                                                    willTopic:willTopic
                                                      willMsg:will
                                                      willQoS:willQos
@@ -259,7 +260,7 @@
  *
  */
 
-- (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic
+- (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic qos:(int)qos retained:(BOOL)retained mid:(unsigned int)mid
 {
 #ifdef DEBUG
     NSLog(@"Connection received %@ %@", topic, [Connection dataToString:data]);
@@ -281,6 +282,16 @@
         [UIApplication sharedApplication].networkActivityIndicatorVisible = FALSE;
     }
     [self.delegate totalBuffered:queued ? queued : flowingOut ? flowingOut : flowingIn];
+}
+
+- (void)sending:(int)type qos:(int)qos retained:(BOOL)retained duped:(BOOL)duped mid:(UInt16)mid data:(NSData *)data
+{
+    //
+}
+
+- (void)received:(int)type qos:(int)qos retained:(BOOL)retained duped:(BOOL)duped mid:(UInt16)mid data:(NSData *)data
+{
+    //
 }
 
 #pragma internal helpers
