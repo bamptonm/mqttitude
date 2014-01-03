@@ -23,6 +23,8 @@
 			<string>URL</string>
 			<key>DefaultValue</key>
 			<string>mqttitude/#</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -67,6 +69,8 @@
 			<string>URL</string>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -117,6 +121,8 @@
 			<string>Alphabet</string>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -129,6 +135,8 @@
 			<string>NumberPad</string>
 			<key>DefaultValue</key>
 			<string>8883</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -167,6 +175,8 @@
 			<string>NumberPad</string>
 			<key>DefaultValue</key>
 			<string>60</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -179,6 +189,8 @@
 			<string>URL</string>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -191,6 +203,8 @@
 			<string>Alphabet</string>
 			<key>DefaultValue</key>
 			<string>lwt</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>

@@ -23,6 +23,8 @@
 			<string>Alphabet</string>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -35,6 +37,8 @@
 			<string>NumberPad</string>
 			<key>DefaultValue</key>
 			<string>200</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -47,6 +51,8 @@
 			<string>NumberPad</string>
 			<key>DefaultValue</key>
 			<string>180</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -65,6 +71,8 @@
 			<string>URL</string>
 			<key>DefaultValue</key>
 			<string>host</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -75,6 +83,8 @@
 			<string>user_preference</string>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -87,6 +97,8 @@
 			<true/>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
 		</dict>
 		<dict>
 			<key>Type</key>
