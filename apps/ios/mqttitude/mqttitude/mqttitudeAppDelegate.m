@@ -18,7 +18,7 @@
 @property (strong, nonatomic) UIAlertView *alertView;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (strong, nonatomic) mqttitudeCoreData *coreData;
-@property (strong, nonatomic) NSDate *locationServiceStarted;
+@property (strong, nonatomic) NSDate *locationLastSent;
 @property (strong, nonatomic) NSString *processingMessage;
 
 - (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon;
@@ -122,7 +122,7 @@
     if ([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
             self.manager = [[CLLocationManager alloc] init];
-            self.locationServiceStarted = [NSDate date];
+            self.locationLastSent = [NSDate date]; // Do not sent old locations
             self.manager.delegate = self;
             
             self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
@@ -446,7 +446,7 @@
          **
          **/
         
-        if ([location.timestamp compare:self.locationServiceStarted] != NSOrderedAscending ) {
+        if ([location.timestamp compare:self.locationLastSent] != NSOrderedAscending ) {
             [self publishLocation:location automatic:YES addon:nil];
         }
     }
@@ -469,7 +469,7 @@
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE addon:@{
+    [self publishLocation:[manager location] automatic:TRUE addon:@{
                                                                          @"event": @"enter",
                                                                          @"desc": region.identifier
                                                                          }];
@@ -490,7 +490,7 @@
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE addon:@{
+    [self publishLocation:[manager location] automatic:TRUE addon:@{
                                                                          @"event": @"leave",
                                                                          @"desc": region.identifier
                                                                          }];
@@ -561,7 +561,7 @@
         // received command
         NSString *message = [Connection dataToString:data];
         if ([message isEqualToString:@"publishNow"]) {
-            [self publishLocation:self.manager.location automatic:YES a];
+            [self publishLocation:self.manager.location automatic:YES];
         } else if ([message isEqualToString:@"publishNever"]) {
             self.monitoring = 0;
         } else if ([message isEqualToString:@"publishNormal"]) {
@@ -745,8 +745,10 @@
 
 - (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon
 {
+    self.locationLastSent = location.timestamp;
+    
     Location *newLocation = [Location locationWithTopic:[self theGeneralTopic]
-                                              timestamp:[NSDate date]
+                                              timestamp:location.timestamp
                                              coordinate:location.coordinate
                                                accuracy:location.horizontalAccuracy
                                               automatic:automatic
