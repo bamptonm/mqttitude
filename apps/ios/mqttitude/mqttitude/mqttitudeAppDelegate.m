@@ -469,7 +469,10 @@
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"event": @"enter"}];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:@{
+                                                                         @"event": @"enter",
+                                                                         @"desc": region.identifier
+                                                                         }];
     
     for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
@@ -487,7 +490,10 @@
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
     [self notification:message];
 
-    [self publishLocation:[self.manager location] automatic:TRUE addon:@{@"event": @"leave"}];
+    [self publishLocation:[self.manager location] automatic:TRUE addon:@{
+                                                                         @"event": @"leave",
+                                                                         @"desc": region.identifier
+                                                                         }];
     
     for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {

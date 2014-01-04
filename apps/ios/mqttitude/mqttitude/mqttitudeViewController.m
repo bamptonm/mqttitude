@@ -28,7 +28,15 @@
 @property (strong, nonatomic) NSFetchedResultsController *frc;
 @property (nonatomic) BOOL suspendAutomaticTrackingOfChangesInManagedObjectContext;
 
-@property (nonatomic) NSInteger friends;
+typedef enum {
+    friendsCenter = 0,
+    friendsAllFriends,
+    friendsTrack,
+    friendsHeading,
+    friendsFriend
+} friendsMode;
+
+@property (nonatomic) friendsMode friends;
 @end
 
 @implementation mqttitudeViewController
@@ -43,7 +51,7 @@
     self.mapView.delegate = self;
     
     // Tracking Mode
-    self.friends = 2;
+    self.friends = friendsTrack;
     
     // Map Mode
     self.mapView.mapType = MKMapTypeStandard;
@@ -76,6 +84,26 @@
 }
 
 #pragma UI actions
+
+/*
+ * setCenter is the unwind action from the friends submenues
+ */
+- (IBAction)setCenter:(UIStoryboardSegue *)segue {
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(0, 0);
+    
+    if ([segue.sourceViewController isKindOfClass:[mqttitudeFriendTVC class]]) {
+        mqttitudeFriendTVC *friendTVC = (mqttitudeFriendTVC *)segue.sourceViewController;
+        coordinate = friendTVC.selectedLocation.coordinate;
+    }
+    if ([segue.sourceViewController isKindOfClass:[mqttitudeLocationTVC class]]) {
+        mqttitudeLocationTVC *locationTVC = (mqttitudeLocationTVC *)segue.sourceViewController;
+        coordinate = locationTVC.selectedLocation.coordinate;
+    }
+    
+    [self.mapView setVisibleMapRect:[self centeredRect:coordinate] animated:YES];
+    self.friends = friendsFriend; // this will set the move mode to not follow when the map appeares again
+}
+
 
 - (IBAction)location:(UIBarButtonItem *)sender {
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -126,7 +154,10 @@
 
 - (IBAction)friends:(UIBarButtonItem *)sender {
     if (sender) {
-        self.friends = (self.friends + 4 - 1) % 4;
+        self.friends++;
+        if (self.friends > friendsHeading) {
+            self.friends = friendsCenter;
+        }
         NSArray *modeNames = @[@"centered",
                                @"shows all friends",
                                @"follows",
@@ -139,17 +170,16 @@
     CLLocationCoordinate2D center = delegate.manager.location.coordinate;
 
     switch (self.friends) {
-        case 3:
+        case friendsHeading:
             self.mapView.userTrackingMode = MKUserTrackingModeFollowWithHeading;
             self.friendsButton.image = [UIImage imageNamed:@"UserTrackingFollowWithHeading.png"];
             break;
-        case 2:
+        case friendsTrack:
             self.mapView.userTrackingMode = MKUserTrackingModeFollow;
             self.friendsButton.image = [UIImage imageNamed:@"UserTrackingFollow.png"];
             break;
-        case 1:
-            self.mapView.userTrackingMode = MKUserTrackingModeNone;
-            
+        case friendsAllFriends:
+        {
             MKMapRect rect = [self centeredRect:center];
             
             for (Location *location in [Location allLocationsInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]])
@@ -175,14 +205,23 @@
             rect.origin.y -= rect.size.height/10.0;
             rect.size.width *= 1.2;
             rect.size.height *= 1.2;
-            
+
+            self.mapView.userTrackingMode = MKUserTrackingModeNone;
             [self.mapView setVisibleMapRect:rect animated:YES];
             self.friendsButton.image = [UIImage imageNamed:@"FriendsOn.png"];
             break;
-        case 0:
-        default:
+        }
+        case friendsCenter:
             self.mapView.userTrackingMode = MKUserTrackingModeNone;
             [self.mapView setVisibleMapRect:[self centeredRect:center] animated:YES];
+            self.friendsButton.image = [UIImage imageNamed:@"UserTrackingNone.png"];
+            break;
+        case friendsFriend:
+        default:
+            /*
+             * If selected from friends submenues, map stays there until changed by user
+             */
+            self.mapView.userTrackingMode = MKUserTrackingModeNone;
             self.friendsButton.image = [UIImage imageNamed:@"UserTrackingNone.png"];
             break;
     }
@@ -452,6 +491,9 @@
     
     NSArray *overlays = [Location allRegionsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     [self.mapView addOverlays:overlays];
+    for (Location *location in overlays) {
+        [delegate.manager startMonitoringForRegion:location.region];
+    }
     
 }
 
