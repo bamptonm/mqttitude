@@ -637,7 +637,6 @@ typedef enum {
 
 - (void)disappearingActionSheet:(NSString *)title button:(UIBarButtonItem *)button
 {
-    //[mqttitudeAlertView alert:title message:message dismissAfter:DISMISS_AFTER];
 #ifdef DEBUG
     NSLog(@"App disappearingActionSheet %@", title);
 #endif
