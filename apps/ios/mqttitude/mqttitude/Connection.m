@@ -169,23 +169,6 @@
     }
 }
 
-- (void)subscribe:(NSString *)topic qos:(NSInteger)qos
-{
-#ifdef DEBUG
-    NSLog(@"Connection subscribe:%@ (%d)", topic, qos);
-#endif
-    [self.session subscribeToTopic:topic atLevel:qos];
-}
-
-- (void)unsubscribe:(NSString *)topic
-{
-#ifdef DEBUG
-    NSLog(@"Connection unsubscribe:%@", topic);
-#endif
-
-    [self.session unsubscribeTopic:topic];
-}
-
 #pragma mark - MQTT Callback methods
 
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode error:(NSError *)error
@@ -211,8 +194,11 @@
              * if clean-session is set or if it's the first time we connect in non-clean-session-mode, subscribe to topic
              */
             if (self.clean || !self.reconnectFlag) {
-                [self.session subscribeToTopic:[[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"]
-                                       atLevel:[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"]];
+                NSString *topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"];
+                UInt8 qos =[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"];
+                if (topic && ![topic isEqualToString:@""]) {
+                    [self.session subscribeToTopic:topic atLevel:qos];
+                }
                 self.reconnectFlag = TRUE;
             }
 
@@ -358,11 +344,8 @@
 
     if (self.reconnectTime < RECONNECT_TIMER_MAX) {
         self.reconnectTime *= 2;
-
     }
-    
     [self connectToInternal];
-
 }
 
 - (void)connectToLast

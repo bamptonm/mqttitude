@@ -48,8 +48,6 @@ enum state {
      withClientId:(NSString *)clientId;
 
 - (UInt16)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
-- (void)subscribe:(NSString *)topic qos:(NSInteger)qos;
-- (void)unsubscribe:(NSString *)topic;
 - (void)disconnect;
 
 - (NSString *)url;
