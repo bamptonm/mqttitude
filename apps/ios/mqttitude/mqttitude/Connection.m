@@ -130,6 +130,7 @@
                                                      willMsg:will
                                                      willQoS:willQos
                                               willRetainFlag:willRetainFlag
+                                               protocolLevel:3
                                                      runLoop:[NSRunLoop currentRunLoop]
                                                      forMode:NSDefaultRunLoopMode];
         [self.session setDelegate:self];
@@ -268,16 +269,6 @@
         [UIApplication sharedApplication].networkActivityIndicatorVisible = FALSE;
     }
     [self.delegate totalBuffered:queued ? queued : flowingOut ? flowingOut : flowingIn];
-}
-
-- (void)sending:(int)type qos:(int)qos retained:(BOOL)retained duped:(BOOL)duped mid:(UInt16)mid data:(NSData *)data
-{
-    //
-}
-
-- (void)received:(int)type qos:(int)qos retained:(BOOL)retained duped:(BOOL)duped mid:(UInt16)mid data:(NSData *)data
-{
-    //
 }
 
 #pragma internal helpers

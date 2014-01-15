@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MQTTSession.h"
-
+#import <MQTTClient/MQTTClient.h>
 @protocol ConnectionDelegate <NSObject>
 
 enum state {
@@ -46,6 +45,8 @@ enum state {
           willQos:(NSInteger)willQos
    willRetainFlag:(BOOL)willRetainFlag
      withClientId:(NSString *)clientId;
+
+- (void)connectToLast;
 
 - (UInt16)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
 - (void)disconnect;

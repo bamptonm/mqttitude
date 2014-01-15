@@ -84,20 +84,6 @@
     return matches;
 }
 
-+ (NSArray *)allSharedWaypointsOfTopic:(NSString *)topic inManagedObjectContext:(NSManagedObjectContext *)context
-{
-    Friend *friend = [Friend friendWithTopic:topic inManagedObjectContext:context];
-
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
-    request.predicate = [NSPredicate predicateWithFormat:@"belongsTo = %@ AND automatic = FALSE AND share = TRUE AND remark != NIL ", friend];
-    
-    NSError *error = nil;
-    
-    NSArray *matches = [context executeFetchRequest:request error:&error];
-    
-    return matches;
-}
-
 + (NSArray *)allAutomaticLocationsWithFriend:(Friend *)friend inManagedObjectContext:(NSManagedObjectContext *)context
 {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];

@@ -12,6 +12,7 @@
 		842D35631850F97600280E3F /* sauer.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 842D35621850F97600280E3F /* sauer.gpx */; };
 		8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8440549417F4EFF300455E26 /* CoreData.framework */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
+		845DBE7A18852B7D00EDB183 /* MQTTClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845DBE7918852B7D00EDB183 /* MQTTClient.framework */; };
 		846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */; };
 		846597D417F78E7100BEA7A8 /* mqttitudeFriendTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D317F78E7100BEA7A8 /* mqttitudeFriendTVC.m */; };
 		846597D717F78E8600BEA7A8 /* mqttitudeLocationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D617F78E8600BEA7A8 /* mqttitudeLocationTVC.m */; };
@@ -51,11 +52,6 @@
 		848468B717FD7A3F0012FC18 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 848468B417FD7A3F0012FC18 /* Default-568h@2x.png */; };
 		848468B817FD7A3F0012FC18 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 848468B517FD7A3F0012FC18 /* Default.png */; };
 		848468B917FD7A3F0012FC18 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 848468B617FD7A3F0012FC18 /* Default@2x.png */; };
-		848468C517FD7A740012FC18 /* MQTTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468BC17FD7A740012FC18 /* MQTTDecoder.m */; };
-		848468C617FD7A740012FC18 /* MQTTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468BE17FD7A740012FC18 /* MQTTEncoder.m */; };
-		848468C717FD7A740012FC18 /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468C017FD7A740012FC18 /* MQTTMessage.m */; };
-		848468C817FD7A740012FC18 /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468C217FD7A740012FC18 /* MQTTSession.m */; };
-		848468C917FD7A740012FC18 /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 848468C417FD7A740012FC18 /* MQttTxFlow.m */; };
 		848477F81864BF2000CA0F81 /* mqttitudeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848477F71864BF2000CA0F81 /* mqttitudeAlertView.m */; };
 		848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036817E47ADC00152C26 /* AddressBook.framework */; };
 		848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848A036A17E4841500152C26 /* AddressBookUI.framework */; };
@@ -92,6 +88,7 @@
 		8440549417F4EFF300455E26 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		8451CB6C184CE28300DAD3F4 /* MQTTitude 5.3a.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MQTTitude 5.3a.xcdatamodel"; sourceTree = "<group>"; };
 		84540E3517D33ACA0088DF92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		845DBE7918852B7D00EDB183 /* MQTTClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MQTTClient.framework; path = "../../../../MQTT-Client-Framework/MQTTClient/dist/MQTTClient.framework"; sourceTree = "<group>"; };
 		846597C217F6631100BEA7A8 /* MQTTitude.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MQTTitude.entitlements; path = MQTTitude/MQTTitude.entitlements; sourceTree = "<group>"; };
 		846597C917F78DD900BEA7A8 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
 		846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
@@ -140,16 +137,6 @@
 		848468B417FD7A3F0012FC18 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		848468B517FD7A3F0012FC18 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		848468B617FD7A3F0012FC18 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		848468BB17FD7A740012FC18 /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
-		848468BC17FD7A740012FC18 /* MQTTDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTDecoder.m; sourceTree = "<group>"; };
-		848468BD17FD7A740012FC18 /* MQTTEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTEncoder.h; sourceTree = "<group>"; };
-		848468BE17FD7A740012FC18 /* MQTTEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTEncoder.m; sourceTree = "<group>"; };
-		848468BF17FD7A740012FC18 /* MQTTMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTMessage.h; sourceTree = "<group>"; };
-		848468C017FD7A740012FC18 /* MQTTMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTMessage.m; sourceTree = "<group>"; };
-		848468C117FD7A740012FC18 /* MQTTSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTSession.h; sourceTree = "<group>"; };
-		848468C217FD7A740012FC18 /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
-		848468C317FD7A740012FC18 /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
-		848468C417FD7A740012FC18 /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
 		848477F61864BF2000CA0F81 /* mqttitudeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAlertView.h; sourceTree = "<group>"; };
 		848477F71864BF2000CA0F81 /* mqttitudeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeAlertView.m; sourceTree = "<group>"; };
 		848A036817E47ADC00152C26 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -193,6 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845DBE7A18852B7D00EDB183 /* MQTTClient.framework in Frameworks */,
 				8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */,
 				848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */,
 				848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */,
@@ -268,28 +256,10 @@
 			path = coredata;
 			sourceTree = SOURCE_ROOT;
 		};
-		848468BA17FD7A740012FC18 /* mqtt */ = {
-			isa = PBXGroup;
-			children = (
-				848468BB17FD7A740012FC18 /* MQTTDecoder.h */,
-				848468BC17FD7A740012FC18 /* MQTTDecoder.m */,
-				848468BD17FD7A740012FC18 /* MQTTEncoder.h */,
-				848468BE17FD7A740012FC18 /* MQTTEncoder.m */,
-				848468BF17FD7A740012FC18 /* MQTTMessage.h */,
-				848468C017FD7A740012FC18 /* MQTTMessage.m */,
-				848468C117FD7A740012FC18 /* MQTTSession.h */,
-				848468C217FD7A740012FC18 /* MQTTSession.m */,
-				848468C317FD7A740012FC18 /* MQttTxFlow.h */,
-				848468C417FD7A740012FC18 /* MQttTxFlow.m */,
-			);
-			path = mqtt;
-			sourceTree = "<group>";
-		};
 		84CF99FC17BEED5B00E1333C = {
 			isa = PBXGroup;
 			children = (
 				84D75587183FFD8A002613E2 /* Images.xcassets */,
-				848468BA17FD7A740012FC18 /* mqtt */,
 				8484689E17FD7A100012FC18 /* coredata */,
 				846597C217F6631100BEA7A8 /* MQTTitude.entitlements */,
 				8484685517FD785D0012FC18 /* assets */,
@@ -311,6 +281,7 @@
 		84CF9A0717BEED5B00E1333C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				845DBE7918852B7D00EDB183 /* MQTTClient.framework */,
 				8440549417F4EFF300455E26 /* CoreData.framework */,
 				848A036A17E4841500152C26 /* AddressBookUI.framework */,
 				848A036817E47ADC00152C26 /* AddressBook.framework */,
@@ -489,20 +460,15 @@
 				84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */,
 				84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */,
 				848468AD17FD7A100012FC18 /* Friend+Create.m in Sources */,
-				848468C517FD7A740012FC18 /* MQTTDecoder.m in Sources */,
 				84004E65180DF24800C831E3 /* mqttitudeCoreData.m in Sources */,
 				84CDE36D1810454800717359 /* Friend.m in Sources */,
-				848468C917FD7A740012FC18 /* MQttTxFlow.m in Sources */,
 				84B0F7FF181FA97F00590276 /* mqttitudePersonTVC.m in Sources */,
 				848468B117FD7A100012FC18 /* MQTTitude.xcdatamodeld in Sources */,
 				846597D417F78E7100BEA7A8 /* mqttitudeFriendTVC.m in Sources */,
 				8471BDC8187779690046D0BB /* Location.m in Sources */,
 				8414726A17C9E5F900F76EAB /* Connection.m in Sources */,
-				848468C817FD7A740012FC18 /* MQTTSession.m in Sources */,
-				848468C717FD7A740012FC18 /* MQTTMessage.m in Sources */,
 				846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */,
 				84C50F4217E04B7D00726FD5 /* mqttitudeStatusTVC.m in Sources */,
-				848468C617FD7A740012FC18 /* MQTTEncoder.m in Sources */,
 				848A037117E5BB9D00152C26 /* mqttitudeFriendAnnotationView.m in Sources */,
 				848468AF17FD7A100012FC18 /* Location+Create.m in Sources */,
 			);
@@ -589,6 +555,10 @@
 				CODE_SIGN_ENTITLEMENTS = MQTTitude/MQTTitude.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/ckrey/MQTT-Client-Framework/MQTTClient/dist",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/mqttitude/mqttitude-Info.plist";
@@ -608,6 +578,10 @@
 				CODE_SIGN_ENTITLEMENTS = MQTTitude/MQTTitude.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/ckrey/MQTT-Client-Framework/MQTTClient/dist",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/mqttitude/mqttitude-Info.plist";

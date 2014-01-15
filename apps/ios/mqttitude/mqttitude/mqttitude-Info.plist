@@ -21,7 +21,10 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
-			<array/>
+			<array>
+				<string>icon_mqtc_iphone@2x</string>
+				<string>icon_mqtc_ipad320</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>MQTTitude Configuration File</string>
 			<key>CFBundleTypeRole</key>

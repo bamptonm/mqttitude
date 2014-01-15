@@ -26,6 +26,7 @@
 @end
 
 #define BACKGROUND_DISCONNECT_AFTER 8.0
+#define REMINDER_AFTER 300.0
 
 #define MAX_OWN_LOCATIONS 50
 #define MAX_OTHER_LOCATIONS 1
@@ -33,6 +34,7 @@
 #undef REMOTE_NOTIFICATIONS
 #undef REMOTE_COMMANDS
 #define BATTERY_MONITORING
+
 
 @implementation mqttitudeAppDelegate
 
@@ -347,7 +349,6 @@
 #ifdef DEBUG
     NSLog(@"App applicationDidEnterBackground");
 #endif
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^
                            {
 #ifdef DEBUG
@@ -363,6 +364,9 @@
                                    self.backgroundTask = UIBackgroundTaskInvalid;
                                }
                            }];
+    if ([UIApplication sharedApplication].applicationIconBadgeNumber) {
+        [self notification:@"MQTTitude has undelivered messages. Tap to restart" after:REMINDER_AFTER];
+    }
 }
 
 
@@ -404,7 +408,7 @@
                              status];
         [mqttitudeAlertView alert:@"App Failure" message:message];
     }
-
+    [self.connection connectToLast];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -418,11 +422,11 @@
     [self notification:@"MQTTitude terminated. Tap to restart"];
 }
 
-- (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification {
+- (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification
+{
 #ifdef DEBUG
     NSLog(@"App didReceiveLocalNotification %@", notification.alertBody);
 #endif
-    // [self disappearingAlert:notification.alertBody];
 }
 
 #pragma CLLocationManagerDelegate
@@ -470,9 +474,9 @@
     [self notification:message];
 
     [self publishLocation:[manager location] automatic:TRUE addon:@{
-                                                                         @"event": @"enter",
-                                                                         @"desc": region.identifier
-                                                                         }];
+                                                                    @"event": @"enter",
+                                                                    @"desc": region.identifier
+                                                                    }];
     
     for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
@@ -491,9 +495,9 @@
     [self notification:message];
 
     [self publishLocation:[manager location] automatic:TRUE addon:@{
-                                                                         @"event": @"leave",
-                                                                         @"desc": region.identifier
-                                                                         }];
+                                                                    @"event": @"leave",
+                                                                    @"desc": region.identifier
+                                                                    }];
     
     for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
@@ -580,7 +584,7 @@
 #ifdef DEBUG
         NSLog(@"App received message %@)", message);
 #endif
-        [self notification:message];
+        [self notification:message, 0];
 #endif
         
     } else {
@@ -657,7 +661,10 @@
         cd = (id<ConnectionDelegate>)self.window.rootViewController;
     }
     [cd totalBuffered:count];
-
+    [UIApplication sharedApplication].applicationIconBadgeNumber = count;
+    if (!count) {
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    }
 }
 
 #pragma actions
@@ -771,8 +778,6 @@
         
     }
     
-    [UIApplication sharedApplication].applicationIconBadgeNumber += 1;
-    
     [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OWN_LOCATIONS];
     
     /**
@@ -825,14 +830,20 @@
 
 - (void)notification:(NSString *)message
 {
+    [self notification:message after:0];
+}
+
+- (void)notification:(NSString *)message after:(NSTimeInterval)after
+{
 #ifdef DEBUG
     NSLog(@"App notification %@", message);
 #endif
-
+    
     UILocalNotification *notification = [[UILocalNotification alloc] init];
     notification.alertBody = message;
     notification.alertLaunchImage = @"itunesArtwork.png";
-    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:after];
+    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
 
 - (void)connect
