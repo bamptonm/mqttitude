@@ -563,9 +563,6 @@ typedef enum {
                 if (location.region) {
                     [delegate.manager startMonitoringForRegion:location.region];
                 }
-                if ([location sharedWaypoint]) {
-                    [delegate sendWayPoint:location];
-                }
                 break;
                 
             case NSFetchedResultsChangeDelete:
@@ -600,9 +597,6 @@ typedef enum {
                 [self.mapView addOverlay:location];
                 if (location.region) {
                     [delegate.manager startMonitoringForRegion:location.region];
-                }
-                if ([location sharedWaypoint]) {
-                    [delegate sendWayPoint:location];
                 }
 
                 break;

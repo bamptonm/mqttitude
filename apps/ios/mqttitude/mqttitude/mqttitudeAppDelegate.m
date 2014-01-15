@@ -805,7 +805,7 @@
     long msgID = [self.connection sendData:data
                                           topic:[self theGeneralTopic]
                                             qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
-                                         retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+                                         retain:NO];
     
     if (msgID <= 0) {
         NSString *message = [NSString stringWithFormat:@"Waypoint %@",

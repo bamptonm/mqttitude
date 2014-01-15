@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *UIradius;
 @property (weak, nonatomic) IBOutlet UISwitch *UIshare;
 
+@property (nonatomic) BOOL needsUpdate;
 @end
 
 @implementation mqttitudeEditLocationTVC
@@ -32,6 +33,12 @@
 {
     [super viewWillDisappear:animated];
     [self.location removeObserver:self forKeyPath:@"placemark"];
+    if (self.needsUpdate) {
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+        if ([self.location sharedWaypoint]) {
+            [delegate sendWayPoint:self.location];
+        }
+    }
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -65,16 +72,19 @@
 
 - (IBAction)sharechanged:(UISwitch *)sender {
     self.location.share = @(sender.on);
+    self.needsUpdate = TRUE;
 }
 
 - (IBAction)remarkchanged:(UITextField *)sender {
     if (![sender.text isEqualToString:self.location.remark]) {
         self.location.remark = sender.text;
+        self.needsUpdate = TRUE;
     }
 }
 - (IBAction)radiuschanged:(UITextField *)sender {
     if ([sender.text doubleValue] != [self.location.regionradius doubleValue]) {
         self.location.regionradius = @([sender.text doubleValue]);
+        self.needsUpdate = TRUE;
     }
 }
 
