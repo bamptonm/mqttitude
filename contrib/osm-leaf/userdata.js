@@ -46,18 +46,22 @@ function getUser(topic)
 	return users[topic] = users[topic] || {};
 }
 
-function friend_add(lat, lon, topic)
+function getPopupText(user, lat, lon) {
+	var text = user.name + "<br/>" + lat + ", " + lon;
+	return text;
+}
+
+function friend_add(user, lat, lon)
 {
 	// Add marker with icon (and text) and return marker object
 	// TODO: text could have reverse-geo on it ...
 
-	var user = getUser(topic);
 	var m = L.marker([lat, lon], {
 		icon: user.icon
 		}).addTo(map);
 
-	var text = user.name + "<br/>" + m.getLatLng().lat + ", " + m.getLatLng().lng;
-	m.bindPopup(text);
+	
+	m.bindPopup(getPopupText(user, lat, lon));
 
 	/* Bind a mouseover to the marker */
 	m.on('mouseover', function(evt) {
@@ -71,13 +75,11 @@ function friend_add(lat, lon, topic)
 	return user.marker;
 }
 
-function friend_move(lat, lon, topic)
+function friend_move(user, lat, lon)
 {
-	var user = getUser(topic);
 	if (user.marker) {
 		user.marker.setLatLng({lat: lat, lng: lon});
-		var text = user.name + "<br/>" + user.marker.getLatLng().lat + ", " + user.marker.getLatLng().lng;
-		user.marker.setPopupContent(text);
+		user.marker.setPopupContent(getPopupText(user, lat, lon));
 	}
 
 	return user.marker;
