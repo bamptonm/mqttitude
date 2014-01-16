@@ -1,5 +1,7 @@
-var map;	// Gobal
-var redIcon;	// Global
+// Global variables
+var map;
+var me;
+var redIcon;
 var latlngs = Array();
 
 function load_map()
@@ -32,12 +34,13 @@ function load_map()
 function mapit(topic, d, date)
 {
 	if (topic == config.mytopic) {
+		// TODO: move me instead of recreating it each time
 		me = L.marker([d.lat, d.lon], {icon: redIcon}).addTo(map);
-		text = topic + "<br/>" + me.getLatLng().lat + ", " + me.getLatLng().lng;
+		var text = topic + "<br/>" + me.getLatLng().lat + ", " + me.getLatLng().lng;
 		me.bindPopup(text);
 		latlngs.push(me.getLatLng());
 	} else { // a friend
-		user = getUser(topic);
+		var user = getUser(topic);
 		if (!user.name) {
 			// doesn't exist. Create something
 			users[topic] = {
@@ -45,7 +48,9 @@ function mapit(topic, d, date)
 				icon: leaf_icon(gravatar('foo@example.com'))
 			};
 		}
-
+		
+		var f = {}
+		
 		if (user.marker) {
 			f = friend_move(d.lat, d.lon, topic);
 		} else {
