@@ -47,9 +47,32 @@ function getUser(topic)
 }
 
 function getPopupText(user, lat, lon) {
-	var text = user.name + "<br/>" + lat + ", " + lon;
+	var geoloc = getRevGeo(lat,lon);
+	var text = "<b>" + user.name + "</b><br/>" + lat + ", " + lon + "</br>" + geoloc;
 	return text;
 }
+
+function getRevGeo(lat, lon) {
+	var url = "http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+	var output = {}
+
+	$.ajax({
+		type: 'GET',
+		dataType: "json",
+		url: url,
+		async: false,
+		data: {},
+		success: function(data) {
+				output = data;
+			},
+		error: function(xhr, status, error) {
+			alert('getRevGeo: ' + status + ", " + error);
+			}
+	});
+	
+	return output["display_name"];
+}
+
 
 function friend_add(user, lat, lon)
 {
