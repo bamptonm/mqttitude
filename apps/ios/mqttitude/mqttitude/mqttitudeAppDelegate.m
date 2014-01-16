@@ -587,10 +587,15 @@
         [self notification:message, 0];
 #endif
         
+    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"waypoints"]]) {
+        // received own waypoint
     } else {
         // received other data
         NSString *deviceName = topic;
         if ([[deviceName lastPathComponent] isEqualToString:@"deviceToken"]) {
+            deviceName = [deviceName stringByDeletingLastPathComponent];
+        }
+        if ([[deviceName lastPathComponent] isEqualToString:@"waypoints"]) {
             deviceName = [deviceName stringByDeletingLastPathComponent];
         }
         NSError *error;
@@ -803,7 +808,7 @@
     NSData *data = [self encodeLocationData:location type:@"waypoint" addon:nil];
     
     long msgID = [self.connection sendData:data
-                                          topic:[self theGeneralTopic]
+                                          topic:[[self theGeneralTopic] stringByAppendingString:@"/waypoints"]
                                             qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
                                          retain:NO];
     
