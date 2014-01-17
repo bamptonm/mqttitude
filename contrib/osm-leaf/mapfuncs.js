@@ -36,25 +36,26 @@ function mapit(topic, d, date)
 	if (topic == config.mytopic) {
 		// TODO: move me instead of recreating it each time
 		me = L.marker([d.lat, d.lon], {icon: redIcon}).addTo(map);
-		var text = topic + "<br/>" + me.getLatLng().lat + ", " + me.getLatLng().lng;
-		me.bindPopup(text);
+		m.bindPopup(getPopupText(user, d.lat, d.lon));
 		latlngs.push(me.getLatLng());
+		
 	} else { // a friend
 		var user = getUser(topic);
 		if (!user.name) {
 			// doesn't exist. Create something
-			users[topic] = {
+			user = {
 				name: topic,
 				icon: leaf_icon(gravatar('foo@example.com'))
 			};
+			users[topic] = user;
 		}
 		
 		var f = {}
 		
 		if (user.marker) {
-			f = friend_move(d.lat, d.lon, topic);
+			f = friend_move(user, d.lat, d.lon);
 		} else {
-			f = friend_add(d.lat, d.lon, topic);
+			f = friend_add(user, d.lat, d.lon);
 		}
 		latlngs.push(f.getLatLng());
 	}
