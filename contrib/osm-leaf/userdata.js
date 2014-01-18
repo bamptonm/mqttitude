@@ -70,6 +70,25 @@ function getRevGeo(lat, lon) {
 			}
 	});
 	
+	var text = "";
+	if (output["address"]) {
+		if (output["address"]["road"]) {
+			text += output["address"]["road"];
+			if (output["address"]["house_number"]) {
+				text += " " + output["address"]["house_number"];
+			}
+		}
+		
+		if (output["address"]["city"]) {
+			text += ", " + output["address"]["city"];
+		} else if (output["address"]["county"]) {
+			text += ", " + output["address"]["county"];
+		} else if (output["address"]["country"]) {
+			text += ", " + output["address"]["county"];
+		}
+		return text
+	}
+	
 	return output["display_name"];
 }
 
