@@ -72,8 +72,15 @@ function getRevGeo(lat, lon) {
 	
 	var text = "";
 	if (output["address"]) {
-		if (output["address"]["road"]) {
+		if (output["address"]["building"]) {
+			text += output["address"]["building"];
+		} else if (output["address"]["road"]) {
 			text += output["address"]["road"];
+			if (output["address"]["house_number"]) {
+				text += " " + output["address"]["house_number"];
+			}
+		} else if (output["address"]["neighbourhood"]) {
+			text += output["address"]["neighbourhood"];
 			if (output["address"]["house_number"]) {
 				text += " " + output["address"]["house_number"];
 			}
