@@ -4,7 +4,8 @@ function mqtt_connect()
 				"leaf" + parseInt(Math.random() * 100, 10));
 
 	client.onConnectionLost = function (responseObject) {
-		$('#mqttstatus').val("connection lost: " + responseObject.errorMessage);
+		$('#mqttstatus').html("Connection lost");
+		$('#mqttstatus-details').html(responseObject.errorMessage);
 	};
 
 	client.onMessageArrived = function (message) {
@@ -33,12 +34,14 @@ function mqtt_connect()
 		timeout: 10,
 		useSSL: config.usetls,
 		onSuccess: function () {
-			$('#mqttstatus').val("connected");
+			$('#mqttstatus').html("Connected");
+			$('#mqttstatus-details').html("Host: " + config.websockethost + ", Port:" +  config.websocketport);
 			client.subscribe(config.friendstopic, {qos: 0});
 			client.subscribe(config.mytopic, {qos: 0});
 		},
 		onFailure: function (message) {
-			$('#mqttstatus').val("Connection failed: " + message.errorMessage);
+			$('#mqttstatus').html("Connection failed");
+			$('#mqttstatus-details').html(message.errorMessage);
 		}
 	};
 
