@@ -112,7 +112,11 @@ Storage of data is pluggable, and the default (in `storage.py`) uses peewee and 
 
 1. Create MySQL database
 2. Check database settings in `settings.py`
-3. run `python dbschema.py` to create the necessary tables
+3. run `python dbschema.py` to create the necessary tables. In particular, the `location` and `waypoint` tables are created.
+
+#### `waypoint` table
+
+* Note that `tst` is a unique index because waypoints are replaced into the table when you create or modify one.
 
 ### Launch
 

@@ -11,6 +11,7 @@ import time
 def plugin(item, m2s=None):
 
     try:
+        _type    = item['_type']
         lat      = item['lat']
         lon      = item['lon']
         tst      = item['tst']
@@ -18,6 +19,9 @@ def plugin(item, m2s=None):
         username = item['username']
         device   = item['device']
         acc      = item['acc']
+        waypoint = item.get('waypoint', 'wp-unknown')
+        event    = item.get('event', None)
+        rad      = item.get('rad', None)
         if 'weather' in item:
             weather = item['weather']
         else:
@@ -32,13 +36,21 @@ def plugin(item, m2s=None):
 
 
     '''
-    The published payload will look like this (wrapped)
+    The published payload will look like this (wrapped) for a Location publish
 
         jjolie-ipod 18:18 (Rain 2.6C) http://maps.google.com/?q=48.858334,2.295134 (1414m) Tour \
                 Eiffel, Avenue Pierre Loti, Gros-Caillou, 7e Arrondissement, Paris...
     '''
 
-    fmt = u'{username}-{device} {timestr} ({weather}) http://maps.google.com/?q={lat},{lon} ({acc}) {address}'
+    if _type == 'location':
+
+        fmt = u'{username}-{device} {timestr} ({weather}) http://maps.google.com/?q={lat},{lon} ({acc}) {address}'
+
+        if event is not None:
+            fmt = u'{username}-{device} {timestr} => {event} {waypoint} ({weather})'
+    if _type == 'waypoint':
+        fmt = u'{username}-{device} {timestr} Waypoint: {waypoint} ({rad}) {lat}/{lon}'
+
     payload = fmt.format(
             username=username,
             device = device,
@@ -48,6 +60,9 @@ def plugin(item, m2s=None):
             acc = acc,
             address = address,
             timestr = timestr,
+            event = event,
+            waypoint = waypoint,
+            rad = rad,
         ).encode('utf-8')
 
     topic = m2s.cf.republish_topic

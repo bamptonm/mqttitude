@@ -174,6 +174,7 @@ def on_message(mosq, userdata, msg):
         username = 'unknown'
 
     item = {
+        '_type'         : _type,
         'topic'         : topic,
         'device'        : deviceid,
         'username'      : username,
@@ -185,6 +186,8 @@ def on_message(mosq, userdata, msg):
         'waypoint'      : data.get('desc', None),   # 'desc' is reserved SQL word; rename
         'event'         : data.get('event', None),
         'date_string'   :  time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(int(tst))),
+        'rad'           : data.get('rad', None),
+        'desc'          : data.get('desc', None),
     }
 
     # Shove it into the queue

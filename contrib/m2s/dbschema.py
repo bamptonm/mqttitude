@@ -33,12 +33,32 @@ class Location(MySQLModel):
     weather         = CharField(null=True)
     revgeo          = CharField(null=True)
 
+class Waypoint(MySQLModel):
+    topic           = BlobField(null=False)
+    username        = CharField(null=False)
+    device          = CharField(null=False)
+    lat             = CharField(null=False)
+    lon             = CharField(null=False)
+    tst             = DateTimeField(default=datetime.datetime.now)
+    rad             = CharField(null=True)
+    waypoint        = CharField(null=True)
+
+    class Meta:
+        indexes = (
+            # Create a unique index on tst
+            (('tst', ), True),
+        )
 
 if __name__ == '__main__':
     mysql_db.connect()
 
     try:
         Location.create_table()
+    except Exception, e:
+        print str(e)
+
+    try:
+        Waypoint.create_table()
     except Exception, e:
         print str(e)
 
