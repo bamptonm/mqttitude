@@ -935,7 +935,8 @@
     NSLog(@"App didFailToRegisterForRemoteNotificationsWithError %@", error);
 #endif
         NSString *message = [NSString stringWithFormat:@"App didFailToRegisterForRemoteNotificationsWithError %@", error];
-        [self alert:message];
+        [mqttitudeAlertView alert:@"App Failure" message:message];
+
 }
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {

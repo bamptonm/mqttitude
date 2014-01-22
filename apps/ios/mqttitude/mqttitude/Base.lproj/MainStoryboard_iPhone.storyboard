@@ -105,7 +105,7 @@
             </objects>
             <point key="canvasLocation" x="1172" y="-1073"/>
         </scene>
-        <!--Mqttitude StatusTVC - MQTT Connection Status-->
+        <!--Mqttitude StatusTVC - MQTTitude v0.0-->
         <scene sceneID="t27-gx-6F9">
             <objects>
                 <tableViewController id="KLm-gU-upL" customClass="mqttitudeStatusTVC" sceneMemberID="viewController">
@@ -315,7 +315,7 @@
                             <outlet property="delegate" destination="KLm-gU-upL" id="Quv-Bw-eyh"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="MQTT Connection Status" id="WFe-YW-aca"/>
+                    <navigationItem key="navigationItem" title="MQTTitude v0.0" id="WFe-YW-aca"/>
                     <connections>
                         <outlet property="UIeffectiveClientId" destination="tas-Tl-Qny" id="xcR-9n-vAl"/>
                         <outlet property="UIeffectiveDeviceId" destination="IIg-tr-L88" id="qqG-tB-YxL"/>

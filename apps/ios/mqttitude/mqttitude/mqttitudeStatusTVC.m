@@ -30,6 +30,9 @@
 {
     [super viewWillAppear:animated];
     
+    self.title = [NSString stringWithFormat:@"App Version %@",
+                  [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]];
+
     self.UIurl.text = self.connection.url;
     
     self.UIerrorCode.text = self.connection.lastErrorCode ? [NSString stringWithFormat:@"%@ %d %@",
