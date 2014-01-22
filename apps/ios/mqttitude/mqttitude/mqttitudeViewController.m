@@ -62,6 +62,9 @@ typedef enum {
 {
     [super viewWillAppear:animated];
     
+    self.title = [NSString stringWithFormat:@"MQTTitude v%@",
+                  [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]];
+    
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     [self showState:delegate.connection.state];
     
