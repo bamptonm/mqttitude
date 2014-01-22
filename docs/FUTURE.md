@@ -37,6 +37,7 @@ Thoughts on possible future enhancements.
 * Requested in #86: "app should register a subscriprion (configurable topic) a) if someone sends a text message it should be displayed as popup window b) if someone sends an HTML message it should be opened in a embedded browser"
 * Generalized messaging app (see [#205](https://github.com/binarybucks/mqttitude/issues/205) )
 * Find my friends [#290](https://github.com/binarybucks/mqttitude/blob/master/docs/FUTURE.md)
+* Indoors edition with iBeacons as requested in [#296](https://github.com/binarybucks/mqttitude/issues/296)
 
 #### Waypoints
 
