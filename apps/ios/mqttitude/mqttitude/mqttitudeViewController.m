@@ -559,46 +559,50 @@ typedef enum {
         {
             case NSFetchedResultsChangeInsert:
                 [self.mapView addAnnotation:location];
-                [self.mapView addOverlay:location];
-                if (location.region) {
-                    [delegate.manager startMonitoringForRegion:location.region];
+                if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+                    [self.mapView addOverlay:location];
+                    if (location.region) {
+                        [delegate.manager startMonitoringForRegion:location.region];
+                    }
                 }
                 break;
                 
             case NSFetchedResultsChangeDelete:
                 [self.mapView removeAnnotation:location];
-                [self.mapView removeOverlay:location];
-                for (CLRegion *region in delegate.manager.monitoredRegions) {
-                    if (region.center.latitude == location.coordinate.latitude &&
-                        region.center.longitude == location.coordinate.longitude) {
+                if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+                    [self.mapView removeOverlay:location];
+                    for (CLRegion *region in delegate.manager.monitoredRegions) {
+                        if (region.center.latitude == location.coordinate.latitude &&
+                            region.center.longitude == location.coordinate.longitude) {
 #ifdef DEBUG
-                        NSLog(@"stopMonitoringForRegion %@ %.0f", region.identifier, region.radius);
+                            NSLog(@"stopMonitoringForRegion %@ %.0f", region.identifier, region.radius);
 #endif
-                        [delegate.manager stopMonitoringForRegion:region];
+                            [delegate.manager stopMonitoringForRegion:region];
+                        }
                     }
                 }
-
                 break;
                 
             case NSFetchedResultsChangeUpdate:
                 [self.mapView removeAnnotation:location];
-                [self.mapView removeOverlay:location];
-                for (CLRegion *region in delegate.manager.monitoredRegions) {
-                    if (region.center.latitude == location.coordinate.latitude &&
-                        region.center.longitude == location.coordinate.longitude) {
+                [self.mapView addAnnotation:location];
+                if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+                    [self.mapView removeOverlay:location];
+                    for (CLRegion *region in delegate.manager.monitoredRegions) {
+                        if (region.center.latitude == location.coordinate.latitude &&
+                            region.center.longitude == location.coordinate.longitude) {
 #ifdef DEBUG
-                        NSLog(@"stopMonitoringForRegion %@ %.0f", region.identifier, region.radius);
+                            NSLog(@"stopMonitoringForRegion %@ %.0f", region.identifier, region.radius);
 #endif
-                        [delegate.manager stopMonitoringForRegion:region];
+                            [delegate.manager stopMonitoringForRegion:region];
+                        }
+                    }
+                    
+                    [self.mapView addOverlay:location];
+                    if (location.region) {
+                        [delegate.manager startMonitoringForRegion:location.region];
                     }
                 }
-                
-                [self.mapView addAnnotation:location];
-                [self.mapView addOverlay:location];
-                if (location.region) {
-                    [delegate.manager startMonitoringForRegion:location.region];
-                }
-
                 break;
                 
             case NSFetchedResultsChangeMove:
