@@ -560,31 +560,34 @@
     if ([topic isEqualToString:[self theGeneralTopic]]) {
         // received own data
         
-#ifdef REMOTE_COMMAND
-    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"listento"]]) {
-        // received command
-        NSString *message = [Connection dataToString:data];
-        if ([message isEqualToString:@"publishNow"]) {
-            [self publishLocation:self.manager.location automatic:YES];
-        } else if ([message isEqualToString:@"publishNever"]) {
-            self.monitoring = 0;
-        } else if ([message isEqualToString:@"publishNormal"]) {
-            self.monitoring = 1;
-        } else if ([message isEqualToString:@"publishMoveMode"]) {
-            self.monitoring = 2;
+#ifdef REMOTE_COMMANDS
+    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"msg"]]) {
+#ifdef DEBUG
+        NSLog(@"App received msg %@", data);
+#endif
+        NSError *error;
+        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (dictionary) {
+            if ([dictionary[@"_type"] isEqualToString:@"msg"]) {
+                NSLog(@"App msg received text:%@ from:%@",
+                      dictionary[@"text"],
+                      dictionary[@"from"]
+                      );
+                [self notification:[NSString stringWithFormat:@"%@ from %@",
+                                    dictionary[@"text"],
+                                    dictionary[@"from"]]];
+            } else {
+#ifdef DEBUG
+                NSLog(@"App received unknown record type %@)", dictionary[@"_type"]);
+#endif
+                // data other than json _type msg is silently ignored
+            }
         } else {
-            
 #ifdef DEBUG
-            NSLog(@"App unknown command %@: %@", topic, [Connection dataToString:data]);
+            NSLog(@"App received illegal json %@)", error);
 #endif
-            NSString *message = @"MQTTitude received an unknown command";
-            [self alert:message];
+            // data other than json is silently ignored
         }
-    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"message"]]) {
-#ifdef DEBUG
-        NSLog(@"App received message %@)", message);
-#endif
-        [self notification:message, 0];
 #endif
         
     } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"waypoints"]]) {
@@ -635,13 +638,13 @@
 #ifdef DEBUG
                 NSLog(@"App received unknown record type %@)", dictionary[@"_type"]);
 #endif
-                // data other than json _type location is silently ignored
+                // data other than json _type location/waypoint is silently ignored
             }
         } else {
 #ifdef DEBUG
             NSLog(@"App received illegal json %@)", error);
 #endif
-            // data other than json _type location is silently ignored
+            // data other than json is silently ignored
         }
     }
     [self saveContext];
@@ -943,7 +946,6 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveRemoteNotification %@", userInfo);
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE addon:nil];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
@@ -951,7 +953,6 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveRemoteNotification fetchCompletionHandler %@", userInfo);
 #endif
-    [self publishLocation:[self.manager location] automatic:TRUE addon:nil];
     completionHandler(UIBackgroundFetchResultNewData);
 }
 

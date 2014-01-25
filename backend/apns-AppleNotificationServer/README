@@ -9,7 +9,7 @@
 #	when converting the key file, enter a new password
 #
 # 3. copy the device token publihed by the IOS App to in MQTT
-#	 under "mqttitude/$devicename/loc/deviceToken" into apns.php
+#	 under "mqttitude/<user>/<device>/deviceToken" into apns.php
 #
 #    or do this to PyAPNS/jp.py
 #

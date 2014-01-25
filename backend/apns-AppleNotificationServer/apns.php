@@ -1,19 +1,19 @@
 <?php
-$deviceToken="bf6b22f9 f9e42d17 3ecb8ee7 42ee18d9 2726575b 2180aa90 340b6b01 89108276";
-$payload['aps'] = array('alert' => 'Your Dad asks you to update your location');
+$deviceToken="bd41949a c6f94c34 ab190cb1 93e246be 859cc5d8 488c916f 8d696656 8f1725d6";
+$payload['aps'] = array('alert' => 'Message sent via APNS');
 $output = json_encode($payload);
 
 #
 # development environment
 #
-#$apnsHost = 'gateway.sandbox.push.apple.com';
-#$apnsCert = 'apns-dev-cert-bundle.pem';
+$apnsHost = 'gateway.sandbox.push.apple.com';
+$apnsCert = 'apns-dev-cert-bundle.pem';
 
 #
 # production environment
 #
-$apnsHost = 'gateway.push.apple.com';
-$apnsCert = 'apns-prod-cert-bundle.pem';
+#$apnsHost = 'gateway.push.apple.com';
+#$apnsCert = 'apns-prod-cert-bundle.pem';
 
 $apnsPort = 2195;
 $streamContext = stream_context_create();

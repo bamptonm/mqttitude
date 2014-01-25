@@ -12,12 +12,12 @@
 		842D35631850F97600280E3F /* sauer.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 842D35621850F97600280E3F /* sauer.gpx */; };
 		8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8440549417F4EFF300455E26 /* CoreData.framework */; };
 		84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84540E3517D33ACA0088DF92 /* Settings.bundle */; };
-		845DBE7A18852B7D00EDB183 /* MQTTClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845DBE7918852B7D00EDB183 /* MQTTClient.framework */; };
 		846597CB17F78DD900BEA7A8 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */; };
 		846597D417F78E7100BEA7A8 /* mqttitudeFriendTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D317F78E7100BEA7A8 /* mqttitudeFriendTVC.m */; };
 		846597D717F78E8600BEA7A8 /* mqttitudeLocationTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 846597D617F78E8600BEA7A8 /* mqttitudeLocationTVC.m */; };
 		84708470185BD219001FC819 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 8470846F185BD219001FC819 /* icon_57x57.png */; };
 		8471BDC8187779690046D0BB /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 8471BDC7187779690046D0BB /* Location.m */; };
+		847355D3189199E00028FE7A /* MQTTClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845DBE7918852B7D00EDB183 /* MQTTClient.framework */; };
 		8484687A17FD785D0012FC18 /* connection.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685617FD785D0012FC18 /* connection.png */; };
 		8484687B17FD785D0012FC18 /* FriendsOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685717FD785D0012FC18 /* FriendsOn.png */; };
 		8484687C17FD785D0012FC18 /* FriendsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685817FD785D0012FC18 /* FriendsOn@2x.png */; };
@@ -74,7 +74,6 @@
 		84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5317BEF45700E1333C /* CoreLocation.framework */; };
 		84D4D111181995E200C23EFC /* icon_mqtc_ipad320.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */; };
 		84D75588183FFD8A002613E2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84D75587183FFD8A002613E2 /* Images.xcassets */; };
-		84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -180,7 +179,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				845DBE7A18852B7D00EDB183 /* MQTTClient.framework in Frameworks */,
+				847355D3189199E00028FE7A /* MQTTClient.framework in Frameworks */,
 				8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */,
 				848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */,
 				848A036917E47ADC00152C26 /* AddressBook.framework in Frameworks */,
@@ -411,7 +410,6 @@
 				848468B717FD7A3F0012FC18 /* Default-568h@2x.png in Resources */,
 				8484689517FD785D0012FC18 /* SatelliteOff@2x.png in Resources */,
 				8484688817FD785D0012FC18 /* iTunesArtwork.png in Resources */,
-				84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */,
 				84708470185BD219001FC819 /* icon_57x57.png in Resources */,
 				8484689617FD785D0012FC18 /* SatelliteOn.png in Resources */,
 				848468B917FD7A3F0012FC18 /* Default@2x.png in Resources */,
@@ -557,7 +555,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/ckrey/MQTT-Client-Framework/MQTTClient/dist",
+					"/Users/ckrey/Developer/MQTT-Client-Framework/MQTTClient/dist",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
@@ -580,7 +578,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/ckrey/MQTT-Client-Framework/MQTTClient/dist",
+					"/Users/ckrey/Developer/MQTT-Client-Framework/MQTTClient/dist",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";

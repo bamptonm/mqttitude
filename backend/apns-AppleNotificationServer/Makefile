@@ -1,4 +1,6 @@
-all: apns-dev-cert-bundle.pem PyAPNS/dev-keyfile.pem PyAPNS/dev-cert.pem apns-prod-cert-bundle.pem PyAPNS/prod-keyfile.pem PyAPNS/prod-cert.pem
+all: dev prod
+prod: apns-prod-cert-bundle.pem PyAPNS/prod-keyfile.pem PyAPNS/prod-cert.pem
+dev: apns-dev-cert-bundle.pem PyAPNS/dev-keyfile.pem PyAPNS/dev-cert.pem
 
 clean:
 	rm -f apns-dev-cert-bundle.pem
