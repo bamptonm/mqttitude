@@ -18,6 +18,7 @@
 		84708470185BD219001FC819 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 8470846F185BD219001FC819 /* icon_57x57.png */; };
 		8471BDC8187779690046D0BB /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 8471BDC7187779690046D0BB /* Location.m */; };
 		847355D3189199E00028FE7A /* MQTTClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845DBE7918852B7D00EDB183 /* MQTTClient.framework */; };
+		847355D6189407C80028FE7A /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */; };
 		8484687A17FD785D0012FC18 /* connection.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685617FD785D0012FC18 /* connection.png */; };
 		8484687B17FD785D0012FC18 /* FriendsOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685717FD785D0012FC18 /* FriendsOn.png */; };
 		8484687C17FD785D0012FC18 /* FriendsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8484685817FD785D0012FC18 /* FriendsOn@2x.png */; };
@@ -432,6 +433,7 @@
 				8484689717FD785D0012FC18 /* SatelliteOn@2x.png in Resources */,
 				8484689B17FD785D0012FC18 /* UserTrackingFollowWithHeading@2x.png in Resources */,
 				8484689317FD785D0012FC18 /* Pin@2x.png in Resources */,
+				847355D6189407C80028FE7A /* MainStoryboard_iPhone.storyboard in Resources */,
 				8484687A17FD785D0012FC18 /* connection.png in Resources */,
 				84540E3617D33ACA0088DF92 /* Settings.bundle in Resources */,
 				8484688C17FD785D0012FC18 /* LocationOff.png in Resources */,
@@ -511,7 +513,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				"LIBRARY_SEARCH_PATHS[arch=armv7s]" = "";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -537,7 +539,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
