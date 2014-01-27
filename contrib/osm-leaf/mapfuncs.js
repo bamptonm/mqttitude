@@ -63,5 +63,5 @@ function mapit(topic, d, date)
 	/* Add lat/lon to array and make sure map encapsulates every
 	 * point */
 
-	map.fitBounds(L.latLngBounds(latlngs));
+	// map.fitBounds(L.latLngBounds(latlngs));
 }
