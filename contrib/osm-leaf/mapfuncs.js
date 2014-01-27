@@ -9,6 +9,8 @@ function load_map()
 	map = L.map('map').setView([51.505, -0.09], 13);
 	var linecolor = 'green';
 	var latlngs = Array();
+
+	map.scrollWheelZoom.disable();
 		
 	//Extend the Default marker class
 	// http://harrywood.co.uk/maps/examples/leaflet/custom-marker.view.html
