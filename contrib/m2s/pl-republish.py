@@ -12,9 +12,6 @@ def plugin(item, m2s=None):
 
     topic = m2s.cf.republish_topic
 
-            "republish_users" : [ 'john', ],
-                    "republish_devices" : [ 'iphone', 'nexus', ],
-
     try:
         _type    = item['_type']
         lat      = item['lat']
