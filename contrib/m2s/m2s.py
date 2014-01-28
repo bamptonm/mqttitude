@@ -30,7 +30,7 @@ except ImportError:
 import os
 
 cf = Config()
-mqtt = mosquitto.Mosquitto(cf.get('mqtt_clientid'))
+mqtt = mosquitto.Mosquitto(cf.get('mqtt_clientid'), clean_session=False)
 
 q_in = Queue.Queue(maxsize=0)
 num_workers = 1
@@ -107,7 +107,7 @@ def on_connect(mosq, userdata, rc):
 
     for topic in cf.get('topics'):
         logging.info("Subscribing to %s", topic)
-        mqtt.subscribe(topic, 0)
+        mqtt.subscribe(topic, 2)
 
 def on_disconnect(mosq, userdata, rc):
     logging.info("OOOOPS! disconnect")
