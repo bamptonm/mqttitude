@@ -10,6 +10,11 @@ import time
 
 def plugin(item, m2s=None):
 
+    topic = m2s.cf.republish_topic
+
+            "republish_users" : [ 'john', ],
+                    "republish_devices" : [ 'iphone', 'nexus', ],
+
     try:
         _type    = item['_type']
         lat      = item['lat']
@@ -32,6 +37,12 @@ def plugin(item, m2s=None):
             if 'display_name' in item['nominatim']:
                 address = item['nominatim']['display_name']
     except:
+        return (None, None)
+
+    if m2s.cf.republish_users and username not in m2s.cf.republish_users:
+        return (None, None)
+
+    if m2s.cf.republish_devices and device not in m2s.cf.republish_devices:
         return (None, None)
 
 

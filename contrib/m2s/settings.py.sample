@@ -47,9 +47,12 @@ data_plugins = [
 #	m2s.cf.name
 #	etc.
 #
-# See pl-republish.py for an example which uses 'republish_topic'
+# See pl-republish.py for an example which uses 'republish_topic',
+# 'republish_users', 'republish_devices'
 
 plugin_configs = {
 	"republish_topic" : "local/loca",
+	"republish_users" : [ 'john', ],
+	"republish_devices" : [ 'iphone', 'nexus', ],
 	"name" : "JP Mens",
 }
