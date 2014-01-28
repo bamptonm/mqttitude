@@ -881,6 +881,10 @@
     
     self.disconnectTimer = nil;
     [self.connection disconnect];
+    
+    if ([UIApplication sharedApplication].applicationIconBadgeNumber) {
+        [self notification:@"MQTTitude has still undelivered messages. Tap to restart" after:0];
+    }
 }
 
 - (NSData *)jsonToData:(NSDictionary *)jsonObject
