@@ -21,8 +21,6 @@
 @property (strong, nonatomic) NSDate *locationLastSent;
 @property (strong, nonatomic) NSString *processingMessage;
 
-- (void)publishLocation:(CLLocation *)location automatic:(BOOL)automatic addon:(NSDictionary *)addon;
-
 @end
 
 #define BACKGROUND_DISCONNECT_AFTER 8.0
@@ -110,7 +108,8 @@
                   self.coreData.documentState, [mqttitudeCoreData theManagedObjectContext]);
 #endif
             if (state & UIDocumentStateInConflict || state & UIDocumentStateSavingError) {
-                [mqttitudeAlertView alert:@"App Failure" message:[NSString stringWithFormat:@"Open document documentState = 0x%02x", state]];
+                [mqttitudeAlertView alert:@"App Failure"
+                                  message:[NSString stringWithFormat:@"Open document documentState = 0x%02x", state]];
                 break;
             }
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
@@ -365,7 +364,9 @@
                                }
                            }];
     if ([UIApplication sharedApplication].applicationIconBadgeNumber) {
-        [self notification:@"MQTTitude has undelivered messages. Tap to restart" after:REMINDER_AFTER];
+        [self notification:@"MQTTitude has undelivered messages. Tap to restart"
+                     after:REMINDER_AFTER
+                  userInfo:@{@"event": @"undelivered"}];
     }
 }
 
@@ -419,7 +420,7 @@
 #endif
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self saveContext];
-    [self notification:@"MQTTitude terminated. Tap to restart"];
+    [self notification:@"MQTTitude terminated. Tap to restart" userInfo:nil];
 }
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification
@@ -441,15 +442,6 @@
 #ifdef DEBUG
         NSLog(@"App location %@", [location description]);
 #endif
-        /** I Don't have a device to test that
-         **
-        if ([CLLocationManager deferredLocationUpdatesAvailable]) {
-            [self.manager allowDeferredLocationUpdatesUntilTraveled:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"]
-                                                            timeout:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"]];
-        }
-         **
-         **/
-        
         if ([location.timestamp compare:self.locationLastSent] != NSOrderedAscending ) {
             [self publishLocation:location automatic:YES addon:nil];
         }
@@ -471,18 +463,28 @@
     NSLog(@"App didEnterRegion %@", region);
 #endif
     NSString *message = [NSString stringWithFormat:@"Entering %@", region.identifier];
-    [self notification:message];
-
-    [self publishLocation:[manager location] automatic:TRUE addon:@{
-                                                                    @"event": @"enter",
-                                                                    @"desc": region.identifier
-                                                                    }];
+    [self notification:message userInfo:nil];
     
-    for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
+    NSMutableDictionary *addon = [[NSMutableDictionary alloc] init];
+    
+    for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic]
+                                    inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
             location.remark = region.identifier; // this touches the location and updates the overlay
+            if ([location.share boolValue]) {
+                [addon setObject:@"enter" forKey:@"event" ];
+                if (location.remark) {
+                    [addon setValue:location.remark forKey:@"desc"];
+                }
+                double rad = [location.regionradius doubleValue];
+                if (rad > 0) {
+                    [addon setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
+                }
+            }
         }
     }
+
+    [self publishLocation:[manager location] automatic:TRUE addon:addon];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
@@ -492,18 +494,28 @@
 #endif
 
     NSString *message = [NSString stringWithFormat:@"Leaving %@", region.identifier];
-    [self notification:message];
-
-    [self publishLocation:[manager location] automatic:TRUE addon:@{
-                                                                    @"event": @"leave",
-                                                                    @"desc": region.identifier
-                                                                    }];
+    [self notification:message userInfo:nil];
     
-    for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
+    NSMutableDictionary *addon = [[NSMutableDictionary alloc] init];
+    
+    for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic]
+                                    inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
             location.remark = region.identifier; // this touches the location and updates the overlay
+            if ([location.share boolValue]) {
+                [addon setObject:@"leave" forKey:@"event" ];
+                if (location.remark) {
+                    [addon setValue:location.remark forKey:@"desc"];
+                }
+                double rad = [location.regionradius doubleValue];
+                if (rad > 0) {
+                    [addon setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
+                }
+            }
         }
     }
+
+    [self publishLocation:[manager location] automatic:TRUE addon:addon];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
@@ -606,21 +618,28 @@
         if (dictionary) {
             if ([dictionary[@"_type"] isEqualToString:@"location"] ||
                 [dictionary[@"_type"] isEqualToString:@"waypoint"]) {
-                NSLog(@"App json received lat:%f lon:%f acc:%f tst:%f desc:%@",
+#ifdef DEBUG
+                NSLog(@"App json received lat:%f lon:%f acc:%f tst:%f rad:%f event:%@ desc:%@",
                       [dictionary[@"lat"] doubleValue],
                       [dictionary[@"lon"] doubleValue],
                       [dictionary[@"acc"] doubleValue],
                       [dictionary[@"tst"] doubleValue],
+                      [dictionary[@"rad"] doubleValue],
+                      dictionary[@"event"],
                       dictionary[@"desc"]
                       );
-
-                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([dictionary[@"lat"] doubleValue], [dictionary[@"lon"] doubleValue]);
+#endif
+                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+                                                                               [dictionary[@"lat"] doubleValue],
+                                                                               [dictionary[@"lon"] doubleValue]
+                                                                               );
+                
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
                                                                      altitude:0
                                                            horizontalAccuracy:[dictionary[@"acc"] doubleValue]
                                                              verticalAccuracy:-1
                                                                     timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] doubleValue]]];
-                NSLog(@"App location received %@", location);
+
                 Location *newLocation = [Location locationWithTopic:deviceName
                                                           timestamp:location.timestamp
                                                          coordinate:location.coordinate
@@ -631,9 +650,20 @@
                                                               share:NO
                                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 [self limitLocationsWith:newLocation.belongsTo toMaximum:MAX_OTHER_LOCATIONS];
+                
+                if (dictionary[@"event"]) {
+                    NSString * name = [newLocation.belongsTo name];
+                    [self notification:[NSString stringWithFormat:@"%@ %@s %@",
+                                        name ? name : newLocation.belongsTo.topic,
+                                        dictionary[@"event"],
+                                        newLocation.remark]
+                              userInfo:nil];
+                }
+                
             } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
                 Friend *friend = [Friend friendWithTopic:deviceName inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
                 friend.device = dictionary[@"deviceToken"];
+                
             } else {
 #ifdef DEBUG
                 NSLog(@"App received unknown record type %@)", dictionary[@"_type"]);
@@ -653,7 +683,7 @@
 - (void)messageDelivered:(UInt16)msgID
 {
     NSString *message = [NSString stringWithFormat:@"Message delivered id=%u", msgID];
-    [self notification:message];
+    [self notification:message userInfo:nil];
 }
 
 - (void)totalBuffered:(NSUInteger)count
@@ -671,7 +701,12 @@
     [cd totalBuffered:count];
     [UIApplication sharedApplication].applicationIconBadgeNumber = count;
     if (!count) {
-        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+        NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+        for (UILocalNotification *notification in notifications) {
+            if (notification.userInfo) {
+                [[UIApplication sharedApplication] cancelLocalNotification:notification];
+            }
+        }
     }
 }
 
@@ -782,7 +817,7 @@
     if (msgID <= 0) {
         NSString *message = [NSString stringWithFormat:@"Location %@",
                              (msgID == -1) ? @"queued" : @"sent"];
-        [self notification:message];
+        [self notification:message userInfo:nil];
         
     }
     
@@ -806,9 +841,21 @@
     }
     [self saveContext];
 }
+
 - (void)sendWayPoint:(Location *)location
 {
-    NSData *data = [self encodeLocationData:location type:@"waypoint" addon:nil];
+    NSMutableDictionary *addon = [[NSMutableDictionary alloc]init];
+    
+    if (location.remark) {
+        [addon setValue:location.remark forKey:@"desc"];
+    }
+    double rad = [location.regionradius doubleValue];
+    if (rad > 0) {
+        [addon setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
+    }
+
+    NSData *data = [self encodeLocationData:location
+                                       type:@"waypoint" addon:addon];
     
     long msgID = [self.connection sendData:data
                                           topic:[[self theGeneralTopic] stringByAppendingString:@"/waypoints"]
@@ -818,7 +865,7 @@
     if (msgID <= 0) {
         NSString *message = [NSString stringWithFormat:@"Waypoint %@",
                              (msgID == -1) ? @"queued" : @"sent"];
-        [self notification:message];
+        [self notification:message userInfo:nil];
         
     }
     [self saveContext];
@@ -836,12 +883,12 @@
 
 #pragma internal helpers
 
-- (void)notification:(NSString *)message
+- (void)notification:(NSString *)message userInfo:(NSDictionary *)userInfo
 {
-    [self notification:message after:0];
+    [self notification:message after:0 userInfo:nil];
 }
 
-- (void)notification:(NSString *)message after:(NSTimeInterval)after
+- (void)notification:(NSString *)message after:(NSTimeInterval)after userInfo:(NSDictionary *)userInfo
 {
 #ifdef DEBUG
     NSLog(@"App notification %@", message);
@@ -851,6 +898,7 @@
     notification.alertBody = message;
     notification.alertLaunchImage = @"itunesArtwork.png";
     notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:after];
+    notification.userInfo = userInfo;
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
 
@@ -915,13 +963,6 @@
                                  @"acc": [NSString stringWithFormat:@"%.0f", [location.accuracy doubleValue]],
                                  @"_type": [NSString stringWithFormat:@"%@", type]
                                  } mutableCopy];
-    if (location.remark) {
-        [jsonObject setValue:[NSString stringWithFormat:@"%@", location.remark] forKey:@"desc"];
-    }
-    double rad = [location.regionradius doubleValue];
-    if (rad > 0) {
-        [jsonObject setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
-    }
     if (addon) {
         [jsonObject addEntriesFromDictionary:addon];
     }
