@@ -366,7 +366,7 @@
     if ([UIApplication sharedApplication].applicationIconBadgeNumber) {
         [self notification:@"MQTTitude has undelivered messages. Tap to restart"
                      after:REMINDER_AFTER
-                  userInfo:@{@"event": @"undelivered"}];
+                  userInfo:@{@"notify": @"undelivered"}];
     }
 }
 
@@ -420,7 +420,7 @@
 #endif
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self saveContext];
-    [self notification:@"MQTTitude terminated. Tap to restart" userInfo:nil];
+    [self notification:@"MQTTitude terminated. Tap to restart" after:REMINDER_AFTER userInfo:nil];
 }
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notification
@@ -428,6 +428,11 @@
 #ifdef DEBUG
     NSLog(@"App didReceiveLocalNotification %@", notification.alertBody);
 #endif
+    if (notification.userInfo) {
+        if ([notification.userInfo[@"notify"] isEqualToString:@"friend"]) {
+            [mqttitudeAlertView alert:@"Friend Notification" message:notification.alertBody dismissAfter:2.0];
+        }
+    }
 }
 
 #pragma CLLocationManagerDelegate
@@ -657,7 +662,7 @@
                                         name ? name : newLocation.belongsTo.topic,
                                         dictionary[@"event"],
                                         newLocation.remark]
-                              userInfo:nil];
+                              userInfo:@{@"notify": @"friend"}];
                 }
                 
             } else if ([dictionary[@"_type"] isEqualToString:@"deviceToken"]) {
@@ -704,7 +709,8 @@
         NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
         for (UILocalNotification *notification in notifications) {
             if (notification.userInfo) {
-                [[UIApplication sharedApplication] cancelLocalNotification:notification];
+                if ([notification.userInfo[@"notify"] isEqualToString:@"undelivered"])
+                    [[UIApplication sharedApplication] cancelLocalNotification:notification];
             }
         }
     }
@@ -885,7 +891,7 @@
 
 - (void)notification:(NSString *)message userInfo:(NSDictionary *)userInfo
 {
-    [self notification:message after:0 userInfo:nil];
+    [self notification:message after:0 userInfo:userInfo];
 }
 
 - (void)notification:(NSString *)message after:(NSTimeInterval)after userInfo:(NSDictionary *)userInfo
@@ -930,8 +936,11 @@
     self.disconnectTimer = nil;
     [self.connection disconnect];
     
-    if ([UIApplication sharedApplication].applicationIconBadgeNumber) {
-        [self notification:@"MQTTitude has still undelivered messages. Tap to restart" after:0];
+    NSInteger number = [UIApplication sharedApplication].applicationIconBadgeNumber;
+    if (number) {
+        [self notification:[NSString stringWithFormat:@"MQTTitude has %d undelivered messages", number]
+                     after:0
+                  userInfo:@{@"notify": @"undelivered"}];
     }
 }
 
