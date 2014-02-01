@@ -30,7 +30,11 @@ except ImportError:
 import os
 
 cf = Config()
-mqtt = mosquitto.Mosquitto(cf.get('mqtt_clientid'), clean_session=False)
+try:
+    mqtt = mosquitto.Mosquitto(cf.get('mqtt_clientid'), clean_session=False)
+except Exception, e:
+    print"Can't create mosquitto object: %s" % (str(e))
+    sys.exit(2)
 
 q_in = Queue.Queue(maxsize=0)
 num_workers = 1
