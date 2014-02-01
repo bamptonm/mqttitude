@@ -9,7 +9,7 @@ logfile	= 'logfile'
 
 mqtt_broker = 'localhost'       # default: 'localhost'
 mqtt_port = 1883                # default: 1883
-# mqtt_clientid = 
+mqtt_clientid = 'm2s-backend'   # MUST be set
 # mqtt_username = 'jane'
 # mqtt_password = 'secret'
 
