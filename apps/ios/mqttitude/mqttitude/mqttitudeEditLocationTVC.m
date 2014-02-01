@@ -9,11 +9,14 @@
 #import "mqttitudeEditLocationTVC.h"
 #import "Friend+Create.h"
 #import "mqttitudeAppDelegate.h"
+#import "mqttitudeCoreData.h"
 
 @interface mqttitudeEditLocationTVC ()
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *UInew;
 @property (weak, nonatomic) IBOutlet UITableViewCell *remarkCell;
 @property (weak, nonatomic) IBOutlet UITextField *UItimestamp;
-@property (weak, nonatomic) IBOutlet UITextField *UIcoordinate;
+@property (weak, nonatomic) IBOutlet UITextField *UIlatitude;
+@property (weak, nonatomic) IBOutlet UITextField *UIlongitude;
 @property (weak, nonatomic) IBOutlet UITextView *UIplace;
 @property (weak, nonatomic) IBOutlet UITextField *UIremark;
 @property (weak, nonatomic) IBOutlet UITextField *UIradius;
@@ -46,10 +49,16 @@
     
     self.title = [self.location nameText];
     
-    self.UIcoordinate.text = [self.location coordinateText];
+    [self setup];
+}
+
+- (void)setup
+{
+    self.UIlatitude.text = [NSString stringWithFormat:@"%f", [self.location.latitude doubleValue]];
+    self.UIlongitude.text = [NSString stringWithFormat:@"%f", [self.location.longitude doubleValue]];
     
     self.UItimestamp.text = [self.location timestampText];
-
+    
     [self.location addObserver:self forKeyPath:@"placemark" options:NSKeyValueObservingOptionNew context:nil];
     [self.location getReverseGeoCode];
     self.UIplace.text = self.location.placemark;
@@ -59,15 +68,40 @@
     self.UIshare.on = [self.location.share boolValue];
     
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
-    if (![self.location.automatic boolValue] && [self.location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+    if (![self.location.automatic boolValue] && [self.location.belongsTo.topic
+                                                 isEqualToString:[delegate.settings theGeneralTopic]]) {
+        self.UIlatitude.enabled = TRUE;
+        self.UIlongitude.enabled = TRUE;
         self.UIremark.enabled = TRUE;
         self.UIradius.enabled = TRUE;
         self.UIshare.enabled = TRUE;
     } else {
+        self.UIlatitude.enabled = FALSE;
+        self.UIlongitude.enabled = FALSE;
         self.UIremark.enabled = FALSE;
         self.UIradius.enabled = FALSE;
         self.UIshare.enabled = FALSE;
     }
+    if ([self.location.belongsTo.topic
+         isEqualToString:[delegate.settings theGeneralTopic]]) {
+        self.UInew.enabled = TRUE;
+    } else {
+        self.UInew.enabled = FALSE;
+    }
+}
+
+- (IBAction)latitudechanged:(UITextField *)sender {
+    self.location.latitude = @([sender.text doubleValue]);
+    self.location.placemark = nil;
+    [self.location getReverseGeoCode];
+    self.needsUpdate = TRUE;
+}
+
+- (IBAction)longitudechanged:(UITextField *)sender {
+    self.location.longitude = @([sender.text doubleValue]);
+    self.location.placemark = nil;
+    [self.location getReverseGeoCode];
+    self.needsUpdate = TRUE;
 }
 
 - (IBAction)sharechanged:(UISwitch *)sender {
@@ -91,6 +125,21 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     self.UIplace.text = self.location.placemark;
+}
+
+- (IBAction)new:(UIBarButtonItem *)sender {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+    self.location = [Location locationWithTopic:[delegate.settings theGeneralTopic]
+                                      timestamp:[NSDate date]
+                                     coordinate:CLLocationCoordinate2DMake(0, 0)
+                                       accuracy:0
+                                      automatic:NO
+                                         remark:@""
+                                         radius:0
+                                          share:NO
+                         inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]
+                     ];
+    [self setup];
 }
 
 @end

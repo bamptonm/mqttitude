@@ -356,7 +356,7 @@ typedef enum {
             
             mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
 
-            if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+            if ([location.belongsTo.topic isEqualToString:[delegate.settings theGeneralTopic]]) {
                 MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_SELF];
                 if (!pinAnnotationView) {
                     pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_SELF];
@@ -489,7 +489,8 @@ typedef enum {
 
     [self.mapView addAnnotations:[Location allLocationsInManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]];
     
-    NSArray *overlays = [Location allRegionsOfTopic:[delegate theGeneralTopic] inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+    NSArray *overlays = [Location allRegionsOfTopic:[delegate.settings theGeneralTopic]
+                              inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
     [self.mapView addOverlays:overlays];
     for (Location *location in overlays) {
         [delegate.manager startMonitoringForRegion:location.region];
@@ -559,7 +560,7 @@ typedef enum {
         {
             case NSFetchedResultsChangeInsert:
                 [self.mapView addAnnotation:location];
-                if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+                if ([location.belongsTo.topic isEqualToString:[delegate.settings theGeneralTopic]]) {
                     [self.mapView addOverlay:location];
                     if (location.region) {
                         [delegate.manager startMonitoringForRegion:location.region];
@@ -569,7 +570,7 @@ typedef enum {
                 
             case NSFetchedResultsChangeDelete:
                 [self.mapView removeAnnotation:location];
-                if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+                if ([location.belongsTo.topic isEqualToString:[delegate.settings theGeneralTopic]]) {
                     [self.mapView removeOverlay:location];
                     for (CLRegion *region in delegate.manager.monitoredRegions) {
                         if (region.center.latitude == location.coordinate.latitude &&
@@ -586,7 +587,7 @@ typedef enum {
             case NSFetchedResultsChangeUpdate:
                 [self.mapView removeAnnotation:location];
                 [self.mapView addAnnotation:location];
-                if ([location.belongsTo.topic isEqualToString:[delegate theGeneralTopic]]) {
+                if ([location.belongsTo.topic isEqualToString:[delegate.settings theGeneralTopic]]) {
                     [self.mapView removeOverlay:location];
                     for (CLRegion *region in delegate.manager.monitoredRegions) {
                         if (region.center.latitude == location.coordinate.latitude &&

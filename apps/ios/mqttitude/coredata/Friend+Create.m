@@ -8,6 +8,7 @@
 
 #import "Friend+Create.h"
 #import "Location+Create.h"
+#import "mqttitudeAppDelegate.h"
 
 @implementation Friend (Create)
 
@@ -119,7 +120,9 @@
 {
     ABRecordRef record = NULL;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ab_preference"]) {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+
+    if ([delegate.settings boolForKey:@"ab_preference"]) {
         record = recordWithTopic((__bridge CFStringRef)(self.topic));
         //NSLog(@"Friend ABRecordRef by topic =  %p", record);
     } else {
@@ -156,7 +159,9 @@
 
 - (void)linkToAB:(ABRecordRef)record
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ab_preference"]) {
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+
+    if ([delegate.settings boolForKey:@"ab_preference"]) {
         ABRecordRef oldrecord = recordWithTopic((__bridge CFStringRef)(self.topic));
         
         if (oldrecord) {

@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "Connection.h"
 #import "Location+Create.h"
+#import "mqttitudeSettings.h"
 
 @interface mqttitudeAppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, ConnectionDelegate>
 
@@ -17,6 +18,7 @@
 @property (strong, nonatomic) CLLocationManager *manager;
 @property (nonatomic) NSInteger monitoring;
 @property (strong, nonatomic) Connection *connection;
+@property (strong, nonatomic) mqttitudeSettings *settings;
 
 - (void)switchOff;
 - (void)sendNow;
@@ -24,10 +26,5 @@
 - (void)reconnect;
 - (void)connectionOff;
 - (void)saveContext;
-
-- (NSString *)theGeneralTopic;
-- (NSString *)theWillTopic;
-- (NSString *)theClientId;
-- (NSString *)theDeviceId;
 
 @end

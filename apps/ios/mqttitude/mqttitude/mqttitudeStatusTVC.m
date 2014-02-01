@@ -42,10 +42,39 @@
                                                              self.connection.lastErrorCode.localizedDescription : @""]
                                                             : @"<no error>";
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
-    self.UIeffectiveDeviceId.text = [delegate theDeviceId];
-    self.UIeffectiveClientId.text = [delegate theClientId];
-    self.UIeffectiveTopic.text = [delegate theGeneralTopic];
-    self.UIeffectiveWillTopic.text = [delegate theWillTopic];
+    self.UIeffectiveDeviceId.text = [delegate.settings theDeviceId];
+    self.UIeffectiveClientId.text = [delegate.settings theClientId];
+    self.UIeffectiveTopic.text = [delegate.settings theGeneralTopic];
+    self.UIeffectiveWillTopic.text = [delegate.settings theWillTopic];
 }
+
+- (IBAction)send:(UIBarButtonItem *)sender
+{
+    MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+    picker.mailComposeDelegate = self;
+    
+    [picker setSubject:[NSString stringWithFormat:@"MQTTitude config %@", self.UIeffectiveClientId.text]];
+    
+    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+    [picker addAttachmentData:[delegate.settings toData] mimeType:@"application/json"
+                     fileName:[NSString stringWithFormat:@"Config-%@.mqtc", self.UIeffectiveClientId.text]];
+    
+    NSString *emailBody = @"see attached file";
+    [picker setMessageBody:emailBody isHTML:NO];
+    
+    [self presentViewController:picker animated:YES completion:^{
+        // done
+    }];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error
+{
+    [controller dismissViewControllerAnimated:YES completion:^{
+        // done
+    }];
+}
+
 
 @end

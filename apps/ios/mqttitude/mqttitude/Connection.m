@@ -8,6 +8,7 @@
 
 #import "Connection.h"
 #import "mqttitudeCoreData.h"
+#import "mqttitudeAppDelegate.h"
 
 @interface Connection()
 
@@ -195,8 +196,9 @@
              * if clean-session is set or if it's the first time we connect in non-clean-session-mode, subscribe to topic
              */
             if (self.clean || !self.reconnectFlag) {
-                NSString *topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"subscription_preference"];
-                UInt8 qos =[[NSUserDefaults standardUserDefaults] integerForKey:@"subscriptionqos_preference"];
+                mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+                NSString *topic = [delegate.settings stringForKey:@"subscription_preference"];
+                UInt8 qos =[delegate.settings integerForKey:@"subscriptionqos_preference"];
                 if (topic && ![topic isEqualToString:@""]) {
                     [self.session subscribeToTopic:topic atLevel:qos];
                 }

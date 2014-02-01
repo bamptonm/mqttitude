@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import "Connection.h"
 
-@interface mqttitudeStatusTVC : UITableViewController
+@interface mqttitudeStatusTVC : UITableViewController <MFMailComposeViewControllerDelegate>
 @property (weak, nonatomic) Connection *connection;
 
 @end

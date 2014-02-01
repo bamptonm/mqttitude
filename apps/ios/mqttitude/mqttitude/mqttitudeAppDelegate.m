@@ -51,33 +51,7 @@
     
     self.backgroundTask = UIBackgroundTaskInvalid;
     
-    NSDictionary *appDefaults = @{
-                                  @"mindist_preference" : @(200),
-                                  @"mintime_preference" : @(180),
-                                  @"deviceid_preference" : @"",
-                                  @"clientid_preference" : @"",
-                                  @"subscription_preference" : @"mqttitude/#",
-                                  @"subscriptionqos_preference": @(1),
-                                  @"topic_preference" : @"",
-                                  @"retain_preference": @(TRUE),
-                                  @"qos_preference": @(1),
-                                  @"host_preference" : @"host",
-                                  @"port_preference" : @(8883),
-                                  @"tls_preference": @(YES),
-                                  @"auth_preference": @(YES),
-                                  @"user_preference": @"user",
-                                  @"pass_preference": @"pass",
-                                  @"keepalive_preference" : @(60),
-                                  @"clean_preference" : @(NO),
-                                  @"will_preference": @"lwt",
-                                  @"willtopic_preference": @"",
-                                  @"willretain_preference":@(NO),
-                                  @"willqos_preference": @(1),
-                                  @"monitoring_preference": @(1),
-                                  @"ab_preference": @(YES)
-                                  };
-    [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    self.settings = [[mqttitudeSettings alloc] init];
     
     return YES;
 }
@@ -126,7 +100,7 @@
             self.locationLastSent = [NSDate date]; // Do not sent old locations
             self.manager.delegate = self;
             
-            self.monitoring = [[NSUserDefaults standardUserDefaults] integerForKey:@"monitoring_preference"];
+            self.monitoring = [self.settings integerForKey:@"monitoring_preference"];
             
             for (CLRegion *region in self.manager.monitoredRegions) {
                 [self.manager stopMonitoringForRegion:region];
@@ -221,7 +195,6 @@
 #endif
     
     if (url) {
-        NSError *error;
         NSInputStream *input = [NSInputStream inputStreamWithURL:url];
         if ([input streamError]) {
             self.processingMessage = [NSString stringWithFormat:@"Error nputStreamWithURL %@ %@", [input streamError], url];
@@ -233,102 +206,74 @@
             return FALSE;
         }
         
-        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithStream:input options:0 error:&error];
-        if (dictionary) {
-            for (NSString *key in [dictionary allKeys]) {
-                NSLog(@"Configuration %@:%@", key, dictionary[key]);
-            }
-            
-            if ([dictionary[@"_type"] isEqualToString:@"configuration"]) {
-                NSString *string;
-                
-                string = dictionary[@"deviceid"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"deviceid_preference"];
-                
-                string = dictionary[@"clientid"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"clientid_preference"];
-                
-                string = dictionary[@"subscription"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"subscription_preference"];
-                
-                string = dictionary[@"topic"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"topic_preference"];
-                
-                string = dictionary[@"host"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"host_preference"];
-                
-                string = dictionary[@"user"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"user_preference"];
-                
-                string = dictionary[@"pass"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"pass_preference"];
-                
-                string = dictionary[@"will"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"will_preference"];
-                
-                string = dictionary[@"willtopic"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:string forKey:@"willtopic_preference"];
-                
-                
-                string = dictionary[@"subscriptionqos"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"subscriptionqos_preference"];
-                
-                string = dictionary[@"qos"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"qos_preference"];
-                
-                string = dictionary[@"port"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"port_preference"];
-                
-                string = dictionary[@"keepalive"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"keepalive_preference"];
-                
-                string = dictionary[@"willqos"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"willqos_preference"];
-                
-                string = dictionary[@"mindist"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"mindist_preference"];
-                
-                string = dictionary[@"mintime"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"mintime_preference"];
-                
-                string = dictionary[@"monitoring"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"monitoring_preference"];
-                
-                
-                string = dictionary[@"retain"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"retain_preference"];
-                
-                string = dictionary[@"tls"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"tls_preference"];
-                
-                string = dictionary[@"auth"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"auth_preference"];
-                
-                string = dictionary[@"clean"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"clean_preference"];
-                
-                string = dictionary[@"willretain"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"willretain_preference"];
-
-                string = dictionary[@"ab"];
-                if (string) [[NSUserDefaults standardUserDefaults] setObject:@([string integerValue]) forKey:@"ab_preference"];
-                
-            } else {
-                self.processingMessage = [NSString stringWithFormat:@"Error invalid configuration file %@)", dictionary[@"_type"]];
-                return FALSE;
-            }
+        NSError *error;
+        NSString *extension = [url pathExtension];
+        if ([extension isEqualToString:@"mqtc"]) {
+            error = [self.settings fromStream:input];
+        } else if ([extension isEqualToString:@"mqtw"]) {
+            error = [self waypointsFromStream:input];
         } else {
-            self.processingMessage = [NSString stringWithFormat:@"Error illegal json in configuration file %@)", error];
-            return FALSE;
+            error = [NSError errorWithDomain:@"MQTTitude" code:2 userInfo:@{@"extension":extension}];
         }
         
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        self.processingMessage = [NSString stringWithFormat:@"Configuration file %@ successfully processed)", [url lastPathComponent]];
-        
+        if (error) {
+            self.processingMessage = [NSString stringWithFormat:@"Error processing file %@: %@",
+                                  [url lastPathComponent],
+                                  error];
+            return FALSE;
+        }
+        self.processingMessage = [NSString stringWithFormat:@"File %@ successfully processed)",
+                                  [url lastPathComponent]];
     }
-    
     return TRUE;
 }
+
+- (NSError *)waypointsFromStream:(NSInputStream *)input
+{
+    NSError *error;
+    
+    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithStream:input options:0 error:&error];
+    if (dictionary) {
+#ifdef DEBUG
+        for (NSString *key in [dictionary allKeys]) {
+            NSLog(@"Waypoints %@:%@", key, dictionary[key]);
+        }
+#endif
+        
+        if ([dictionary[@"_type"] isEqualToString:@"waypoints"]) {
+            NSArray *waypoints = dictionary[@"waypoints"];
+            for (NSDictionary *waypoint in waypoints) {
+                if ([waypoint[@"_type"] isEqualToString:@"waypoint"]) {
+                    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+                                                                                   [waypoint[@"lat"] doubleValue],
+                                                                                   [waypoint[@"lon"] doubleValue]
+                                                                                   );
+                     CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
+                                                                          altitude:0
+                                                                horizontalAccuracy:[waypoint[@"acc"] doubleValue]
+                                                                  verticalAccuracy:-1
+                                                                         timestamp:[NSDate dateWithTimeIntervalSince1970:[waypoint[@"tst"] doubleValue]]];
+                     
+                    [Location locationWithTopic:[self.settings theGeneralTopic]
+                                      timestamp:location.timestamp
+                                     coordinate:location.coordinate
+                                       accuracy:location.horizontalAccuracy
+                                      automatic:NO
+                                         remark:waypoint[@"desc"]
+                                         radius:[waypoint[@"rad"] doubleValue]
+                                          share:YES
+                         inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]];
+                }
+            }
+        } else {
+            return [NSError errorWithDomain:@"MQTTitude Waypoints" code:1 userInfo:@{@"_type": dictionary[@"_type"]}];
+        }
+    } else {
+        return error;
+    }
+    return nil;
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -418,7 +363,7 @@
 #ifdef DEBUG
     NSLog(@"App applicationWillTerminate");
 #endif
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self.settings synchronize];
     [self saveContext];
     [self notification:@"MQTTitude terminated. Tap to restart" after:REMINDER_AFTER userInfo:nil];
 }
@@ -471,19 +416,15 @@
     [self notification:message userInfo:nil];
     
     NSMutableDictionary *addon = [[NSMutableDictionary alloc] init];
+    [addon setObject:@"enter" forKey:@"event" ];
     
-    for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic]
+    for (Location *location in [Location allRegionsOfTopic:[self.settings theGeneralTopic]
                                     inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
             location.remark = region.identifier; // this touches the location and updates the overlay
             if ([location.share boolValue]) {
-                [addon setObject:@"enter" forKey:@"event" ];
                 if (location.remark) {
                     [addon setValue:location.remark forKey:@"desc"];
-                }
-                double rad = [location.regionradius doubleValue];
-                if (rad > 0) {
-                    [addon setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
                 }
             }
         }
@@ -502,19 +443,15 @@
     [self notification:message userInfo:nil];
     
     NSMutableDictionary *addon = [[NSMutableDictionary alloc] init];
+    [addon setObject:@"leave" forKey:@"event" ];
     
-    for (Location *location in [Location allRegionsOfTopic:[self theGeneralTopic]
+    for (Location *location in [Location allRegionsOfTopic:[self.settings theGeneralTopic]
                                     inManagedObjectContext:[mqttitudeCoreData theManagedObjectContext]]) {
         if ([location.remark isEqualToString:region.identifier]) {
             location.remark = region.identifier; // this touches the location and updates the overlay
             if ([location.share boolValue]) {
-                [addon setObject:@"leave" forKey:@"event" ];
                 if (location.remark) {
                     [addon setValue:location.remark forKey:@"desc"];
-                }
-                double rad = [location.regionradius doubleValue];
-                if (rad > 0) {
-                    [addon setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
                 }
             }
         }
@@ -574,7 +511,7 @@
 
 - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic
 {
-    if ([topic isEqualToString:[self theGeneralTopic]]) {
+    if ([topic isEqualToString:[self.settings theGeneralTopic]]) {
         // received own data
         
 #ifdef REMOTE_COMMANDS
@@ -607,7 +544,7 @@
         }
 #endif
         
-    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self theGeneralTopic], @"waypoints"]]) {
+    } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", [self.settings theGeneralTopic], @"waypoints"]]) {
         // received own waypoint
     } else {
         // received other data
@@ -727,7 +664,7 @@
     [self saveContext];
     [self connectionOff];
     self.monitoring = 0;
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self.settings synchronize];
     exit(0);
 }
 - (void)sendNow
@@ -754,17 +691,17 @@
 #endif
 
     _monitoring = monitoring;
-    [[NSUserDefaults standardUserDefaults] setObject:@(monitoring) forKey:@"monitoring_preference"];
+    [self.settings setObject:@(monitoring) forKey:@"monitoring_preference"];
 
     switch (monitoring) {
         case 2:
-            self.manager.distanceFilter = [[NSUserDefaults standardUserDefaults] doubleForKey:@"mindist_preference"];
+            self.manager.distanceFilter = [self.settings doubleForKey:@"mindist_preference"];
             self.manager.desiredAccuracy = kCLLocationAccuracyBest;
             self.manager.pausesLocationUpdatesAutomatically = YES;
             [self.manager stopMonitoringSignificantLocationChanges];
             
             [self.manager startUpdatingLocation];
-            self.activityTimer = [NSTimer timerWithTimeInterval:[[NSUserDefaults standardUserDefaults] doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
+            self.activityTimer = [NSTimer timerWithTimeInterval:[self.settings doubleForKey:@"mintime_preference"] target:self selector:@selector(activityTimer:) userInfo:Nil repeats:YES];
             [[NSRunLoop currentRunLoop] addTimer:self.activityTimer forMode:NSRunLoopCommonModes];
             break;
         case 1:
@@ -803,7 +740,7 @@
 {
     self.locationLastSent = location.timestamp;
     
-    Location *newLocation = [Location locationWithTopic:[self theGeneralTopic]
+    Location *newLocation = [Location locationWithTopic:[self.settings theGeneralTopic]
                                               timestamp:location.timestamp
                                              coordinate:location.coordinate
                                                accuracy:location.horizontalAccuracy
@@ -816,9 +753,9 @@
     NSData *data = [self encodeLocationData:newLocation type:@"location" addon:addon];
     
     long msgID = [self.connection sendData:data
-                                       topic:[self theGeneralTopic]
-                                         qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
-                                      retain:[[NSUserDefaults standardUserDefaults] boolForKey:@"retain_preference"]];
+                                       topic:[self.settings theGeneralTopic]
+                                         qos:[self.settings integerForKey:@"qos_preference"]
+                                      retain:[self.settings boolForKey:@"retain_preference"]];
     
     if (msgID <= 0) {
         NSString *message = [NSString stringWithFormat:@"Location %@",
@@ -855,17 +792,13 @@
     if (location.remark) {
         [addon setValue:location.remark forKey:@"desc"];
     }
-    double rad = [location.regionradius doubleValue];
-    if (rad > 0) {
-        [addon setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
-    }
 
     NSData *data = [self encodeLocationData:location
                                        type:@"waypoint" addon:addon];
     
     long msgID = [self.connection sendData:data
-                                          topic:[[self theGeneralTopic] stringByAppendingString:@"/waypoints"]
-                                            qos:[[NSUserDefaults standardUserDefaults] integerForKey:@"qos_preference"]
+                                          topic:[[self.settings theGeneralTopic] stringByAppendingString:@"/waypoints"]
+                                            qos:[self.settings integerForKey:@"qos_preference"]
                                          retain:NO];
     
     if (msgID <= 0) {
@@ -910,21 +843,21 @@
 
 - (void)connect
 {
-    [self.connection connectTo:[[NSUserDefaults standardUserDefaults] stringForKey:@"host_preference"]
-                          port:[[NSUserDefaults standardUserDefaults] integerForKey:@"port_preference"]
-                           tls:[[NSUserDefaults standardUserDefaults] boolForKey:@"tls_preference"]
-                     keepalive:[[NSUserDefaults standardUserDefaults] integerForKey:@"keepalive_preference"]
-                         clean:[[NSUserDefaults standardUserDefaults] integerForKey:@"clean_preference"]
-                          auth:[[NSUserDefaults standardUserDefaults] boolForKey:@"auth_preference"]
-                          user:[[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"]
-                          pass:[[NSUserDefaults standardUserDefaults] stringForKey:@"pass_preference"]
-                     willTopic:[self theWillTopic]
+    [self.connection connectTo:[self.settings stringForKey:@"host_preference"]
+                          port:[self.settings integerForKey:@"port_preference"]
+                           tls:[self.settings boolForKey:@"tls_preference"]
+                     keepalive:[self.settings integerForKey:@"keepalive_preference"]
+                         clean:[self.settings integerForKey:@"clean_preference"]
+                          auth:[self.settings boolForKey:@"auth_preference"]
+                          user:[self.settings stringForKey:@"user_preference"]
+                          pass:[self.settings stringForKey:@"pass_preference"]
+                     willTopic:[self.settings theWillTopic]
                           will:[self jsonToData:@{
                                                   @"tst": [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]],
                                                   @"_type": @"lwt"}]
-                       willQos:[[NSUserDefaults standardUserDefaults] integerForKey:@"willqos_preference"]
-                willRetainFlag:[[NSUserDefaults standardUserDefaults] boolForKey:@"willretain_preference"]
-                  withClientId:[self theClientId]];
+                       willQos:[self.settings integerForKey:@"willqos_preference"]
+                willRetainFlag:[self.settings boolForKey:@"willretain_preference"]
+                  withClientId:[self.settings theClientId]];
 }
 
 - (void)disconnectInBackground
@@ -972,6 +905,12 @@
                                  @"acc": [NSString stringWithFormat:@"%.0f", [location.accuracy doubleValue]],
                                  @"_type": [NSString stringWithFormat:@"%@", type]
                                  } mutableCopy];
+    
+    double rad = [location.regionradius doubleValue];
+    if (rad > 0) {
+        [jsonObject setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
+    }
+
     if (addon) {
         [jsonObject addEntriesFromDictionary:addon];
     }
@@ -1029,72 +968,5 @@
 }
 #endif // REMOTE_NOTIFICATIONS
 
-#pragma construct topic names
-
-- (NSString *)theGeneralTopic
-{
-    NSString *topic;
-    topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"topic_preference"];
-    
-    if (!topic || [topic isEqualToString:@""]) {
-        topic = [NSString stringWithFormat:@"mqttitude/%@", [self theId]];
-    }
-    return topic;
-}
-
-- (NSString *)theWillTopic
-{
-    NSString *topic;
-    topic = [[NSUserDefaults standardUserDefaults] stringForKey:@"willtopic_preference"];
-    
-    if (!topic || [topic isEqualToString:@""]) {
-        topic = [self theGeneralTopic];
-    }
-    
-    return topic;
-}
-
-- (NSString *)theClientId
-{
-    NSString *clientId;
-    clientId = [[NSUserDefaults standardUserDefaults] stringForKey:@"clientid_preference"];
-    
-    if (!clientId || [clientId isEqualToString:@""]) {
-        clientId = [self theId];
-    }
-    return clientId;
-}
-
-- (NSString *)theId
-{
-    NSString *theId;
-    NSString *user;
-    user = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_preference"];
-    NSString *deviceId;
-    deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"deviceid_preference"];
-    
-        if (!user || [user isEqualToString:@""]) {
-            if (!deviceId || [deviceId isEqualToString:@""]) {
-                theId = [[UIDevice currentDevice] name];
-            } else {
-                theId = deviceId;
-            }
-        } else {
-            if (!deviceId || [deviceId isEqualToString:@""]) {
-                theId = user;
-            } else {
-                theId = [NSString stringWithFormat:@"%@/%@", user, deviceId];
-            }
-        }
-    
-    return theId;
-}
-
-- (NSString *)theDeviceId
-{
-    NSString *deviceId;
-    deviceId = [[NSUserDefaults standardUserDefaults] stringForKey:@"deviceid_preference"];
-    return deviceId;
-}
 
 @end

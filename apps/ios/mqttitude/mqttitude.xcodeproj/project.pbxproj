@@ -72,6 +72,8 @@
 		84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */; };
 		84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5117BEF44F00E1333C /* MapKit.framework */; };
 		84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5317BEF45700E1333C /* CoreLocation.framework */; };
+		84D1A7BD189B1CBF00824EE6 /* mqttitudeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D1A7BC189B1CBF00824EE6 /* mqttitudeSettings.m */; };
+		84D1A7BF189B958B00824EE6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1A7BE189B958B00824EE6 /* MessageUI.framework */; };
 		84D4D111181995E200C23EFC /* icon_mqtc_ipad320.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */; };
 		84D75588183FFD8A002613E2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84D75587183FFD8A002613E2 /* Images.xcassets */; };
 		84E40E661897DC3800DB0936 /* MQTTClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845DBE7918852B7D00EDB183 /* MQTTClient.framework */; };
@@ -169,6 +171,9 @@
 		84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		84CF9A5117BEF44F00E1333C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84CF9A5317BEF45700E1333C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		84D1A7BB189B1CBF00824EE6 /* mqttitudeSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeSettings.h; sourceTree = "<group>"; };
+		84D1A7BC189B1CBF00824EE6 /* mqttitudeSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeSettings.m; sourceTree = "<group>"; };
+		84D1A7BE189B958B00824EE6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		84D4D110181995E200C23EFC /* icon_mqtc_ipad320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mqtc_ipad320.png; sourceTree = "<group>"; };
 		84D75587183FFD8A002613E2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MQTTitude/Images.xcassets; sourceTree = "<group>"; };
 		84F93C0417C028690060E809 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
@@ -180,6 +185,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84D1A7BF189B958B00824EE6 /* MessageUI.framework in Frameworks */,
 				84E40E661897DC3800DB0936 /* MQTTClient.framework in Frameworks */,
 				8440549517F4EFF300455E26 /* CoreData.framework in Frameworks */,
 				848A036B17E4841500152C26 /* AddressBookUI.framework in Frameworks */,
@@ -281,6 +287,7 @@
 		84CF9A0717BEED5B00E1333C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				84D1A7BE189B958B00824EE6 /* MessageUI.framework */,
 				845DBE7918852B7D00EDB183 /* MQTTClient.framework */,
 				8440549417F4EFF300455E26 /* CoreData.framework */,
 				848A036A17E4841500152C26 /* AddressBookUI.framework */,
@@ -314,6 +321,8 @@
 				846597CA17F78DD900BEA7A8 /* CoreDataTableViewController.m */,
 				84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */,
 				84BDE18617C7B11000C47B65 /* mqttitudeAppDelegate.m */,
+				84D1A7BB189B1CBF00824EE6 /* mqttitudeSettings.h */,
+				84D1A7BC189B1CBF00824EE6 /* mqttitudeSettings.m */,
 				848477F61864BF2000CA0F81 /* mqttitudeAlertView.h */,
 				848477F71864BF2000CA0F81 /* mqttitudeAlertView.m */,
 				8414726817C9E5F900F76EAB /* Connection.h */,
@@ -460,6 +469,7 @@
 				84BDE19117C7B11000C47B65 /* mqttitudeAppDelegate.m in Sources */,
 				84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */,
 				848468AD17FD7A100012FC18 /* Friend+Create.m in Sources */,
+				84D1A7BD189B1CBF00824EE6 /* mqttitudeSettings.m in Sources */,
 				84004E65180DF24800C831E3 /* mqttitudeCoreData.m in Sources */,
 				84CDE36D1810454800717359 /* Friend.m in Sources */,
 				84B0F7FF181FA97F00590276 /* mqttitudePersonTVC.m in Sources */,
