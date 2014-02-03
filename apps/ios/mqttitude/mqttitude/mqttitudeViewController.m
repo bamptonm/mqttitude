@@ -81,6 +81,7 @@ typedef enum {
             self.frc.delegate = self;
         }
     }
+    
 }
 
 #pragma UI actions
@@ -426,18 +427,23 @@ typedef enum {
     }
 }
 
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay
 {
-    mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
-    MKCircleView *view = [[MKCircleView alloc] initWithCircle:overlay];
-    
-    Location *location = (Location *)overlay;
-    if ([location.region containsCoordinate:[delegate.manager location].coordinate]) {
-        view.fillColor = [UIColor colorWithRed:1.0 green:0.5 blue:0.5 alpha:0.333];
+    if ([overlay isKindOfClass:[Location class]]) {
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *) [[UIApplication sharedApplication] delegate];
+        MKCircleRenderer *renderer = [[MKCircleRenderer alloc] initWithCircle:overlay];
+        
+        Location *location = (Location *)overlay;
+        if ([location.region containsCoordinate:[delegate.manager location].coordinate]) {
+            renderer.fillColor = [UIColor colorWithRed:1.0 green:0.5 blue:0.5 alpha:0.333];
+        } else {
+            renderer.fillColor = [UIColor colorWithRed:0.5 green:0.5 blue:1.0 alpha:0.333];
+        }
+        return renderer;
+        
     } else {
-        view.fillColor = [UIColor colorWithRed:0.5 green:0.5 blue:1.0 alpha:0.333];
+        return nil;
     }
-    return view;
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
@@ -445,14 +451,6 @@ typedef enum {
 #ifdef DEBUG
     NSLog(@"didSelectAnnotationView");
 #endif
-
-    /*
-     * trigger reverse geocoding only when looking at details
-     *
-    if ([view.annotation respondsToSelector:@selector(getReverseGeoCode)]) {
-        [view.annotation performSelector:@selector(getReverseGeoCode)];
-    }
-     */
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
@@ -495,7 +493,6 @@ typedef enum {
     for (Location *location in overlays) {
         [delegate.manager startMonitoringForRegion:location.region];
     }
-    
 }
 
 - (void)setFrc:(NSFetchedResultsController *)newfrc

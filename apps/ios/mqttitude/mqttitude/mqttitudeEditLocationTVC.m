@@ -48,19 +48,19 @@
     [super viewWillAppear:animated];
     
     self.title = [self.location nameText];
-    
+
+    [self.location getReverseGeoCode];
     [self setup];
 }
 
 - (void)setup
 {
-    self.UIlatitude.text = [NSString stringWithFormat:@"%f", [self.location.latitude doubleValue]];
-    self.UIlongitude.text = [NSString stringWithFormat:@"%f", [self.location.longitude doubleValue]];
+    self.UIlatitude.text = [NSString stringWithFormat:@"%g", [self.location.latitude doubleValue]];
+    self.UIlongitude.text = [NSString stringWithFormat:@"%g", [self.location.longitude doubleValue]];
     
     self.UItimestamp.text = [self.location timestampText];
     
     [self.location addObserver:self forKeyPath:@"placemark" options:NSKeyValueObservingOptionNew context:nil];
-    [self.location getReverseGeoCode];
     self.UIplace.text = self.location.placemark;
     
     self.UIremark.text = self.location.remark;
@@ -93,14 +93,14 @@
 - (IBAction)latitudechanged:(UITextField *)sender {
     self.location.latitude = @([sender.text doubleValue]);
     self.location.placemark = nil;
-    [self.location getReverseGeoCode];
+    self.location.accuracy = @(0);
     self.needsUpdate = TRUE;
 }
 
 - (IBAction)longitudechanged:(UITextField *)sender {
     self.location.longitude = @([sender.text doubleValue]);
     self.location.placemark = nil;
-    [self.location getReverseGeoCode];
+    self.location.accuracy = @(0);
     self.needsUpdate = TRUE;
 }
 
@@ -112,6 +112,7 @@
 - (IBAction)remarkchanged:(UITextField *)sender {
     if (![sender.text isEqualToString:self.location.remark]) {
         self.location.remark = sender.text;
+        self.location.accuracy = @(0);
         self.needsUpdate = TRUE;
     }
 }
@@ -128,6 +129,8 @@
 }
 
 - (IBAction)new:(UIBarButtonItem *)sender {
+    [self.location removeObserver:self forKeyPath:@"placemark"];
+
     mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
     self.location = [Location locationWithTopic:[delegate.settings theGeneralTopic]
                                       timestamp:[NSDate date]

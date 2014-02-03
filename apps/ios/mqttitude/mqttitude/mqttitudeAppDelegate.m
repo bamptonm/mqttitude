@@ -167,7 +167,7 @@
 - (void)batteryLevelChanged:(NSNotification *)notification
 {
 #ifdef DEBUG
-    NSLog(@"App batteryLevelChanged %f", [UIDevice currentDevice].batteryLevel);
+    NSLog(@"App batteryLevelChanged %.0f", [UIDevice currentDevice].batteryLevel);
 #endif
 
     // No, we do not want to switch off location monitoring when battery gets low
@@ -561,7 +561,7 @@
             if ([dictionary[@"_type"] isEqualToString:@"location"] ||
                 [dictionary[@"_type"] isEqualToString:@"waypoint"]) {
 #ifdef DEBUG
-                NSLog(@"App json received lat:%f lon:%f acc:%f tst:%f rad:%f event:%@ desc:%@",
+                NSLog(@"App json received lat:%g lon:%g acc:%.0f tst:%.0f rad:%.0f event:%@ desc:%@",
                       [dictionary[@"lat"] doubleValue],
                       [dictionary[@"lon"] doubleValue],
                       [dictionary[@"acc"] doubleValue],
@@ -899,13 +899,18 @@
 - (NSData *)encodeLocationData:(Location *)location type:(NSString *)type addon:(NSDictionary *)addon
 {
     NSMutableDictionary *jsonObject = [@{
-                                 @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
-                                 @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
+                                 @"lat": [NSString stringWithFormat:@"%g", location.coordinate.latitude],
+                                 @"lon": [NSString stringWithFormat:@"%g", location.coordinate.longitude],
                                  @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
-                                 @"acc": [NSString stringWithFormat:@"%.0f", [location.accuracy doubleValue]],
                                  @"_type": [NSString stringWithFormat:@"%@", type]
                                  } mutableCopy];
     
+    
+    double acc = [location.accuracy doubleValue];
+    if (acc > 0) {
+        [jsonObject setValue:[NSString stringWithFormat:@"%.0f", acc] forKey:@"acc"];
+    }
+
     double rad = [location.regionradius doubleValue];
     if (rad > 0) {
         [jsonObject setValue:[NSString stringWithFormat:@"%.0f", rad] forKey:@"rad"];
@@ -916,8 +921,10 @@
     }
     
 #ifdef BATTERY_MONITORING
-    [jsonObject setValue:[NSString stringWithFormat:@"%.0f", [UIDevice currentDevice].batteryLevel != -1.0 ?
-                          [UIDevice currentDevice].batteryLevel * 100.0 : -1.0] forKey:@"batt"];
+    if ([type isEqualToString:@"location"]) {
+        [jsonObject setValue:[NSString stringWithFormat:@"%.0f", [UIDevice currentDevice].batteryLevel != -1.0 ?
+                              [UIDevice currentDevice].batteryLevel * 100.0 : -1.0] forKey:@"batt"];
+    }
 #endif
 
     return [self jsonToData:jsonObject];

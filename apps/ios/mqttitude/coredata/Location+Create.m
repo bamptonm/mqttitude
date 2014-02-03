@@ -127,13 +127,13 @@
 {
     return [NSString stringWithFormat:@"%@ (±%.0fm)",
             (self.placemark) ? self.placemark :
-            [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude],
+            [NSString stringWithFormat:@"%g,%g", self.coordinate.latitude, self.coordinate.longitude],
             [self.accuracy doubleValue]];
 }
 
 - (NSString *)coordinateText
 {
-    return [NSString stringWithFormat:@"%f,%f (±%.0fm)",
+    return [NSString stringWithFormat:@"%g,%g (±%.0fm)",
             self.coordinate.latitude,
             self.coordinate.longitude,
             [self.accuracy doubleValue]];

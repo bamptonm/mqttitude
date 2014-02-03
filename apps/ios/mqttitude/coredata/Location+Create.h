@@ -9,7 +9,6 @@
 #import "Location.h"
 #import <MapKit/MapKit.h>
 
-
 @interface Location (Create) <MKAnnotation, MKOverlay>
 
 + (Location *)locationWithTopic:(NSString *)topic
