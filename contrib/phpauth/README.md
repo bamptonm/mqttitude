@@ -1,5 +1,7 @@
 PHP < 5.5.0 Authentication based on https://defuse.ca/php-pbkdf2.htm
 
+** NOTE: this has moved to [https://github.com/owntracks/contrib](https://github.com/owntracks/contrib)
+
 PHP include file to be used with mosquitto-auth-plug password standards of generationg and checking passwords.
 
 functions:

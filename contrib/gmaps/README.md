@@ -1,5 +1,7 @@
 # gmaps
 
+** NOTE: this has moved to [https://github.com/owntracks/contrib](https://github.com/owntracks/contrib)
+
 To be used with the http://mqttitude.org/ project. Subscribes to a topic and plots the mqttitude in realtime using websockets.
 
 ![Screenshot](screenshot.jpg)

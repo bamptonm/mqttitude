@@ -1,4 +1,6 @@
 
+
+** NOTE: this has moved to [https://github.com/owntracks/contrib](https://github.com/owntracks/contrib)
 Work in Progress!
 
 ![Screenshot](screenshot.jpg)
