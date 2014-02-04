@@ -1,5 +1,7 @@
 # MQTTitude to Storage (m2s)
 
+**NOTE: This repo has moved to [https://github.com/owntracks/backend/tree/master/m2s](https://github.com/owntracks/backend/tree/master/m2s)**
+
 This is part of the MQTTitude back-end. This program subscribes to a configured MQTT topic (default: `mqttitude/+/+`), extracts the JSON payload from received messages, optionally looks up weather and reverse-geo and others via plugins for the reported `lat` and `lon`, and stores the result. Storage is pluggable (see below), and we provide a default MySQL storage plugin.
 
 
